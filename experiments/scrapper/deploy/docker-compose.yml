@@ -1,0 +1,8 @@
+version: '3'
+
+services:
+  sih:
+    build: .
+    volumes:
+      - ./secrets:/secrets
+      - ./data:/data
