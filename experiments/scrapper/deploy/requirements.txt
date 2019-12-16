@@ -1,0 +1,5 @@
+gspread
+bs4
+requests
+oauth2client
+PyOpenSSL
