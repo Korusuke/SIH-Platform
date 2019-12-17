@@ -34,7 +34,7 @@ export default function IndexContent()
             direction="row"
             spacing={3}
         >
-            <Grid item md={6} xs={12} style={{padding:'10px;'}}>
+            <Grid item md={6} xs={12} style={{padding:'10px'}}>
                 <Box boxShadow={3} style={{background:'white'}}>
                     <Timeline />
                 </Box>

@@ -20,30 +20,37 @@ export default function Header(){
             <AppBar position="static" style={
                 {
                     backgroundColor: 'white',
-                    color: 'black'
+                    color: 'black',
+                    height: '80px'
                 }
             } >
                 <Toolbar>
+                    <div style={
+                        {position: 'absolute',
+                        width:'100%',
+                        height: '100%'
+                    }
+                    }>
+                    <Center>
+                        <h1>Internal Hackathon</h1>
+                    </Center>
+                    </div>
                     <Grid 
                     container 
                     direction="row"
-                    spacing={3}
+                    spacing={1}
                     >
-                        <Grid item xs={2} sm={1}>
+                        <Grid item sm={1}>
                             <Center style={styles.center}>
                             <img src="/assets/images/somaiya.png" style={styles.image} width="100" />
                             </Center>
                         </Grid>
-                        <Grid item xs={2} sm={1}>
+                        <Grid item sm={1}>
                             <Center style={styles.center}>
                                 <img src="/assets/images/sihlogo.png" style={styles.image} width="100"/>
                             </Center>
                         </Grid>
-                        <Grid item xs={8} sm={10}>
-                            <Center>
-                                <h1>Internal Hackathon</h1>
-                            </Center>
-                        </Grid>
+                        
                         
                             
                     </Grid>
