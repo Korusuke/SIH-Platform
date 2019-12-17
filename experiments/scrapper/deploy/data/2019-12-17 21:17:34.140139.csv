@@ -1,0 +1,238 @@
+Company,PS_Num,Category,Domain,PS_Title,PS_Desc,Youtube,DataSet
+CDK Global,RA24,Software,Smart Vehicles,"Vehicle Maintenance Index- In Today’s world with so many cars, models in the market, it is hard to find out which car has a  high maintenance cost/index that is authentic source.","
+ In Today’s world with so many cars, models in the market, it is hard to find out which car has a  high maintenance cost/index that is authentic source.
+•	Problem statement in Description 
+o	System that shows the health and Maintenance Index of various components of car models or car parts based on multiple factors
+o	This will help new buyers to understand the maintenance costs of a certain model and probability of which car part requires more often servicing /change, OEM’s to understand which part is requiring frequent change and needs to be recalled and made better in the new models 
+o	Vehicle maintenance patterns across car models by mileage, usage , age of the vehicle , regional patterns across dealers, service stations  and car manufacturer
+•	Purpose and who will benefit
+o	Consumers so they know which car has a higher maintenance and maintenance index.
+o	Car Manufacturers , so they know which parts are getting serviced often based on the part change
+•	How does it help the nation
+o	Better understanding for consumers on which car to purchase with low Vehicle Maintenance Index
+o	Govt has better understanding of car maintenance index before approving cars on the Road (ARAI Authority)
+•	Practical and reasons why this idea could be a challenge from Implementation 
+o	Data Challenge : Build a dealer/service station network , OEM, consumers who can feed data into the system – without data this solution will not work
+o	Ability to integrate this solution easily with the current systems which can collate the data
+o	Marketing challenge : Owner within the Govt to take this ahead and invest this product
+o	Political : OEM’s might not want such a system to be developed.
+•	Domain Bucket 
+o	Transport , Vehicles 
+•	Technology Bucket 
+o	Integration across systems – Integration platform across systems with security model for data extraction 
+o	Analytics & Data Science (if possible)  - Bigdata/Hadoop, AI / ML 
+o	Data Aggregation 
+o	Visualization
+","
+ https://www.youtube.com/channel/UCh2EfZS-vHfz7grCT
+","
+
+"
+CDK Global,RA25,Software,Smart Communication,Better and faster emergency care during accidents and vehicle impact.,"
+ Better and faster emergency care during accidents and vehicle impact
+•	Problem statement in Description 
+o	During accidents while we have sophisticated technology that opens airbags , add functionality that can start recording and inform the closest emergency service care of the incident
+o	Share Location, situation within the accident spot , broadcast images, videos
+o	Audio Video Signal Transmitter/ Store  during any impact in the vehicle and calling out for emergency care
+o	Ability to inform the closest police station, hospital, fire brigade—GPS location closest proximity guard or govt office to rush emergency care
+o	In current situation it requires someone to call the emergency service and delays in calling for care , results in loss of life . with this device and service the call is automatically made and emergency care can be provided promptly 
+o	Evaluate the ease of connecting the device with the car easily externally, requires OEM support to develop such compatible cars
+•	Purpose of this analysis and who will benefit
+o	Person who meets with the accident and facility for the nearest emergency care to respond to the situation in a timely fashion
+o	Govt can benefit by providing the device on rent in certain specific areas that are accident prone – and earn additional income
+o	Govt agencies can start building net income by dealing in such devices and auxiliary services
+o	OEMS – additional charge for service
+•	Lateral Solutions where similar solution can be extrapolated
+o	Car Theft or Window Windshield breaking
+o	Car break down 
+o	Home Safety – breaking
+•	How does it help the nation
+o	Better and faster emergency care
+•	Practical and reasons why this idea could be a challenge
+o	Device manufacturing  that works across regions , network connectivity
+o	Economically viable in managing the security of such devices
+o	Law Suit if the device did not work in an accident
+o	OEM’s to modify car design to easily integrate with such devices , externally and easily plugin the device
+•	Domain Bucket 
+o	Vehicles 
+o	Emergency care 
+•	Technology Bucket 
+o	Integration across systems – Integration platform across systems with security model for data extraction 
+o	IOT 
+o	Analytics & Data Science (if possible)  - Bigdata/Hadoop, AI / ML 
+o	Data Aggregation 
+o	Visualization
+","
+ https://www.youtube.com/watch?v=g19af-4NiJQ
+","
+
+"
+CDK Global,RA26,Software,Waste Management,Geo Tracking of Waste and Triggering Alerts and Mapping Areas with High Waste Index,"
+ •	Problem statement in Description 
+o	We do have waste lying in cities which makes it hard for cleaning staff to know which area requires attention and urgent garbage, waste pickup
+o	Identifying Waste across in the City 
+•	With Swachh Bharat App , it requires people to take pictures and geo tag the images , due to which adoption is low, 
+•	With the Drone connectivity and intelligent algorithms, pattern matching the drone can fly in designated coverage areas help monitor the waste
+•	Cameras attached to Govt or Public Vehicles while driving can capture video and identify garbage areas and upload images (image /video scanning ) 
+•	Ability to capture images of garbage and upload, images will automatically have GEO location position of the image  
+o	Viewing the high waste areas 
+•	Mapping the location on a map with the Waste Quantity Index (approximate) so that the waste management team , can quickly take action based on the wastage level thrown in an area
+•	Lateral Scenarios and Scaling the solution  
+o	Flood Monitoring and reporting
+o	Traffic Monitoring due events
+o	Toll Booth Huge Lines Monitoring
+•	Purpose of this analysis and who will benefit
+o	Govt agencies , citizens  
+•	How does it help the nation
+o	Govt Agencies 
+•	Practical and reasons why this idea could be a challenge
+o	Device manufacturing  that works across regions , network connectivity
+o	Security of devices, drones and permission to have them executed in specific areas
+o	Costs of drones and manageability – alternative for using Image/video capture automatically and via image capture 
+o	Economically viable in managing the security of such devices , drones
+","
+ https://www.youtube.com/watch?v=uRPV9K2SS48&t=15s
+","
+                                                                                                                       NA
+                                                                                                                                                                                "
+CDK Global,RA27,Software,Agriculture and Rural Development,Portal for Farmers to sell the produce at a better rate,"
+ Portal for Farmers to sell the produce at a better rate 
+•	Problem statement in Description 
+o	System that provides farmers an interface to sell their produce , and connect with the buyers all over India
+o	Simple interface that works on mobile, SMS to upload produce details and respond via phone and SMS (taking care of digital divide)
+o	Interface for anyone to buy the produce/vegetable – initially visit the place and buy or have courier service integrated to deliver the vegetables
+o	Farmers can get a better price for their produce, no additional cost spent in marketing and delivery of goods , however they can choose to charge more by delivering the items themselves
+•	Purpose of this analysis and who will benefit
+o	Farmers, Restaurant owners, Buyers ,  Courier Companies, Delivery Agencies, Vegetable Vendors
+•	How does it help the nation
+o	Better rates for the vegetables, Make the Farmers live with pride and make additional income
+•	Practical and reasons why this idea could be a challenge
+o	Brokers , Govt rules
+o	Overall profitability in the deal for the buyer to purchase directly from farm , excluding transportation
+•	How does this help CDK : What’s in it for us
+o	No Direct link 
+•	Technology that can be used as a platform for connecting car buyer to Seller
+Domain Bucket 
+o	Agriculture 
+o	E-Commerce 
+o	Payment 
+•	Technology Bucket 
+o	Integration across systems – Integration platform across systems with security model for data extraction 
+o	SMS and Mobile Computing 
+o	Analytics & Data Science (if possible)  - Bigdata/Hadoop, AI / ML 
+o	Data Aggregation 
+o	Visualization
+","
+ https://www.youtube.com/watch?v=owp4L1e0aK0&t=165s
+","
+
+"
+CDK Global,RA28,Software,Agriculture and Rural Development,"Crop Guidance and Farmers Friend   •	Problem Title  : Helping the farmers in terms of Crop suggestion, precautions based on the met department forecast of rain fall / weather, potential  pest attacks , weather warnings etc.","
+ Crop Guidance and Farmers Friend  
+•	Problem Title  : Helping the farmers in terms of Crop suggestion, precautions based on the met department forecast of rain fall / weather, potential  pest attacks , weather warnings etc.
+•	Problem statement in Description 
+o	System that provides details to farmers on weather patterns that could impact the crop , possible pest attacks , weather warnings
+o	Steps for producing high yield that are specific for a farmer based on the local, regional terrain , weather scenario  , rather than generic guidance
+o	Helping the Farmer to be well prepared if there is a pest, insect attack
+o	Better Farmer Financial Inclusion for planning out loans , interest and managing his costs
+•	Purpose of this analysis and who will benefit
+o	Farmers, Pesticide firms , Govt agencies helping farmers , Agriculture loan banks
+•	How does it help the nation
+o	Better crop produce and farmers have better income
+o	High Yield and prescriptive guidance
+•	Practical and reasons why this idea could be a challenge
+o	Working with the larger teams like Govt Agencies, Brokers, Chemical Factories producing medicines, pesticides
+o	Single Owner driving and investing in the product
+o	Famers basic digital divide to access such information
+•	How does this help CDK : What’s in it for us
+o	Limited usage from this scenario
+•	Domain Bucket 
+o	Agriculture 
+•	Technology Bucket 
+o	Integration across systems – Integration platform across systems with security model for data extraction 
+o	SMS and Mobile Computing 
+o	Analytics & Data Science (if possible)  - Bigdata/Hadoop, AI / ML 
+o	Data Aggregation 
+o	Visualization
+","
+ https://www.youtube.com/watch?v=8i-RO9lnQAE&t=21s
+","
+
+"
+MIXORG,CB31,Software,Security & Surveillance,"Create an affordable solution through image processing of number plates of vehicles for the detection, identification and monitoring of vehicles  in different senarios such as residential societies, tolls, business complex, parking spaces etc.","
+ Description: Many residential society administrations, tolls, business complexes and parking spaces in India lack an automated system for car parking and vehicle monitoring. Most of the commercial and residential places face an impending problem of illegal car/vehicle parking inside their premises. This issue is not bounded to just parking, but also adds to the security concerns inside those  establishments. Though there are solutions that exist in the market, the affordability comes into question. In this regard, we would like to have an affordable solution that caters to the Indian markets
+
+Expectation:  For the team choosing this topic, we expect to have a working model / infrastructure of the solution wherein, when a vehicle passes through a  checkpost and the solution identifies as many features as it can regarding the situation of the vehicle. All Teams will be provided with an amount of video footage. The teams must build a fictitous database based on the vehicles appering in footage and demonstrate the problems that they are able to solve/automate in existing infrastucture. (For example, if a team is trying to solve problems of a residential complex, they might create a database of some of the vehicles appearing in the footage and list them as residents and others not registered in the database to be considered as visitors).
+
+Applicants will be provided video data through the following website link.
+
+http://mixorg.com/competitions/SIH-2020/registration
+Each team is supposed to download the data and annotate it according to the features they are going to build.
+Teams must come up with new features for monetization of their business model and must build machine learning models (for preliminary shortlisting and finals) and required mobile/web applications(for finals only) reflecting the same features .
+Teams are requested to share the annotations done by them on the video data and the pattern of annotation.
+Teams are requested to build the machine learning model and share a working code on github(privately with @chetanbansiwal or publically)
+
+Teams will be judged on the following grounds in the same order as written for the next round :
+1. Accuracy of the model in performing the expected task.
+2. Speed of the model in performing the expected task.
+3. The precision followed during annotation of data.
+4. The relevance of annotations considering the problem the team is expecting to solve with it.
+","
+ 
+","
+
+"
+Great Learning,GL32,Software,Smart Education,Attention Span Detection in Online Instructor Led Sessions,"
+ As per a report by KPMG, it is estimated that by 2021, online education market in India is going to be around $ 2BN. Currently dominating and emerging categories in online education are K12 education, test preparation and professional learning
+Great Learning is a leading Ed-Tech company based out of India which is helping professionals develop career critical competencies in area of Analytics & Data Science, Machine Learning, Artificial Intelligence, Cyber Security, Cloud Computing, Design Thinking, Digital Marketing and many more. Great Learning has academic collaboration with leading Indian and global institutes like Great Lakes institute of management, Purdue University, UT Austin’s McCombs School of Business, Stanford University and so forth to deliver these programs. Since 6 years of its founding, it has impacted careers of 10,000+ working professionals
+Great Learning’s online programs are flipped classroom instructor led programs. In flip classroom format, learners are expected to go through video lectures on a weekly basis and then participate in live online instructor led sessions in a micro group containing up to 10 learners. The agenda of instruction led session is to do a quick debrief of video lectures for the week and discuss practical applications of the concepts covered in the video lecture of the week
+The problem statement is to create a mechanism to monitor and measure the attention span of the learners in the instructor led online sessions.
+Following are a few ideas on the measures that can be used to quantify the level of attention span:
+•         out of the designated session-time, what proportion of session was one-way dialogue vs two-way dialogue
+•         number of distinct learners who participated in the session
+•         presence of background noise, chatters in the session, etc..
+Expected Outcomes
+•         Real time dashboard that quantifies the participation for each participant
+•         Real time triggers in case of sub-optimal participation
+•         Suggestions (along with implementation) of other ideas to quantify level / quality of interactions
+
+Great Learning will be sharing sample recording of the online mentored sessions
+","
+ 
+","
+
+"
+Bajaj Fin Serv,CH46,Software,Healthcare & Biomedical Devices,Gamification for Health data collection,"
+ Insurance has typically been a push product where the customer is usually sold an insurance by the agents. This makes the product marketing/ sales cost too high due to low conversion rates on insurance sales. It can be said that two factors contribute to this:
+1.	Insurance being viewed as an expense rather than a protection 
+2.	The long and non-engaging information capture process which is required to issue the insurance. 
+ 
+At Bajaj, we are looking to solve this problem by providing a mobile app as an engagement tool, which also helps you manage your health better. This app will also act as a source for insurance sales basis the data provided by the consumer. Gamification has emerged as a tool in the financial industry to convert the existing processes (non- engaging) into exciting activities. Some examples of the same can be capturing relevant information through quizzes (on say, world heart day) or health score generators (answer these questions to get your health score/ heart age).
+","
+ 
+","
+
+"
+Bajaj Fin Serv,VA47,Software,Healthcare & Biomedical Devices,Lab Report Digitization / OCR,"
+ Insurance companies regularly gets health check reports submitted by potential buyers of insurance. 
+We need a way to digitize different kinds of printed lab reports / health check reports to discrete values of each parameter captured. Conversion to a standardized set of digitized value will help in automating lot of backend approval process. 
+Ability to read and classify comments/observations for common parameters will be a big plus
+When a customer is uploading his health check report regularly, then also a trend chart can be plotted for key parameters. 
+Few sample reports will be provided to the participating teams. Test will be based on that as well as unknown set of health check reports post completion.
+","
+ 
+","
+
+"
+GE Healthcare,UP49,Software,Healthcare & Biomedical Devices,Early Prediction of Sepsis from Clinical Data,"
+ The goal of this Challenge is the early detection of sepsis using physiological data. For the purpose of the Challenge, defined sepsis according to the Sepsis-3 guidelines, i.e., a two-point change in the patient's Sequential Organ Failure Assessment (SOFA) score and clinical suspicion of infection (as defined by the ordering of blood cultures or IV antibiotics) (Singer et al., 2016).
+The early prediction of sepsis is potentially life-saving, and challenging participants to predict sepsis 6 hours before the clinical prediction of sepsis. Conversely, the late prediction of sepsis is potentially life-threatening, and predicting sepsis in non-sepsis patients (or predicting sepsis very early in sepsis patients) consumes limited hospital resources.
+Develop a digital solution that uses artificial intelligence to detect patient deterioration before it’s too late and trigger notifications to clinicians and care teams. Train healthcare providers and front-line staff to quickly recognize symptoms to identify sepsis and treat patients at the earliest. Also, educate preventing infections in health care settings and in the community so that infections that can lead to sepsis can be stopped before they happen. Provide guidelines to follow infection control requirements (e.g., Hand hygiene) and ensure one to receive recommended vaccines (e.g., Flu and pneumococcal, etc.).
+Abstract
+Sepsis is a life-threatening condition that occurs when the body's response to infection causes tissue damage, organ failure, or death (Singer et al., 2016). In the U.S., nearly 1.7 million people develop sepsis and 270,000 people die from sepsis each year; over one third of people who die in U.S. hospitals have sepsis (CDC). Internationally, an estimated 30 million people develop sepsis and 6 million people die from sepsis each year; an estimated 4.2 million newborns and children are affected (WHO). Sepsis costs U.S. hospitals more than any other health condition at $24 billion (13% of U.S. healthcare expenses) a year, and a majority of these costs are for sepsis patients that were not diagnosed at admission (Paoli et al., 2018). Sepsis costs are even greater globally with the developing world at most risk. Altogether, sepsis is a major public health issue responsible for significant morbidity, mortality, and healthcare expenses.
+Early detection and antibiotic treatment of sepsis are critical for improving sepsis outcomes, where each hour of delayed treatment has been associated with roughly an 4-8% increase in mortality (Kumar et al., 2006; Seymour et al., 2017). To help address this problem, clinicians have proposed new definitions for sepsis (Singer et al., 2016), but the fundamental need to detect and treat sepsis early still remains, and basic questions about the limits of early detection remain unanswered. data set https://physionet.org/content/challenge-2019/1.0.0/
+","
+ 
+","
+                                                                                                                       NA
+                                                                                                                                                                                "
