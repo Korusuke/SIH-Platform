@@ -1,0 +1,57 @@
+.mainbar{
+    position: relative;
+    height: 82px;
+    width: 100%;
+    background-color: #260B2C;
+    color: white;
+}
+
+.filtertext{
+    position: absolute;
+    top: 30.49%;
+    left: 33.49%;
+    width: 4.8%;
+    height: 39.02%;
+    text-align: left;
+    font-size: 24px;
+    font: Regular 24px/32px Roboto;
+    letter-spacing: 0.42px;
+    color: #FFFFFF;
+    opacity: 1;
+}
+
+.beftext{
+    position: absolute;
+    left: 12.62%;
+    top: 20.15%;
+    text-align: left;
+    font-size: 24px;
+    font: Regular 24px/32px Roboto;
+    letter-spacing: 0.42px;
+    color: rgba(255, 255, 255, 0.871);
+    opacity: 1;
+}
+
+.firstlist{
+    position: absolute;
+    left: 39.94%;
+    top: 13.17%;
+    width: 11.46%;
+    height: 33.66%;
+}
+
+.secondlist{
+    position: absolute;
+    left: 42.19%;
+    top: 13.17%;
+    width: 11.46%;
+    height: 33.66%;
+}
+
+.searchbox{
+    position: absolute;
+    left: 47.30%;
+    top: 10.17%;
+    bottom: 10.17%;
+
+}
