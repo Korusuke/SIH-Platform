@@ -11,7 +11,7 @@ export default function Header(){
         },
         image:{
             backgroundSize: 'contain',
-            width: '100%'
+            
         }
 
     }
@@ -31,12 +31,12 @@ export default function Header(){
                     >
                         <Grid item xs={2} sm={1}>
                             <Center style={styles.center}>
-                            <img src="/assets/images/somaiya.png" style={styles.image} />
+                            <img src="/assets/images/somaiya.png" style={styles.image} width="100" />
                             </Center>
                         </Grid>
                         <Grid item xs={2} sm={1}>
                             <Center style={styles.center}>
-                                <img src="/assets/images/sihlogo.png" style={styles.image} />
+                                <img src="/assets/images/sihlogo.png" style={styles.image} width="100"/>
                             </Center>
                         </Grid>
                         <Grid item xs={8} sm={10}>
