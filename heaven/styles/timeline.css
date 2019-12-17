@@ -1,0 +1,7 @@
+.vertical-timeline::before{
+    background: #707070 !important;
+}
+
+.vertical-timeline-element-content-arrow {
+    transform: translateY(50%);
+}
