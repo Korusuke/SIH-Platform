@@ -4,6 +4,35 @@ const otpGenerator = require('otp-generator');
 const router = express.Router(); 
 const User = require('../models/user.model');
 
+const client = redis.createClient();
+client.on('error', (err) => {
+  console.log('Something went wrong ', err);
+});
+
+async function verifyToken(req, res, next) {
+    const token = req.cookies.token;
+    if(!token){
+      res.json({
+        'msg': 'Token not present'
+      });
+    }
+    blacklistedTokens = await client.lrange('blacklistedTokens',0,-1);
+    if(token in blacklistedTokens){
+      res.json({
+        "msg":"Token invalidated, please sign in again",
+      });
+      return;
+    } 
+    jwt.verify(token, privateKey, (err) => {
+      if (err) {
+        res.json({'msg': 'Token expired'});
+      }
+      else{
+        req.token = token;
+        next();
+      }
+    });
+  }
 
 router.post('/login', (req, res) => {
     const Email = req.body.Email;
@@ -99,6 +128,22 @@ router.post('/signup', (req, res) => {
         })
         .catch(err => res.status(400).json('Error: ' + err))
 })
+
+router.post('/logout',verifyToken, (req,res)=>{
+    client.rpush(blacklistedTokens, verifyToken, redis.print, (err, resp)=>{
+      if(err){
+        res.json({
+          'msg': 'Unable to logout',
+          'success': false,
+        });
+        return;
+    }
+    res.json({
+        'msg': 'Successfully logged out',
+        'success': true,
+    })
+    });
+  });
 
 module.exports = router;
 
