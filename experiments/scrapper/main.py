@@ -10,3 +10,4 @@ data = r.text
 soup = bs4.BeautifulSoup(data, 'html.parser')
 table = soup.find_all("tbody")[0]
 rows = table.find_all("tr")
+

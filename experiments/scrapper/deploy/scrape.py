@@ -64,29 +64,58 @@ with csvfile:
     for i in all:
         csvwriter.writerow(i)
 
+from pymongo import MongoClient
+
+# Push to MongoDB
+mongodb_uri = "mongodb://probably:pr0b4bly@ds255857.mlab.com:55857/sih_platform"
+client = MongoClient(mongodb_uri)
+db = client.sih_platform
+col = db.problem_statements
+print(col)
+try:
+    for ps in all:
+        # print(ps[1])
+        data = {
+            "Company": ps[0],
+            "Number": ps[1],
+            "Category": ps[2],
+            "Domain": ps[3],
+            "Title": ps[4],
+            "Description": ps[5],
+            "Youtube": ps[6],
+            "Dataset": ps[7]
+        }
+        # print(col.find({'Number': data['Number']}))
+        if col.find({'Number': data['Number']}).count() == 0:
+            print(ps[1])
+            col.insert(data)
+except Exception as err:
+    print(err)
+
+
 # Update the spreadsheet now
 
 
-scope = ['https://spreadsheets.google.com/feeds',
-         'https://www.googleapis.com/auth/drive']
+# scope = ['https://spreadsheets.google.com/feeds',
+#          'https://www.googleapis.com/auth/drive']
 
-credentials = ServiceAccountCredentials.from_json_keyfile_name(
-    'secrets/auth.json', scope)
+# credentials = ServiceAccountCredentials.from_json_keyfile_name(
+#     'secrets/auth.json', scope)
 
-gc = gspread.authorize(credentials)
+# gc = gspread.authorize(credentials)
 
 
-sht = gc.open_by_url(
-    'https://docs.google.com/spreadsheets/d/1Mh8YwVGhyWVSoszik6zFyyPnHG53b43NIpSGyOShzrI')
+# sht = gc.open_by_url(
+#     'https://docs.google.com/spreadsheets/d/1Mh8YwVGhyWVSoszik6zFyyPnHG53b43NIpSGyOShzrI')
 
-worksheet = sht.get_worksheet(0)
+# worksheet = sht.get_worksheet(0)
 
-cell_list = worksheet.range('A1:H' + str(len(all) + 1))
-flatten_list = [j for sub in all for j in sub]
-for i in range(0,8):
-    cell_list[i].value = head[i]
-for i in range(8, len(cell_list)):
-    cell_list[i].value = flatten_list[i-8]
+# cell_list = worksheet.range('A1:H' + str(len(all) + 1))
+# flatten_list = [j for sub in all for j in sub]
+# for i in range(0,8):
+#     cell_list[i].value = head[i]
+# for i in range(8, len(cell_list)):
+#     cell_list[i].value = flatten_list[i-8]
 
-# Update in batch
-worksheet.update_cells(cell_list)
+# # Update in batch
+# worksheet.update_cells(cell_list)
