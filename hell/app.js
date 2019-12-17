@@ -31,7 +31,7 @@ connection.once('open', () => {
     console.log("MongoDB database connection established successfully");
 })
 
-app.use('/', require('./server/'));
+app.use('/ps/', require('./routes/problemStatement'));
 
 const port = 8080;
 app.listen(port, () => {
