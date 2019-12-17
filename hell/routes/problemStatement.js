@@ -1,5 +1,5 @@
 const express = require('express');
-const ProblemStatement = require('./models/problemStatement.model')
+const ProblemStatement = require('../models/problemStatement.model')
 const router = express.Router();
 
 // const db = require('./dbconnection');
