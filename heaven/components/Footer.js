@@ -2,6 +2,9 @@ import React from 'react';
 import { shadows } from '@material-ui/system'
 import {Grid, Box} from '@material-ui/core'
 import Center from 'react-center'
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
+import { faCoffee , faHeart } from '@fortawesome/free-solid-svg-icons'
+
 export default function Footer(){
     return (
         
@@ -16,7 +19,7 @@ export default function Footer(){
             
             >
              <Center style={{height:'100%'}}>
-                 <span><b>Made by Team Probably</b></span>
+                 <span><b>Made with <FontAwesomeIcon icon={faCoffee} style={{color:'#a05a07'}}/> and <FontAwesomeIcon icon={faHeart} style={{color:'red'}}/>  by Team Probably</b></span>
                  </Center>  
             </Box>
         
