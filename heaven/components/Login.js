@@ -101,7 +101,7 @@ export default class Login extends React.Component{
     render() { 
         return (
             <Container>
-                <Tabs value={value}>
+                <Tabs>
                     <Tab label="Login"/>
                     <Tab label="SignUp"/>
                 </Tabs>
