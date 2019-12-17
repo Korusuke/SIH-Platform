@@ -1,16 +1,33 @@
 const express = require('express');
+const jwt = require('jsonwebtoken');  
 const otpGenerator = require('otp-generator');
-const router = express.Router();
+const router = express.Router(); 
+const User = require('../models/user.model');
+
 
 router.post('/login', (req, res) => {
-    const email = req.body.email;
-    const password = req.body.password;
-    User.find({email, password})
+    const Email = req.body.Email;
+    const Password = req.body.Password;
+    User.find({Email, Password})
         .then(user => {
-            if(user)
-                res.status(200).json({loggedin: true});
-            else 
-                res.status(200).json({loggedin: false});       
+            if(!user){
+                res.status(200).json({loggedin: false});
+                return;
+            }
+            console.log(Email);
+            jwt.sign({Email}, process.env.KEY, { expiresIn: "30d" }, (er, token) => {
+                if (er) {
+                  console.log(er);
+                  res.send(500);
+                  return;
+                }
+                res.json({
+                    loggedin: false,
+                    msg: 'Passwords match',
+                    token,
+                });
+              });
+            
         })
         .catch(err => res.status(400).json('Error: ' + err));
 });
