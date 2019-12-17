@@ -12,6 +12,13 @@ async function verifyToken(req, res, next) {
       'msg': 'Token not present'
     });
   }
+  blacklistedTokens = await client.lrange('blacklistedTokens',0,-1);
+  if(token in blacklistedTokens){
+    res.json({
+      "msg":"Token invalidated, please sign in again",
+    });
+    return;
+  } 
   jwt.verify(token, privateKey, (err) => {
     if (err) {
       res.json({'msg': 'Token expired'});
