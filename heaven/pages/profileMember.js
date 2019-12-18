@@ -8,7 +8,7 @@ import Bottomcardteam from '../components/bottomcardteam';
 import Bottomcardjoin from '../components/bottomcardjoin';
 import Bottomcardfirst from '../components/bottomcardfirst';
 import Bottomcardconf from '../components/bottomcardconf';
-
+import BottomCardMerge from '../components/BottomCardMerge'
 import {Container, Paper} from '@material-ui/core' 
 
 import '../styles/index.css'
@@ -22,11 +22,10 @@ export default function ProfileMember(){
             padding: '40px'
         }}>
         < Profile />
-        </Paper>
-        <Bottomcardteam />
-            <Bottomcardjoin />
-            <Bottomcardfirst />
-            <Bottomcardconf />
+        
+        </Paper >
+        <br/>
+            <BottomCardMerge />
         </Container>
         </div>
     );
