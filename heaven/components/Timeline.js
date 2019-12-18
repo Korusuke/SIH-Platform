@@ -11,19 +11,23 @@ import { borderTop } from '@material-ui/system';
 
 const timeline = [
   {
+    "key":0,
   "title":"Initial Notification",
   "date":"16th December"
   },
 {
+  "key":1,
   "title":"Meeting and registration",
   "date":"7th January"
 
   },
   {
+    "key":2,
     "title":"Team/Mentor formation",
     "date":"9th January"
   },
   {
+    "key":3,
     "title":"Internal Hackathon",
     "date":"15th January"
   }

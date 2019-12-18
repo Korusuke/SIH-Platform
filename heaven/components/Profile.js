@@ -73,7 +73,7 @@ export default class Profile extends React.Component{
         <Grid style={{padding:"1% 1% 1% 1%"}} item xs ={12} sm ={3}>
         <Avatar style={{width:"15vw", height:"15vw", position:"relative", left: "50%", top:'50%', transform:'translate(-50%, -50%'}} alt="Remy Sharp" src="https://hack.kjscecodecell.com/assets/team/compressed/Karan.png"  />
         </Grid>
-        <Grid style={{paddingTop:"2%"}}container spacing={3} xs={12} sm={9} >
+        <Grid style={{paddingTop:"2%"}}container item spacing={3} xs={12} sm={9} >
           <Grid item xs={12} sm={4}>
           <TextField style ={{width:"100%"}}
           required
@@ -122,7 +122,7 @@ export default class Profile extends React.Component{
                name="phonenumber"
                label="Phone Number"
                defaultValue="+91 "
-               fullwidth
+               fullwidth="true"
                variant = "outlined"
                onChange={this.handleChange}
             />
