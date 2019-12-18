@@ -1,0 +1,92 @@
+.fullsc{
+    width: 100vh;
+    height: 100vh;
+}
+body {
+    padding: 0;
+    margin: 0;
+}
+.maincard{
+    position: relative;
+    width: 100%;
+    height: min-content;
+    background: #FFFFFF 0% 0% no-repeat padding-box;
+    box-shadow: 0px 3px 6px #00000029;
+    opacity: 1
+}
+
+.inputConf{
+    position: absolute;
+    left: 26.3%;
+    top: 55.46%;
+}
+
+.exitbut{
+    color: red;
+}
+
+.member{
+    position: absolute;
+    left: 25.33%;
+    top: 7.52%;
+    width: 72.66%;
+    height: 13.86%;
+    background: #FFFFFF 0% 0% no-repeat padding-box;
+    box-shadow: 0px 3px 6px #00000029;
+    opacity: 1;
+}
+
+.namemember{
+    position: absolute;
+    top: 25.71%;
+    left: 2.11%;
+    width: 14.5%;
+    text-align: left;
+    font: Regular 26px/34px Roboto;
+    letter-spacing: 0;
+    color: #707070;
+    opacity: 1;
+}
+
+.emailmember{
+    padding-left: 5%;
+    overflow: hidden;
+    font: Regular 26px/34px Roboto;
+    letter-spacing: 0;
+    color: #707070;
+    opacity: 1;
+}
+
+.leadermember{
+    position: absolute;
+    top: 14.23%;
+    left: 83.58%;
+    height: 71.42%;
+    width: 15.04%; 
+    opacity: 1;
+    text-align: center;
+}
+
+.titlelem{
+    text-decoration: underline;
+}
+
+.rightags{
+    position:relative;
+    align-content: flex-end;
+}
+
+.leaderbtn{
+    position: absolute;
+    right:10%;
+}
+
+
+
+.maindiv{
+    height: 100vh;
+}
+
+body{
+    height: 100vh;
+}
