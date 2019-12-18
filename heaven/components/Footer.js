@@ -7,21 +7,22 @@ import { faCoffee , faHeart } from '@fortawesome/free-solid-svg-icons'
 
 export default function Footer(){
     return (
-        
+
             <Box boxShadow={3} style={{
-               position:'absolute',
+               position:'relative',
                bottom:0,
                width: '100%',
                height:'45px',
                background:'white',
-               boxSizing:'border-box'
+            boxSizing: 'border-box',
+               marginTop: '10vh'
             }}
-            
+
             >
              <Center style={{height:'100%'}}>
                  <span><b>Made with <FontAwesomeIcon icon={faCoffee} style={{color:'#a05a07'}}/> and <FontAwesomeIcon icon={faHeart} style={{color:'red'}}/>  by Team Probably</b></span>
-                 </Center>  
+                 </Center>
             </Box>
-        
+
     )
 }
