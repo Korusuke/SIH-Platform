@@ -1,14 +1,7 @@
-import React from 'react';
-import Grid from '@material-ui/core/Grid';
+import React, { Component } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-import InputLabel from '@material-ui/core/InputLabel';
-import Avatar from '@material-ui/core/Avatar';
+import { Button, Typography, TextField, FormControl, Grid, Select, Avatar, InputLabel, MenuItem } from '@material-ui/core';
+
 
 
 
@@ -28,7 +21,6 @@ const useStyles = makeStyles(theme => ({
       height: theme.spacing(7),
     },
   }));
-  
 
 
 export default class Profile extends React.Component{
@@ -215,11 +207,13 @@ export default class Profile extends React.Component{
               variant = "outlined"
               onChange={this.handleChange}
             />
+              </Grid>
+              <Grid item xs={6} sm={2}>
+              <Button onClick={this.update}>Update</Button>
+              </Grid>
+            </Grid>
           </Grid>
-        </Grid>
-    </Grid>
-      </React.Fragment>
-    );
-}
-
+          </React.Fragment>
+        );
+    }
 }
