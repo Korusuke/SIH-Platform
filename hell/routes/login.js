@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const otpGenerator = require('otp-generator');
 const router = express.Router(); 
 const User = require('../models/user.model');
+const redis = require('redis');
 
 const client = redis.createClient();
 client.on('error', (err) => {
