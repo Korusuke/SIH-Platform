@@ -5,6 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Login from '../components/Login'
 import Timeline from '../components/Timeline';
 import { Grid , Paper,  Box, Container} from '@material-ui/core';
+import { noAuto } from '@fortawesome/fontawesome-svg-core';
 
 const useStyles = makeStyles(theme => ({
     container: {
@@ -28,21 +29,22 @@ const useStyles = makeStyles(theme => ({
 export default function IndexContent()
 {
     return(
-        <Container maxWidth="xl" style={{paddingTop:'100px'}}>
-        <Grid 
+        <Container maxWidth="xl" style={{paddingTop:'5%'}}>
+        <Grid
             container
             direction="row"
             spacing={3}
         >
-            <Grid item md={6} xs={12} style={{padding:'10px'}}>
-                <Box boxShadow={3} style={{background:'white'}}>
-                    <Timeline />
-                </Box>
-            </Grid>
-            <Grid item md={6} xs={12}>
+          <Grid item md={8} xs={12} style={{ padding: '10px' }}>
+            <Paper>
+              <div style={{ width: '100%', margin:'auto' }}>
+                <Timeline />
+              </div>
+            </Paper>
+          </Grid>
+          <Grid item md={4} xs={12} style={{ padding: '10px' }}>
                 <Login />
-            </Grid>
-
+          </Grid>
         </Grid>
         </Container>
     )

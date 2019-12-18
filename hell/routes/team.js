@@ -34,9 +34,9 @@ async function verifyToken(req, res, next) {
   });
 }
 
-router.post('/create', verifyToken, (req, res)=>{
-  const { teamName } = req.body;
-  Team.findOne({'teamName': teamName}, (err, result)=>{
+router.post('/create', (req, res)=>{
+  const { TeamName, Leader } = req.body;
+  Team.findOne({'TeamName': TeamName}, (err, result)=>{
     if(err){
       console.log(err);
       res.send(500);
@@ -46,11 +46,12 @@ router.post('/create', verifyToken, (req, res)=>{
       res.send('Team name already taken');
       return;
     }
-    const decodedData = jwt.decode(req.token);
-    const Leader =decodedData.Email;
-    let members = [leader];
-    inviteCode = otpGenerator.generate(6, { specialChars: false });
-    teamId = uuid(); 
+    // Use with middleware
+    // const decodedData = jwt.decode(req.token);
+    // const Leader =decodedData.Email;
+    let Members = [Leader];
+    InviteCode = otpGenerator.generate(6, { specialChars: false });
+    TeamId = uuid(); 
     const doc = {
       teamName,
       leader,
