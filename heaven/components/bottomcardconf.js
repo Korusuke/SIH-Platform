@@ -9,7 +9,26 @@ import Card from '@material-ui/core/Card';
 import ReactDOM from 'react-dom';
 
 class App extends Component {
+
+  constructor(props)
+  {
+    super()
+    this.props = props
+    this.state = {
+
+    }
+  }
+
   render() {
+    let arr = []
+    this.props.team.Members.forEach(e=>{
+      
+      arr.push(
+        <Grid item xs={10}>
+            <div style={{minHeight:'50px', borderBottom:'1px solid black'}} ><span className="emailmember">{e}</span><span className="rightags"></span></div>
+        </Grid>
+      )
+    })
     return (
       <div className="maindiv">
       <Center style={{height:"100%"}}>
@@ -45,7 +64,7 @@ class App extends Component {
           <TextField
           id="outlined-read-only-input"
           label="Team Name"
-          defaultValue="Team Probably"
+          defaultValue={this.props.team.TeamName}
           InputProps={{
             readOnly: true,
           }}
@@ -57,7 +76,7 @@ class App extends Component {
           <TextField
           id="outlined-read-only-input"
           label="Team Code"
-          defaultValue="ABC4D2H"
+          defaultValue={this.props.team.InviteCode}
           InputProps={{
             readOnly: true,
           }}
@@ -79,27 +98,7 @@ class App extends Component {
         <Grid container 
         direction="column"
         spacing={3}>
-          <Grid item xs={10}>
-            <Card style={{height:"150%"}} >Akshay Padte<span className="emailmember">akshay.padte@somaiya.edu</span><span className="rightags"></span></Card>
-          </Grid>
-          <Grid item xs={10}>
-            <Paper width="100%" >Akshay Padte<span className="emailmember">akshay.padte@somaiya.edu</span></Paper>
-          </Grid>
-          <Grid item xs={10}>
-            <Paper style={{height:"130%"}}>Akshay Padte<span className="emailmember">akshay.padte@somaiya.edu</span></Paper>
-          </Grid>
-          <Grid item xs={10}>
-            <Paper style={{height:"130%"}}>Akshay Padte<span className="emailmember">akshay.padte@somaiya.edu</span></Paper>
-          </Grid>
-          <Grid item xs={10}>
-            <Paper style={{height:"130%"}}>Akshay Padte<span className="emailmember">akshay.padte@somaiya.edu</span></Paper>
-          </Grid>
-          <Grid item xs={10}>
-            <Paper style={{height:"130%"}}>Akshay Padte<span className="emailmember">akshay.padte@somaiya.edu</span></Paper>
-          </Grid>
-          <Grid item xs={10}>
-            <Paper style={{height:"130%"}}>Akshay Padte<span className="emailmember">akshay.padte@somaiya.edu</span></Paper>
-          </Grid>
+          {arr}
         </Grid>
         </Grid>
         
