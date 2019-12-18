@@ -35,7 +35,7 @@ connection.once('open', () => {
 app.use('/ps/', require('./routes/problemStatement'));
 app.use('/team/invite', require('./routes/invitation'));
 app.use('/team', require('./routes/team'));
-app.use('/lg', require('./routes/login'));
+app.use('/', require('./routes/login'));
 
 const port = 8080;
 app.listen(port, () => {
