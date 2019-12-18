@@ -34,6 +34,7 @@
     "react-otp-input": "^1.0.1",
     "react-vertical-timeline-component": "^2.5.0",
     "styled-components": "^4.4.1",
-    "typeface-roboto": "0.0.75"
+    "typeface-roboto": "0.0.75",
+    "universal-cookie": "^4.0.2"
   }
 }
