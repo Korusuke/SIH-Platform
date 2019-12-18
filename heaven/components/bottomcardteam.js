@@ -2,11 +2,8 @@ import React, { Component } from 'react';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import '../styles/bottomcard.css';
-import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Center from 'react-center';
-import ReactDOM from 'react-dom';
-
 
 
 class App extends Component {
@@ -60,7 +57,7 @@ handleChange(event)
         onChange = {this.handleChange} />
         </Grid>
         <Grid item xs={12} align="center">
-        <Button style={{width:"100%"}} variant="contained" color="primary">Confirm</Button>
+        <Button style={{width:"100%"}} variant="contained" color="primary" onClick={()=>{this.props.changeParentState(2)}}>Confirm</Button>
         </Grid>
       </Grid>
       </Center>
