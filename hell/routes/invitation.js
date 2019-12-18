@@ -3,11 +3,38 @@ const router = express.Router();
 const nodemailer = require('nodemailer');
 var otpGenerator = require('otp-generator');    
 
-router.post('/', (req,res)=>{
+async function verifyToken(req, res, next) {
+  const token = req.cookies.token;
+  if(!token){
+    res.json({
+      'msg': 'Token not present'
+    });
+  }
+  blacklistedTokens = await client.lrange('blacklistedTokens',0,-1);
+  if(token in blacklistedTokens){
+    res.json({
+      "msg":"Token invalidated, please sign in again",
+    });
+    return;
+  } 
+  jwt.verify(token, privateKey, (err) => {
+    if (err) {
+      res.json({'msg': 'Token expired'});
+    }
+    else{
+      req.token = token;
+      next();
+    }
+  });
+}
+
+router.post('/', verifyToken, (req,res)=>{
   const emailId = process.env.EMAIL;
   const password = process.env.PASSWORD; 
   var member = req.body.email;
-  var {sender} = req.body;
+  const decodedData = jwt.decode(req.token);
+  let sender = decodedData.Email.slice(-11);
+  sender = sender.replace(".", " ");
   var transporter = nodemailer.createTransport({
   service: "gmail",
   auth:{
