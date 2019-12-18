@@ -25,20 +25,15 @@ export default function Header(){
                 }
             } >
                 <Toolbar>
-                    <div style={
-                        {position: 'absolute',
-                        width:'100%',
-                        height: '100%'
-                    }
-                    }>
+                    {/* <div
+                    >
                     <Center>
                         <h1>Internal Hackathon</h1>
                     </Center>
-                    </div>
+                    </div> */}
                     <Grid 
                     container 
                     direction="row"
-                    spacing={1}
                     >
                         <Grid item sm={1}>
                             <Center style={styles.center}>
