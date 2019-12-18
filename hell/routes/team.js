@@ -2,10 +2,13 @@ const express = require('express');
 const router = express.Router();
 var otpGenerator = require('otp-generator');    
 const { uuid } = require('uuidv4');
-const Team = require('../models/team.model');
+const team = require('../models/team.model');
 const User = require('../models/user.model');
-const redis = require('redis');
-const jwt = require('jsonwebtoken');  
+const redis = require('redis')
+const jwt = require('jsonwebtoken');
+
+
+const privateKey = process.env.KEY;
 
 const client = redis.createClient();
 client.on('error', (err) => {
@@ -26,7 +29,7 @@ async function verifyToken(req, res, next) {
       "msg":"Token invalidated, please sign in again",
     });
     return;
-  } 
+  }
   jwt.verify(token, privateKey, (err) => {
     if (err) {
       res.json({'msg': 'Token expired'});
@@ -63,11 +66,11 @@ router.post('/create', (req, res)=>{
     InviteCode = otpGenerator.generate(6, { specialChars: false });
     TeamId = uuid(); 
     const doc = {
-      TeamName,
-      Leader,
-      Members,
-      InviteCode,
-      TeamId
+      teamName,
+      leader,
+      members,
+      inviteCode,
+      teamId
     };
     const team1 = new Team(doc);
     team1.save((err, result)=>{
@@ -108,7 +111,7 @@ router.post('/join', (req, res)=>{
       return;
     }
     console.log(result);
-    result.Members.push(user);
+    result.members.push(user);
     result.save();
     res.json({
       status: 'success',
