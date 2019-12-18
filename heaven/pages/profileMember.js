@@ -25,7 +25,7 @@ export default function ProfileMember(){
         
         </Paper >
         <br/>
-            <BottomCardMerge />
+            <BottomCardMerge url="http://localhost:8080"/>
         </Container>
         </div>
     );

@@ -4,6 +4,13 @@ var otpGenerator = require('otp-generator');
 const { uuid } = require('uuidv4');
 const Team = require('../models/team.model');
 const User = require('../models/user.model');
+const redis = require('redis');
+const jwt = require('jsonwebtoken');  
+
+const client = redis.createClient();
+client.on('error', (err) => {
+  console.log('Something went wrong ', err);
+});
 
 async function verifyToken(req, res, next) {
   const token = req.cookies.token;
@@ -13,6 +20,7 @@ async function verifyToken(req, res, next) {
     });
   }
   blacklistedTokens = await client.lrange('blacklistedTokens',0,-1);
+  console.log('Blacklist: ', blacklistedTokens)
   if(token in blacklistedTokens){
     res.json({
       "msg":"Token invalidated, please sign in again",
@@ -31,7 +39,7 @@ async function verifyToken(req, res, next) {
 }
 
 router.post('/create', (req, res)=>{
-  const { TeamName, Leader } = req.body;
+  const { TeamName /*,Leader*/ } = req.body;
   Team.findOne({'TeamName': TeamName}, (err, result)=>{
     if(err){
       console.log(err);
@@ -39,12 +47,18 @@ router.post('/create', (req, res)=>{
       return;
     }
     if(result){
-      res.send('Team name already taken');
+      res.json(
+        {
+          'status': 'error',
+          'msg': 'Team Name Already Taken',
+        }
+      );
       return;
     }
     // Use with middleware
-    // const decodedData = jwt.decode(req.token);
-    // const Leader =decodedData.Email;
+    const decodedData = jwt.decode(req.cookies.token, {complete: true});
+    console.log('Decode: %s',decodedData)
+    const Leader =decodedData.payload.Email;
     let Members = [Leader];
     InviteCode = otpGenerator.generate(6, { specialChars: false });
     TeamId = uuid(); 
@@ -62,30 +76,44 @@ router.post('/create', (req, res)=>{
       }
       console.log("Saved", result);
       res.json({
-        'msg': 'Saved document succesfully'
+        'status': 'success',
+        'msg': 'Team Created Successfully',
+        'InviteCode':InviteCode,
+        team: team1
       });
     });
   });
 });
 
-router.post('/join', verifyToken, (req, res)=>{
+router.post('/join', (req, res)=>{
   const { InviteCode } = req.body;
-  const decodedData = jwt.decode(req.token);
-  const user = decodedData.Email;
+  const decodedData = jwt.decode(req.cookies.token, {complete: true});
+  console.log('Decode: %s',decodedData)
+  const user = decodedData.payload.Email;
+  console.log(decodedData)
+  console.log(InviteCode)
+  console.log(req.body)
   Team.findOne({'InviteCode': InviteCode}, (err, result)=>{
     if(err){
       res.send(500);
       return;
     }
     if(!result){
-      res.send('Check your invite code again');
+      res.json(
+        {
+          status: 'error',
+          msg: 'Check your Invite Code again :/'
+        }
+      );
       return;
     }
     console.log(result);
     result.Members.push(user);
     result.save();
     res.json({
-      msg:'Hello there'
+      status: 'success',
+      msg:'Joined Successfully',
+      team: result
     });
     User.findOne({'email': user}, (err, result)=>{
       if(err){
@@ -94,6 +122,36 @@ router.post('/join', verifyToken, (req, res)=>{
       }
       console.log(result);
     });
+  });
+});
+
+router.post('/currentTeam', (req, res)=>{
+  const { InviteCode } = req.body;
+  const decodedData = jwt.decode(req.cookies.token, {complete: true});
+  const user = decodedData.payload.Email;
+  
+  Team.findOne({"Members" : {"$in" : [user]}}, (err, result)=>{
+    if(err){
+      res.send(500);
+      return;
+    }
+    if(!result){
+      res.json(
+        {
+          status: 'success',
+          state: 0
+        }
+      );
+      return;
+    }
+    console.log(result);
+    
+    res.json({
+      status: 'success',
+      state: 3,
+      team:result
+    });
+    
   });
 });
 
