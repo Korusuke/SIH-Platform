@@ -4,22 +4,17 @@
 
 .maincard{
   width: 100%;
-  height: 236px;
+  min-height: 250px;
+  padding: 20px;
   background: rgb(255, 255, 255) 0% 0% no-repeat padding-box;
   box-shadow: 0px 3px 6px #00000029;
   opacity: 1;
   position: relative;
+
 }
 
 .cardtitle{
-  position: absolute;
-  left: 16.28%;
-  top: 8.05%;
-  width: 27.6%;
-  height: 19.92%;
-  background: rgb(255, 255, 255);
-  text-align: left;
-  font-size: 32px;
+  
   font-family: Roboto;
   letter-spacing: 0.3px;
   color: #000000;
@@ -27,85 +22,75 @@
 }
 
 .cardorg{
-  position: absolute;
-  top: 5.20%;
-  right: 1.55%;
-  width: 25.43%;
-  height: 10.42%;
+
   font-size: 16px;
   text-align: right;
-  background: rgb(255, 255, 255);
   font-family: Roboto;
   letter-spacing: 0.15px;
   color: #000000;
   opacity: 1;
+  text-align: right;
 }
 
 .cardlogosmall{
-  position: absolute;
-  top: 15.23%;
-  right: 1.55%;
-  width: 3.49%;
-  height: 7.63%;
-  color: #E4633D;
+
   opacity: 1;
+  text-align: right;
 }
 
 #test {
-  position: absolute;
-  top: 4.24%;
-  left: 1.55%;
-  width: 10%;
-  height: 27.54%;
+
+  position: relative;
+  
+ 
   border: 1px solid;
   border-radius: 50%;
+  overflow: hidden;
+
+  width: 70px;
+  height: 70px;
+  
+}
+
+#test img{
+ 
+  width: 70px;
+  height: 70px;
+  
+  
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .cardlogo{
-  position: absolute;
-  top: 14.21%;
-  right: 14.21%;
-  width: 72%;
-  height: 72%;
+
   background: #ffffff 0% 0% no-repeat padding-box;
   opacity: 1;
 }
 
 .cardcode{
-  position: absolute;
-  top: 27.97%;
-  right: 1.55%;
-  width: 8.53%;
-  height: 8.47%;
+
   text-align: right;
   font-size: 16px;
   font-family:Roboto;
-  letter-spacing: 0.15px;
   color: #000000;
   opacity: 1;
 }
 
 .cardline{
-  position: absolute;
-  right: 1.52%;
-  left: 1.52%;
-  top: 37.92%;
-  width: 96.6%;
-  height: 0px;
-  border: 1px solid #707070;
+  
+  width: 100%;
+  border: 2px solid #707070;
   box-shadow: 0px 0px 4px 0px #bbbbbb;
   opacity: 1;
 }
 
 .carddata{
-  position: absolute;
-  width: 93.95%;
-  height: 54.66%;
-  top: 42.37%;
-  right: 2.95%;
+  padding: 5px;
   text-align: left;
   font-family: Roboto;
-  letter-spacing: 0.19px;
   color: #000000;
   opacity: 1;
 }
