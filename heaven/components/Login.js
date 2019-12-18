@@ -11,6 +11,8 @@ import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 import Center from 'react-center';
 import axios from 'axios';
 import Snackbar from './snackbar';
+import Cookies from 'universal-cookie';
+import { useRouter, Router } from 'next/router'
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -51,7 +53,7 @@ const customTheme = createMuiTheme({
 });
 
 const divStyle = {
-    width: '540px',
+    width: '100%',
 };
 
 const customInputTheme = createMuiTheme({
@@ -89,9 +91,12 @@ export default class LoginBox extends React.Component{
         },
         loginSubmitted: false,
         signupSubmitted: false,
-        verifyOTP: false
+        verifyOTP: false,
+        snack: false,
 
     };
+
+    snackcontent = ''
 
     handleChange = (event, value) => {
         this.setState({ value });
@@ -117,38 +122,83 @@ export default class LoginBox extends React.Component{
 
     handleSignUpSubmit = () => {
         const { SignUpData } = this.state.signup;
-        this.setState({ signupSubmitted: true }, () => {
-            axios.post('http://295d5620.ngrok.io/signup', SignUpData).then(
-                res => console.log(res.data)
-            );
-            setTimeout(() => this.setState({ submitted: false }), 5000);
-        });
+
+        axios.post('http://876c5fcc.ngrok.io/signup', SignUpData).then(
+            res => {
+                console.log(res)
+                if (res.status == 200) {
+                    if (res.data.status === 'success') {
+                        this.setState({ signupSubmitted: true });
+                    }
+                    this.snackcontent = <Snackbar type={res.data.status} msg={res.data.msg} />;
+                    this.setState({ snack: true });
+                    setTimeout(() => {
+                        this.setState({ snack: false });
+                    }, 3000);
+                } else {
+                    this.snackcontent = <Snackbar type='error' msg='Uh ho! Error Occured' />;
+                    this.setState({ snack: true });
+                    setTimeout(() => {
+                        this.setState({ snack: false });
+                    }, 3000);
+                }
+            }
+        );
+
+
     }
 
     handleLoginSubmit = () => {
         const { loginData } = this.state.login;
-        axios.post('http://295d5620.ngrok.io/login', loginData).then(
+        axios.post('http://876c5fcc.ngrok.io/login', loginData).then(
             res => {
-                if (res.json.value === 'false') {
-                    <Snackbar type='error' msg={res.json.msg} />
-                } else {
-                    console.log('Logged In');
-                    //Page Redirect
+                console.log(res.data)
+                if (res.status == 200) {
+                    if (res.data.status === 'success') {
+                        this.setState({ verifyOTP: true });
+                        const cookies = new Cookies();
+                        cookies.set('token', res.data.token, { path: '/' });
+                        console.log(cookies.get('token')); // Pacman
+                        const router = useRouter();
+                        router.push('/problems');
+
                     }
+                    this.snackcontent = <Snackbar type={res.data.status} msg={res.data.msg} />;
+                    this.setState({ snack: true });
+                    setTimeout(() => {
+                        this.setState({ snack: false });
+                    }, 3000);
+                } else {
+                    <Snackbar type='error' msg='Error occured: Please try again later' />
                 }
+            }
         );
             // <Snackbar type='success' msg='{status.msg}' />
     }
 
     handleOTPVerify = () => {
         const { SignUpData } = this.state.signup;
-        axios.post('http://295d5620.ngrok.io/verify', SignUpData).then(
-                res => console.log(res.data)
-        ).then(
+        axios.post('http://876c5fcc.ngrok.io/verify', SignUpData).then(
             res => {
-                if (res.json.verified === 'true') {
-                    this.setState({ verifyOTP: 'true' });
-                }//else give toast and maybe send a new otp?
+                console.log(res.data)
+                if (res.status == 200) {
+                    if (res.data.status === 'success') {
+                        this.setState({ verifyOTP: true });
+                        const cookies = new Cookies();
+                        cookies.set('token', res.data.token, { path: '/' });
+                        console.log(cookies.get('token')); // Pacman
+                        const router = useRouter();
+                        router.push('/problems');
+
+                    }
+                    this.snackcontent = <Snackbar type={res.data.status} msg={res.data.msg} />;
+                    this.setState({ snack: true });
+                    setTimeout(() => {
+                        this.setState({ snack: false });
+                    }, 3000);
+                } else {
+                    <Snackbar type='error' msg='Error occured: Please try again later' />
+                }
             }
         )
 
@@ -179,6 +229,12 @@ export default class LoginBox extends React.Component{
         });
     }
 
+    componentWillMount() {
+        const cookies = new Cookies();
+        if (cookies.get('token')) {
+            location.href = '/problems';
+        }
+    }
     render() {
         const { loginData } = this.state.login;
         const { SignUpData } = this.state.signup;
@@ -189,37 +245,37 @@ export default class LoginBox extends React.Component{
         if (signupSubmitted) {
             signupPanel =
                 <MuiThemeProvider theme={customInputTheme}>
-                <ValidatorForm
-                    ref="form"
-                    onSubmit={this.handleOTPVerify}
-                    onError={errors => console.log(errors)}
-                    style={{ width: '100%' }}
-                >
-                    <Center>
-                        <TextValidator
-                            id="OTP"
-                            label="OTP"
-                            onChange={this.handleOTP}
-                            name="email"
-                            value={SignUpData.otp}
-                            variant="outlined"
-                            required />
-                    </Center>
-                    <br />
-                    <Center>
-                        <Button
-                            color="secondary"
-                            variant="contained"
-                            type="submit"
-                            disabled={verifyOTP}
-                        >
-                            {
-                                (verifyOTP && 'Verifying OTP')
-                                || (!verifyOTP && 'Verify')
-                            }
-                        </Button>
-                    </Center>
-                </ValidatorForm>
+                    <ValidatorForm
+                        ref="form"
+                        onSubmit={this.handleOTPVerify}
+                        onError={errors => console.log(errors)}
+                        style={{ width: '100%' }}
+                    >
+                        <Center>
+                            <TextValidator
+                                id="OTP"
+                                label="OTP"
+                                onChange={this.handleOTP}
+                                name="otp"
+                                value={SignUpData.otp}
+                                variant="outlined"
+                                required />
+                        </Center>
+                        <br />
+                        <Center>
+                            <Button
+                                color="secondary"
+                                variant="contained"
+                                type="submit"
+                                disabled={verifyOTP}
+                            >
+                                {
+                                    (verifyOTP && 'Verifying OTP')
+                                    || (!verifyOTP && 'Verify')
+                                }
+                            </Button>
+                        </Center>
+                    </ValidatorForm>
                 </MuiThemeProvider>
         } else {
             signupPanel = <MuiThemeProvider theme={customInputTheme}>
@@ -293,10 +349,9 @@ export default class LoginBox extends React.Component{
             </MuiThemeProvider>
         }
 
-
-
         return (
             <MuiThemeProvider theme={customTheme}>
+                {this.state.snack ? this.snackcontent : null}
                 <Paper style={divStyle}>
                     <AppBar position="static">
                         <Tabs value={this.state.value} onChange={this.handleChange} aria-label="simple tabs example">

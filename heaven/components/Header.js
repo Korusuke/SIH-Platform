@@ -11,7 +11,7 @@ export default function Header(){
         },
         image:{
             backgroundSize: 'contain',
-            
+
         }
 
     }
@@ -25,14 +25,8 @@ export default function Header(){
                 }
             } >
                 <Toolbar>
-                    {/* <div
-                    >
-                    <Center>
-                        <h1>Internal Hackathon</h1>
-                    </Center>
-                    </div> */}
-                    <Grid 
-                    container 
+                    <Grid
+                    container
                     direction="row"
                     >
                         <Grid item sm={1}>
@@ -45,11 +39,13 @@ export default function Header(){
                                 <img src="/assets/images/sihlogo.png" style={styles.image} width="100"/>
                             </Center>
                         </Grid>
-                        
-                        
-                            
+                        <Grid item sm={8}>
+                            <Center>
+                                <h1>Internal Hackathon</h1>
+                            </Center>
+                        </Grid>
                     </Grid>
-                
+
                 </Toolbar>
             </AppBar>
         </div>
