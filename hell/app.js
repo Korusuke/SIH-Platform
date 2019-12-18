@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const cookieParser = require('cookie-parser');
 
 require('dotenv').config();
 
@@ -14,14 +15,14 @@ app.use((req, res, next) => {
 });
 
 // Middleware functions
-// app.use(cookieParser());
+app.use(cookieParser());
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
   extended: true,
 }));
 
-const uri = "process.env.MONGODB_URI";
+const uri = process.env.MONGODB_URI;
 mongoose.connect(uri, {
     useNewUrlParser: true,
     useCreateIndex: true
@@ -31,7 +32,10 @@ connection.once('open', () => {
     console.log("MongoDB database connection established successfully");
 })
 
-app.use('/', require('./server/'));
+app.use('/ps/', require('./routes/problemStatement'));
+app.use('/team/invite', require('./routes/invitation'));
+app.use('/team', require('./routes/team'));
+app.use('/lg', require('./routes/login'));
 
 const port = 8080;
 app.listen(port, () => {
