@@ -2,8 +2,18 @@ const express = require('express');
 const router = express.Router();
 var otpGenerator = require('otp-generator');    
 const { uuid } = require('uuidv4');
-const Team = require('../models/team.model');
+const team = require('../models/team.model');
 const User = require('../models/user.model');
+const redis = require('redis')
+const jwt = require('jsonwebtoken');
+
+
+const privateKey = process.env.KEY;
+
+const client = redis.createClient();
+client.on('error', (err) => {
+  console.log('Something went wrong ', err);
+});
 
 async function verifyToken(req, res, next) {
   const token = req.cookies.token;
@@ -11,14 +21,8 @@ async function verifyToken(req, res, next) {
     res.json({
       'msg': 'Token not present'
     });
-  }
-  blacklistedTokens = await client.lrange('blacklistedTokens',0,-1);
-  if(token in blacklistedTokens){
-    res.json({
-      "msg":"Token invalidated, please sign in again",
-    });
     return;
-  } 
+  }
   jwt.verify(token, privateKey, (err) => {
     if (err) {
       res.json({'msg': 'Token expired'});
@@ -31,8 +35,8 @@ async function verifyToken(req, res, next) {
 }
 
 router.post('/create', verifyToken, (req, res)=>{
-  const { TeamName } = req.body;
-  Team.findOne({'TeamName': TeamName}, (err, result)=>{
+  const { teamName } = req.body;
+  Team.findOne({'teamName': teamName}, (err, result)=>{
     if(err){
       console.log(err);
       res.send(500);
@@ -44,15 +48,15 @@ router.post('/create', verifyToken, (req, res)=>{
     }
     const decodedData = jwt.decode(req.token);
     const Leader =decodedData.Email;
-    let Members = [Leader];
-    InviteCode = otpGenerator.generate(6, { specialChars: false });
-    TeamId = uuid(); 
+    let members = [leader];
+    inviteCode = otpGenerator.generate(6, { specialChars: false });
+    teamId = uuid(); 
     const doc = {
-      TeamName,
-      Leader,
-      Members,
-      InviteCode,
-      TeamId
+      teamName,
+      leader,
+      members,
+      inviteCode,
+      teamId
     };
     const team1 = new Team(doc);
     team1.save((err, result)=>{
@@ -68,10 +72,10 @@ router.post('/create', verifyToken, (req, res)=>{
 });
 
 router.post('/join', verifyToken, (req, res)=>{
-  const { InviteCode } = req.body;
+  const { inviteCode } = req.body;
   const decodedData = jwt.decode(req.token);
-  const user = decodedData.Email;
-  Team.findOne({'InviteCode': InviteCode}, (err, result)=>{
+  const user = decodedData.email;
+  team.findOne({'InviteCode': InviteCode}, (err, result)=>{
     if(err){
       res.send(500);
       return;
@@ -81,7 +85,7 @@ router.post('/join', verifyToken, (req, res)=>{
       return;
     }
     console.log(result);
-    result.Members.push(user);
+    result.members.push(user);
     result.save();
     res.json({
       msg:'Hello there'
