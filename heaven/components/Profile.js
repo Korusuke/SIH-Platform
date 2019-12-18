@@ -10,6 +10,8 @@ import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 import Avatar from '@material-ui/core/Avatar';
 
+
+
 const useStyles = makeStyles(theme => ({
     root: {
       display: 'flex',
@@ -28,20 +30,56 @@ const useStyles = makeStyles(theme => ({
   }));
   
 
-export default function Profile(){
-    const classes = useStyles();
-    const inputLabel = React.useRef(null);
-  const [labelWidth, setLabelWidth] = React.useState(0);
-  React.useEffect(() => {
-    setLabelWidth(inputLabel.current.offsetWidth);
-  }, []);
+
+export default class Profile extends React.Component{
+    
+  // const [labelWidth, setLabelWidth] = React.useState(0);
+  // React.useEffect(() => {
+  //   setLabelWidth(inputLabel.current.offsetWidth);
+  // }, []);
+
+  constructor(props)
+  {
+    super()
+    this.props = props
+    this.handleChange = this.handleChange.bind(this)
+
+    this.state = {
+      firstname:"",
+      middlename:"",
+      lastname:"",
+      email:"",
+      phonenumber:"",
+      gender:"",
+      division:"",
+      department:"",
+      year:"",
+      rollno:""
+    }
+  }
+
+    handleChange(event)
+    {
+      let {name, type, value} = event.target
+      this.setState(
+        {
+          [name]:value
+        }
+      )
+
+      console.log(name+": "+value)
+    }
+
+    render(){
+      //const classes = useStyles();
+     // const inputLabel = React.useRef(null);
     return (
         <React.Fragment>
         <Typography variant="h6" gutterBottom>
         </Typography>
     <Grid container spacing ={3}>
-        <Grid style={{padding:"1% 1% 1% 1%"}} container xs ={12} sm ={3}>
-        <Avatar style={{width:"100%", height:"100%"}} alt="Remy Sharp" src="/static/images/avatar/1.jpg" className={classes.large} />
+        <Grid style={{padding:"1% 1% 1% 1%"}} item xs ={12} sm ={3}>
+        <Avatar style={{width:"15vw", height:"15vw", position:"relative", left: "50%", top:'50%', transform:'translate(-50%, -50%'}} alt="Remy Sharp" src="https://hack.kjscecodecell.com/assets/team/compressed/Karan.png"  />
         </Grid>
         <Grid style={{paddingTop:"2%"}}container spacing={3} xs={12} sm={9} >
           <Grid item xs={12} sm={4}>
@@ -51,6 +89,7 @@ export default function Profile(){
           name = "firstname"
           label="First Name"
           variant="outlined"
+          onChange={this.handleChange}
         />
           </Grid>
           <Grid item xs={12} sm={4}>
@@ -60,6 +99,7 @@ export default function Profile(){
               name="middlename"
               label="Middle name"
               variant = "outlined"
+              onChange={this.handleChange}
             />
           </Grid>
           <Grid item xs={12} sm={4}>
@@ -69,6 +109,7 @@ export default function Profile(){
               name="lastname"
               label="Last name"
               variant = "outlined"
+              onChange={this.handleChange}
             />
           </Grid>
           <Grid item xs={12} >
@@ -77,9 +118,9 @@ export default function Profile(){
               id="outlined-full-width"
               name="email"
               label="Email"
-              fullwidth
+              fullwidth="true"
               variant = "outlined"
-              
+              onChange={this.handleChange}
             />
           </Grid>
           <Grid item xs={12} sm ={4}>
@@ -91,15 +132,16 @@ export default function Profile(){
                defaultValue="+91 "
                fullwidth
                variant = "outlined"
+               onChange={this.handleChange}
             />
           </Grid>
           <Grid item xs={12} sm ={4} >
           <FormControl variant="outlined" style ={{ width:"100%"}} >
-        <InputLabel ref={inputLabel} required variant = "outlined">
+        <InputLabel ref={null} required variant = "outlined">
           Gender
         </InputLabel>
         <Select 
-        
+        onChange={this.handleChange}
         inputProps={{
             name: 'gender',
             id: 'outlined-age-native-simple',
@@ -122,15 +164,16 @@ export default function Profile(){
               name="rollno"
               label="Roll No."
               variant = "outlined"
+              onChange={this.handleChange}
             />
           </Grid>
           <Grid item xs={12} sm ={3} >
           <FormControl variant="outlined" style ={{ width:"100%"}} >
-        <InputLabel ref={inputLabel} required variant = "outlined">
+        <InputLabel ref={null} required variant = "outlined">
           Year
         </InputLabel>
         <Select 
-        
+        onChange={this.handleChange}
         inputProps={{
             name: 'year',
             id: 'outlined-year-native-simple',
@@ -145,11 +188,11 @@ export default function Profile(){
           </Grid>
           <Grid item xs={12} sm ={3} >
           <FormControl variant="outlined" style ={{ width:"100%"}} >
-        <InputLabel ref={inputLabel} required variant = "outlined">
+        <InputLabel ref={null} required variant = "outlined">
           Department
         </InputLabel>
         <Select 
-        
+        onChange={this.handleChange}
         inputProps={{
             name: 'department',
             id: 'outlined-year-native-simple',
@@ -170,10 +213,13 @@ export default function Profile(){
               name="division"
               label="Division"
               variant = "outlined"
+              onChange={this.handleChange}
             />
           </Grid>
         </Grid>
     </Grid>
       </React.Fragment>
     );
+}
+
 }
