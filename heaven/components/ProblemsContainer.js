@@ -19,7 +19,7 @@ export default class ProblemsContainer extends React.Component
         this.props = props
         this.state = {
             offset: 0,
-            
+
         }
 
         console.log(this.props.cards.length)
@@ -29,7 +29,7 @@ export default class ProblemsContainer extends React.Component
     handleClick(offset) {
         this.setState({ offset });
     }
-    
+
 
     render(){
         let arr = this.props.cards.map((card)=>(
@@ -40,22 +40,38 @@ export default class ProblemsContainer extends React.Component
 
         let arrs = arr.slice(this.state.offset, this.state.offset+10)
 
-    
+
 
     return (
-        <Container style={{paddingTop:'100px'}}>
+        <Container style={{ paddingTop: '50px' }}>
+            <MuiThemeProvider theme={theme}>
+                <CssBaseline />
+                <Pagination
+                    limit={10}
+                    offset={this.state.offset}
+                    total={arr.length}
+                    onClick={(e, offset) => this.handleClick(offset)}
+                    style={{
+                        display: 'flex',
+                        justifyContent: 'center'}}
+                                />
+            </MuiThemeProvider>
             <Grid container >
-                    {arrs}
+                {arrs}
             </Grid>
             <MuiThemeProvider theme={theme}>
-        <CssBaseline />
-        <Pagination
-          limit={10}
-          offset={this.state.offset}
-          total={arr.length}
-          onClick={(e, offset) => this.handleClick(offset)}
-        />
-      </MuiThemeProvider>
+                <CssBaseline />
+                <Pagination
+                limit={10}
+                offset={this.state.offset}
+                total={arr.length}
+                    onClick={(e, offset) => this.handleClick(offset)}
+                    style={{
+                        display: 'flex',
+                        justifyContent: 'center'
+                    }}
+                />
+            </MuiThemeProvider>
         </Container>
             )
     }

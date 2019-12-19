@@ -36,7 +36,7 @@ export default class Problems extends React.Component {
         found = this.props.problems.filter(obj => obj.Category == 'Software' || obj.Category=='Hardware')
       else if (software)
         found = this.props.problems.filter(obj => obj.Category == 'Software' )
-      else 
+      else
         found = this.props.problems.filter(obj => obj.Category == 'Hardware' )
 
       if(org)
@@ -44,13 +44,13 @@ export default class Problems extends React.Component {
 
       if(ideabucket)
         found = found.filter(obj => obj.Domain == ideabucket )
-      
 
-     
+
+
       if(searchfilter)
           found = this.filterIt(found, searchfilter)
 
-      
+
 
 
       this.setState(
@@ -65,10 +65,10 @@ export default class Problems extends React.Component {
       return (
           <div>
               <Header />
-              <NoiceBanner text="Problem Statements" backgroundImage={"/assets/images/banner.jpg"} /> 
+              <NoiceBanner text="Problem Statements" backgroundImage={"/assets/images/banner.jpg"} />
               <SearchBar filter={this.applyFilter} cards={this.props.problems} />
-              <ProblemsContainer cards={this.state.found} /> 
-              <Footer/>
+              <ProblemsContainer cards={this.state.found} />
+              {/* <Footer/> */}
           </div>
       );
     }
@@ -79,9 +79,9 @@ export default class Problems extends React.Component {
       'origin':'google.com'
     }});
     const data = await res.json();
-  
+
     //console.log(data);
-  
+
     return {
       problems: data
     };
