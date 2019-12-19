@@ -35,7 +35,7 @@ class ProblemCard extends Component {
         raised={this.state.raised}
         style={{ width: '100%' }} className="maincard">
 
-          <Grid container direction="coloumn" >
+          <Grid container direction="column" >
           <Grid container item xs={12} direction="row" alignItems="center" spacing={2}>
             <Grid item >
                 <Avatar style={{ width: '75px', height: '75px', border:'1.5px solid black'}}>
@@ -48,7 +48,7 @@ class ProblemCard extends Component {
                   {this.props.card.Company}
                 </FitText>
               </Grid>
-            <Grid constainer item direction="coloumn" style={{ textAlign: 'end',width: 'max-content', height: 'auto' }}>
+            <Grid container item direction="column" style={{ textAlign: 'end',width: 'max-content', height: 'auto' }}>
 
                 <Grid item xs={12}>
                   {this.props.card.Domain}
