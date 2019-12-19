@@ -1,9 +1,47 @@
 const express = require('express');
+const multer = require('multer');
 const ProblemStatement = require('../models/problemStatement.model')
 const Team = require('../models/team.model');
 const User = require('../models/user.model');
 const router = express.Router();
-const { verifyToken } = require('./token');
+
+var storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'storage/submissions')
+    },
+    filename: function (req, file, cb) {
+        cb(null, Date.now() + '-' + file.originalname)
+    }
+})
+
+var upload = multer({ storage: storage }).single('file')
+
+async function verifyToken(req, res, next) {
+    const token = req.cookies.token;
+    if(!token){
+      res.json({
+        'msg': 'Token not present'
+      });
+      return;
+    }
+    blacklistedTokens = await client.lrange('blacklistedTokens',0,-1);
+    if(token in blacklistedTokens){
+      res.json({
+        "msg":"Token invalidated, please sign in again",
+      });
+      return;
+    } 
+    jwt.verify(token, privateKey, (err, decoded) => {
+      if (err) {
+        res.json({'msg': 'Token expired'});
+      }
+      else{
+        req.token = token;
+        req.decoded = decoded;
+        next();
+      }
+    });
+}
 
 router.get('/', verifyToken, (req, res) => {
     ProblemStatement.find()
@@ -72,5 +110,20 @@ router.get('/ps_comments', verifyToken, (req, res) => {
         })
         .catch(() => res.status(500));
 });
+
+router.post('/upload',function(req, res) {
+    console.log(req.files);
+    upload(req, res, function (err) {
+           if (err instanceof multer.MulterError) {
+               console.log(err)
+               return res.status(500).json(err)
+           } else if (err) {
+               console.log(err)
+               return res.status(500).json(err)
+           }
+        console.log("uploaded");
+        return res.status(200).send(req.files);
+    })
+})
 
 module.exports = router;
