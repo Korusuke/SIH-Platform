@@ -20,8 +20,7 @@ export default function Header(){
         },
         image:{
             backgroundSize: 'contain',
-            width: '100%',
-            maxWidth: '100px'
+
         }
 
     }
@@ -31,31 +30,45 @@ export default function Header(){
                 {
                     backgroundColor: 'white',
                     color: 'black',
-                    height: 'auto'
+                    height: '80px'
                 }
             } >
                 <Toolbar>
                     <Grid
                     container
                     direction="row"
-                    spacing={0}
                     >
-                        <Grid item sm={1} xs={6}>
+                        <Grid item sm={1}>
                             <Center style={styles.center}>
-                            <img src="/assets/images/somaiya.png" style={styles.image}/>
+                            <img src="/assets/images/somaiya.png" style={styles.image} width="100" />
                             </Center>
                         </Grid>
-                        <Grid item sm={1} xs={6}>
+                        <Grid item sm={1}>
                             <Center style={styles.center}>
-                                <img src="/assets/images/sihlogo.png" style={styles.image}/>
+                                <img src="/assets/images/sihlogo.png" style={styles.image} width="100"/>
                             </Center>
                         </Grid>
-                        <Grid item sm={8} xs={12}>
+                        <Grid item sm={8}>
                             <Center>
                                 <h1>Internal Hackathon</h1>
                             </Center>
                         </Grid>
-                        
+                        <Grid item sm={2}>
+                        <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
+                        <Avatar alt="Karan Sheth" src="https://hack.kjscecodecell.com/assets/team/compressed/Karan.png" />
+                        </Button>
+                        <Menu
+                            id="simple-menu"
+                            anchorEl={anchorEl}
+                            keepMounted
+                            open={Boolean(anchorEl)}
+                            onClose={handleClose}
+                        >
+                            <MenuItem onClick={handleClose}>Profile</MenuItem>
+                            <MenuItem onClick={handleClose}>Dashboard</MenuItem>
+                            <MenuItem onClick={handleClose}>Logout</MenuItem>
+                        </Menu>
+                        </Grid>
                         
                     </Grid>
 
