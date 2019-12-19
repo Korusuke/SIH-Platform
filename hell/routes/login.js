@@ -1,43 +1,18 @@
 const express = require('express');
-const jwt = require('jsonwebtoken');  
-const redis = require('redis');
+const jwt = require('jsonwebtoken'); 
 const otpGenerator = require('otp-generator');
 const nodemailer = require('nodemailer');
 const router = express.Router(); 
 const User = require('../models/user.model');
 const LoginData = require('../models/logindata.model');
+const { verifyToken } = require('./token');
 
-const client = redis.createClient();
-client.on('error', (err) => {
-  console.log('Something went wrong ', err);
+router.post('/test', verifyToken, (req, res)=>{
+  console.log("test");
+  res.json({
+    msg: 'Protected url'
+  })
 });
-
-async function verifyToken(req, res, next) {
-    const token = req.cookies.token;
-    if(!token){
-      res.json({
-        'msg': 'Token not present'
-      });
-      return;
-    }
-    blacklistedTokens = await client.lrange('blacklistedTokens',0,-1);
-    if(token in blacklistedTokens){
-      res.json({
-        "msg":"Token invalidated, please sign in again",
-      });
-      return;
-    } 
-    jwt.verify(token, privateKey, (err, decoded) => {
-      if (err) {
-        res.json({'msg': 'Token expired'});
-      }
-      else{
-        req.token = token;
-        req.decoded = decoded;
-        next();
-      }
-    });
-}
 
 router.post('/login', (req, res) => {
     const { email, password } = req.body;
@@ -158,8 +133,6 @@ router.post('/signup', (req, res) => {
                         port: 465,
                         secureConnection: true,
                         });
-                    
-                    const team = "Team_Probably";
                     var mailOptions = {
                         from: emailId,
                         to: email,
@@ -196,7 +169,7 @@ router.post('/signup', (req, res) => {
     
 })
 
-router.post('/logout',verifyToken, (req,res)=>{
+router.post('/logout', verifyToken,(req,res)=>{
     client.rpush(blacklistedTokens, verifyToken, redis.print, (err, resp)=>{
       if(err){
         res.json({
