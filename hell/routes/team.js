@@ -183,8 +183,8 @@ function deleteTeam(user){
         return;
       }
       console.log(userData);
-    })
-  })
+    });
+  });
 }
 
 module.exports = router;
