@@ -6,8 +6,7 @@ const Team = require('../models/team.model');
 const User = require('../models/user.model');
 const redis = require('redis')
 const jwt = require('jsonwebtoken');
-
-const privateKey = process.env.KEY;
+const {verifyToken} = require('./token');
 
 const client = redis.createClient();
 client.on('error', (err) => {
@@ -17,8 +16,8 @@ client.on('error', (err) => {
 router.use('/invite', require('./invitation'));
 
 router.post('/create', (req, res)=>{
-  const { TeamName } = req.body;
-  Team.findOne({'TeamName': TeamName}, (err, result)=>{
+  const { teamName } = req.body;
+  Team.findOne({'teamName': teamName}, (err, result)=>{
     if(err){
       console.log(err);
       res.send(500);
@@ -36,10 +35,10 @@ router.post('/create', (req, res)=>{
     const decodedData = jwt.decode(req.cookies.token, {complete: true});
     console.log('Decode: %s',decodedData)
     // Remove req.body.email for production env
-    const leader =decodedData.payload.Email || req.body.email;
+    const leader = decodedData.payload.Email?decodedData.payload.Email:req.body.email;
     let members = [leader];
-    InviteCode = otpGenerator.generate(6, { specialChars: false });
-    TeamId = uuid(); 
+    inviteCode = otpGenerator.generate(6, { specialChars: false });
+    teamId = uuid(); 
     const doc = {
       teamName,
       leader,
@@ -56,7 +55,7 @@ router.post('/create', (req, res)=>{
       res.json({
         'status': 'success',
         'msg': 'Team Created Successfully',
-        'InviteCode':InviteCode,
+        'inviteCode':inviteCode,
         team: team1
       });
     });
@@ -64,11 +63,11 @@ router.post('/create', (req, res)=>{
 });
 
 router.post('/join', (req, res)=>{
-  const { InviteCode } = req.body;
+  const { inviteCode } = req.body;
   const decodedData = jwt.decode(req.cookies.token, {complete: true});
   console.log('Decode: %s',decodedData)
   const user = decodedData.payload.Email;
-  Team.findOne({'InviteCode': InviteCode}, (err, result)=>{
+  Team.findOne({'inviteCode': inviteCode}, (err, result)=>{
     if(err){
       res.send(500);
       return;
@@ -103,7 +102,6 @@ router.post('/join', (req, res)=>{
 router.post('/currentTeam', (req, res)=>{
   const decodedData = jwt.decode(req.cookies.token, {complete: true});
   const user = decodedData.payload.Email;
-  
   Team.findOne({"members" : {"$in" : [user]}}, (err, result)=>{
     if(err){
       res.send(500);
@@ -128,5 +126,65 @@ router.post('/currentTeam', (req, res)=>{
     
   });
 });
+
+router.post('/exit', verifyToken, (req,res)=>{
+  const decodedData = jwt.decode(req.cookies.token, {complete: true});
+  const user = decodedData.payload.Email?decodedData.payload.Email:req.body.email;
+  Team.findOne({members:user},async (err, data)=>{
+    if(err){
+      console.log(err);
+      res.send(500)
+      return;
+    }
+    if(data.leader === user){
+      await removeUser(user);
+      if(data.members.length()==0){
+        deleteTeam(user);
+        res.status(200).json({
+          msg:'Deleted team since no other member present'
+        })
+        return;
+      }
+      data.leader=members[0]
+      data.save();
+      res.send(200).json({msg: 'Exited team'});
+    }
+  });
+});
+
+async function removeUser(user){
+  await User.findOneAndUpdate({members: user}, {$pull:{members: user}},{new: true} ,(err, data)=>{
+    if(err){
+      console.log(err);
+      res.send(500);
+      return;
+    }
+    console.log(data);
+  });
+}
+
+router.post('/delete', (req, res)=>{
+  const { email } = req.body;
+  deleteTeam(email);
+  res.json({msg:'Done'});
+});
+
+function deleteTeam(user){
+  Team.find({leader: user}, (err, teamData)=>{
+    if(err){
+      console.log(err);
+      res.send(500);
+      return;
+    }
+    User.find({teamId: teamData.teamId}, (err, userData)=>{
+      if(err){
+        console.log(err);
+        res.send(500);
+        return;
+      }
+      console.log(userData);
+    })
+  })
+}
 
 module.exports = router;
