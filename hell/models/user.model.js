@@ -23,6 +23,7 @@ const userSchema = new Schema({
     department: {type: String},
     division: {type: String},
     teamId: {type: String},
+    profilePic: {type: String},
     comments: [
         {
             psid: String,
