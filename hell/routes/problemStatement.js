@@ -3,33 +3,7 @@ const ProblemStatement = require('../models/problemStatement.model')
 const Team = require('../models/team.model');
 const User = require('../models/user.model');
 const router = express.Router();
-
-async function verifyToken(req, res, next) {
-    const token = req.cookies.token;
-    if(!token){
-      res.json({
-        'msg': 'Token not present'
-      });
-      return;
-    }
-    blacklistedTokens = await client.lrange('blacklistedTokens',0,-1);
-    if(token in blacklistedTokens){
-      res.json({
-        "msg":"Token invalidated, please sign in again",
-      });
-      return;
-    } 
-    jwt.verify(token, privateKey, (err, decoded) => {
-      if (err) {
-        res.json({'msg': 'Token expired'});
-      }
-      else{
-        req.token = token;
-        req.decoded = decoded;
-        next();
-      }
-    });
-}
+const { verifyToken } = require('./token');
 
 router.get('/', verifyToken, (req, res) => {
     ProblemStatement.find()
