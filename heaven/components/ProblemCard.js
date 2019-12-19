@@ -1,69 +1,78 @@
 import React, { Component } from 'react'
 import Link from 'next/link';
-
-
+import FitText from '@kennethormandy/react-fittext';
 import '../styles/problemcard.css';
-import {Grid, ButtonBase} from '@material-ui/core'
-// import logo from '../assets/GC.svg';
-
+import { Grid, Card, Avatar, ButtonBase } from '@material-ui/core'
+import Divider from '@material-ui/core/Divider';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCode, faMicrochip } from '@fortawesome/free-solid-svg-icons'
 class ProblemCard extends Component {
 
-  
+  type(t) {
+    if (t == 'Software') {
+      return <Grid item xs={12} style={{color:'orange'}}>
+        <FontAwesomeIcon icon={faCode} />
+      </Grid>
+    } else {
+      return <Grid item xs={12} style={{ color: 'green' }}>
+        <FontAwesomeIcon icon={faMicrochip} />
+      </Grid>
+    }
+  }
+  state = {
+    raised: false
+  }
+
+  toggleRaised = () => this.setState({ raised: !this.state.raised });
+
   render() {
 
     return (
-      <div>
-      <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" rel="stylesheet" />
-      <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
-      <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
-      <ButtonBase style={{width:'100%'}}>
+      <ButtonBase style={{ width: '100%' }}>
         <Link href="/problem/[id]" as={`/problem/${this.props.card['_id']}`}>
-        <div className="maincard">
-          
-        <Grid container direction="row" style={{
-          minHeight: '80px'
-        }}>
-          <Grid item xs={2}>
-            <div id='test'>
+      <Card onMouseOver={this.toggleRaised}
+        onMouseOut={this.toggleRaised}
+        raised={this.state.raised}
+        style={{ width: '100%' }} className="maincard">
+
+          <Grid container direction="coloumn" >
+          <Grid container item xs={12} direction="row" alignItems="center" spacing={2}>
+            <Grid item >
+                <Avatar style={{ width: '75px', height: '75px', border:'1.5px solid black'}}>
                   <img src="https://hack.kjscecodecell.com/assets/team/compressed/Karan.png" />
-              </div>
+                </Avatar>
             </Grid>
-            <Grid item xs={5}>
-            <div className="cardtitle">
-              {this.props.card.Domain}
-              </div>
+
+              <Grid item xs style={{ fontFamily: 'Roboto', fontSize: '2rem', textAlign: 'start' }}>
+              <FitText maxFontSize={24}>
+                  {this.props.card.Company}
+                </FitText>
+              </Grid>
+            <Grid constainer item direction="coloumn" style={{ textAlign: 'end',width: 'max-content', height: 'auto' }}>
+
+                <Grid item xs={12}>
+                  {this.props.card.Domain}
+              </Grid>
+
+                {this.type(this.props.card.Category)}
+                <Grid item xs={12}>
+                  {this.props.card.Number}
+                </Grid>
+              </Grid>
             </Grid>
-            <Grid item xs={5}>
-            <div className="cardorg">
-            {this.props.card.Company} 
-          </div>
-          <br/>
-          <div className="cardcode">
-            {this.props.card.code}
-          </div> 
-          <div className="cardlogosmall">
-            <i className="fa fa-code"></i>
-          </div>
+
+          <Divider style={{ width: '100%', marginTop: '10px', marginBottom: '10px', backgroundColor: 'rgba(13, 13, 13, 0.52)'}}/>
+            <Grid container item xs={12} direction="row" style={{ textAlign: 'start'}}>
+              <span>
+                {this.props.card.Title}
+              </span>
             </Grid>
-        </Grid>
-         
-          
-          
-          
-                   
-          <div className="cardline"></div>
-          <div className="carddata">
-          {this.props.card.Title}
-            <div className="cardshare">
-            <i className="material-icons">
-          share
-            </i>
-            </div>
-          </div>
-        </div>
+          </Grid>
+
+          </Card>
         </Link>
       </ButtonBase>
-      </div>
+
     );
   }
 }
