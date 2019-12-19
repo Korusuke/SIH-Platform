@@ -7,7 +7,7 @@ import Comment from '../components/Comment'
 import '../styles/index.css'
 
 
-export default function Index() {
+export default function Comment() {
     
     return (
         <div>

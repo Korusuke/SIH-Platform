@@ -17,11 +17,39 @@ class App extends Component {
     this.state = {
 
     }
+
+    this.exitTeam = this.exitTeam.bind(this)
+  }
+
+  exitTeam()
+  {
+    try{
+      fetch(`${this.props.url}/team/exit/`, {
+          method: "POST",
+          credentials: "include",
+         
+          
+      }).then(res => res.json())
+      .then(data => {
+          if (data.status == "success")
+              this.props.changeParentState(0, data);
+          else this.props.changeParentState(-1, data);
+      });
+  }
+  catch(e)
+  {
+      console.log(e)
+      data = {
+          status: 'error',
+          msg: 'Something went wrong :('
+      }
+      this.props.changeParentState(-1, data);
+  }
   }
 
   render() {
     let arr = []
-    this.props.team.Members.forEach(e=>{
+    this.props.team.members.forEach(e=>{
       
       arr.push(
         <Grid item xs={10}>
@@ -64,7 +92,7 @@ class App extends Component {
           <TextField
           id="outlined-read-only-input"
           label="Team Name"
-          defaultValue={this.props.team.TeamName}
+          defaultValue={this.props.team.teamName}
           InputProps={{
             readOnly: true,
           }}
@@ -76,7 +104,7 @@ class App extends Component {
           <TextField
           id="outlined-read-only-input"
           label="Team Code"
-          defaultValue={this.props.team.InviteCode}
+          defaultValue={this.props.team.inviteCode}
           InputProps={{
             readOnly: true,
           }}
@@ -84,12 +112,14 @@ class App extends Component {
         />
           </Grid>
 
-          <Grid item xs={10}>
+          {/* <Grid item xs={10}>
           <Button style={{width:"100%"}} variant="contained" color="primary">Add member</Button>
-          </Grid>
-
+          </Grid> */}
+        <Grid item xs={1}>
+        </Grid>
           <Grid item xs={10}>
-          <Button style={{width:"100%"}} variant="contained" color="secondary">Exit team</Button>
+          <Button style={{width:"100%"}} variant="contained" color="secondary" onClick={this.exitTeam}>Exit team</Button>
+          
           </Grid>
         </Grid>
         </Grid>

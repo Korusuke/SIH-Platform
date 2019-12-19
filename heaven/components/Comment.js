@@ -15,8 +15,8 @@ export default function Comment(props)
     
     
     return (
-        <Paper>
-            <div>
+        
+            <div style={{border: '1px solid #cdcdcd'}}>
                 <div style={{background: '#f8f8f8', minHeight:'20px', padding: '5px', borderBottom: '1px solid #cdcdcd'}}>
                    <Grid container direction="row">
                        <Grid item xs={10} sm={11}>
@@ -34,6 +34,6 @@ export default function Comment(props)
                 </div>
 
             </div>
-        </Paper>
+        
     )
 }
