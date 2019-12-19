@@ -41,7 +41,7 @@ class App extends Component {
                     'Content-Type': 'application/json'
                 },
                 body:JSON.stringify( {
-                    TeamName: this.state.teamname
+                    teamName: this.state.teamname
                 })
             }).then(res => res.json())
             .then(data => {
