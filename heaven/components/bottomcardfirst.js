@@ -26,11 +26,11 @@ export default class bottomcardfirst extends Component {
     spacing={0}
     >
         <Grid item xs={4} align="center">
-        <Button variant="contained" className="leftbutton" color="primary">Join Team</Button>        </Grid>
+        <Button variant="contained" className="leftbutton" color="primary" onClick={()=>{this.props.changeParentState(1)}}>Join Team</Button>        </Grid>
         <Grid item xs={1} align="center">OR
         </Grid>
         <Grid item xs={4} align="center">
-        <Button variant="contained" className="rightbutton" color="primary">Create Team</Button>
+        <Button variant="contained" className="rightbutton" color="primary" onClick={()=>{this.props.changeParentState(2)}}>Create Team</Button>
         </Grid>
     </Grid>
     </Center>
