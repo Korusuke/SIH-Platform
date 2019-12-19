@@ -11,13 +11,13 @@ app.prepare().then(() => {
     const server = express()
 
     server.get('/', (req, res) => {
-        if(req.cookie && req.cookie.token)
+        if(req.cookies.token && req.cookies.token)
             return res.redirect('/profile')
         return app.render(req, res, '/index', req.query)
     })
 
     server.get('/profile', (req, res) => {
-        if(req.cookie && req.cookie.token)
+        if(req.cookies && req.cookies.token)
             return app.render(req, res, '/profile', req.query)
         return res.redirect('/')
     })
@@ -28,6 +28,10 @@ app.prepare().then(() => {
 
     server.get('/problem/:id', (req, res) => {
         return app.render(req, res, `/problem/${req.params.id}`, req.query)
+    })
+
+    server.get('/upload', (req, res) => {
+        return app.render(req, res, '/upload', req.query)
     })
 
     server.all('*', (req, res) => {

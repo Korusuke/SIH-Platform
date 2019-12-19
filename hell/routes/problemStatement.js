@@ -1,8 +1,20 @@
 const express = require('express');
+const multer = require('multer');
 const ProblemStatement = require('../models/problemStatement.model')
 const Team = require('../models/team.model');
 const User = require('../models/user.model');
 const router = express.Router();
+
+var storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'storage/submissions')
+    },
+    filename: function (req, file, cb) {
+        cb(null, Date.now() + '-' + file.originalname)
+    }
+})
+
+var upload = multer({ storage: storage }).single('file')
 
 async function verifyToken(req, res, next) {
     const token = req.cookies.token;
@@ -98,5 +110,20 @@ router.get('/ps_comments', verifyToken, (req, res) => {
         })
         .catch(() => res.status(500));
 });
+
+router.post('/upload',function(req, res) {
+    console.log(req.files);
+    upload(req, res, function (err) {
+           if (err instanceof multer.MulterError) {
+               console.log(err)
+               return res.status(500).json(err)
+           } else if (err) {
+               console.log(err)
+               return res.status(500).json(err)
+           }
+        console.log("uploaded");
+        return res.status(200).send(req.files);
+    })
+})
 
 module.exports = router;
