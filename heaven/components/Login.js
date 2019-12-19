@@ -161,8 +161,7 @@ export default class LoginBox extends React.Component{
                         const cookies = new Cookies();
                         cookies.set('token', res.data.token, { path: '/' });
                         console.log(cookies.get('token')); // Pacman
-                        const router = useRouter();
-                        router.push('/problems');
+                        location.href = '/problems'
 
                     }
                     this.snackcontent = <Snackbar type={res.data.status} msg={res.data.msg} />;
@@ -190,8 +189,8 @@ export default class LoginBox extends React.Component{
                         const cookies = new Cookies();
                         cookies.set('token', res.data.token, { path: '/' });
                         console.log(cookies.get('token')); // Pacman
-                        const router = useRouter();
-                        router.push('/problems');
+                        
+                        location.href='/problems'
 
                     }
                     this.snackcontent = <Snackbar type={res.data.status} msg={res.data.msg} />;
