@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Button, Typography, TextField, FormControl, Grid, Select, Avatar, InputLabel, MenuItem } from '@material-ui/core';
 import withWidth, { isWidthUp } from '@material-ui/core/withWidth';
+import InputAdornment from '@material-ui/core/InputAdornment';
 
 
 
@@ -115,7 +116,9 @@ class Profile extends React.Component{
                 id="outlined-full-width"
                 name="phonenumber"
                 label="Phone Number"
-                defaultValue="+91 "
+                InputProps={{
+                  startAdornment: <InputAdornment position="start">+91</InputAdornment>,
+                }}
                 fullwidth="true"
                 variant = "outlined"
                 onChange={this.handleChange}
