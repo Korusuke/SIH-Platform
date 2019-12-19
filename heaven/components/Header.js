@@ -20,7 +20,8 @@ export default function Header(){
         },
         image:{
             backgroundSize: 'contain',
-
+            width: '100%',
+            maxWidth: '100px'
         }
 
     }
@@ -30,25 +31,26 @@ export default function Header(){
                 {
                     backgroundColor: 'white',
                     color: 'black',
-                    height: '80px'
+                    height: 'auto'
                 }
             } >
                 <Toolbar>
                     <Grid
                     container
                     direction="row"
+                    spacing={0}
                     >
-                        <Grid item sm={1}>
+                        <Grid item sm={1} xs={6}>
                             <Center style={styles.center}>
-                            <img src="/assets/images/somaiya.png" style={styles.image} width="100" />
+                            <img src="/assets/images/somaiya.png" style={styles.image}/>
                             </Center>
                         </Grid>
-                        <Grid item sm={1}>
+                        <Grid item sm={1} xs={6}>
                             <Center style={styles.center}>
-                                <img src="/assets/images/sihlogo.png" style={styles.image} width="100"/>
+                                <img src="/assets/images/sihlogo.png" style={styles.image}/>
                             </Center>
                         </Grid>
-                        <Grid item sm={8}>
+                        <Grid item sm={8} xs={12}>
                             <Center>
                                 <h1>Internal Hackathon</h1>
                             </Center>
