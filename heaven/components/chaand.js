@@ -9,42 +9,44 @@ import { faMoon } from '@fortawesome/free-solid-svg-icons'
 
 
 export default class chaand extends React.Component{
-    constructor()
+    constructor(props)
     {
-        super();
+        super(props);
+        console.log(props);
         this.state = {
-            chaand : 1
+            chaand : props.chaand,
         }
 
-        this.handleClick = this.handleClick.bind(this);
     }
 
-    handleClick()
-    {
-        if(this.state.chaand) this.setState({chaand:0})
-        else this.setState({chaand:1})
+    static getDerivedStateFromProps(props, state) {
+        if (props.chaand !== state.chaand) {
+            return { chaand: props.chaand };
+        }
+        console.log('possible error');
+        return null;
     }
 
     render(){
         let chaand
         if(this.state.chaand)
         {
-            chaand = <Fab size="small" style={{backgroundColor:"#FFFFFF"}}>
-            <FontAwesomeIcon icon={faMoon} style={{color:'#212020' }} onClick={this.handleClick}/>
+            chaand = <Fab size="small" style={{ backgroundColor: "#FFFFFF" }} onClick={this.props.handler}>
+            <FontAwesomeIcon icon={faMoon} style={{color:'#212020' }} />
         </Fab>
         }
         else{
-            chaand=<Fab size="small"  style={{backgroundColor:"#212020"}}>
-            <FontAwesomeIcon icon={faSun} style={{color:'#FFFFFF' }} onClick={this.handleClick}/>
+            chaand = <Fab size="small" style={{ backgroundColor: "#212020" }} onClick={this.props.handler}>
+            <FontAwesomeIcon icon={faSun} style={{color:'#FFFFFF' }} />
         </Fab>
         }
         return (
-            <div>
-            
-        {chaand}
-    </div>
-        
-            
+            <div style={{
+                position: 'fixed', right:'50px', bottom:'50px'
+            }}>
+
+             {chaand}
+            </div>
         )
     }
 }

@@ -9,7 +9,7 @@ import Bottomcardjoin from '../components/bottomcardjoin';
 import Bottomcardfirst from '../components/bottomcardfirst';
 import Bottomcardconf from '../components/bottomcardconf';
 import BottomCardMerge from '../components/BottomCardMerge'
-import {Container, Paper} from '@material-ui/core' 
+import {Container, Paper} from '@material-ui/core'
 
 import '../styles/index.css'
 
@@ -23,7 +23,7 @@ export default function ProfileMember(){
             marginTop: '50px',
         }}>
             < Profile />
-        
+
         </Paper >
         <br/>
             <BottomCardMerge url="http://localhost:8080"/>
