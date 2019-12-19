@@ -6,6 +6,7 @@ import Login from '../components/Login'
 import Timeline from '../components/Timeline';
 import { Grid , Paper,  Box, Container} from '@material-ui/core';
 import { noAuto } from '@fortawesome/fontawesome-svg-core';
+import { getThemeProps } from '@material-ui/styles';
 
 const useStyles = makeStyles(theme => ({
     container: {
@@ -26,7 +27,7 @@ const useStyles = makeStyles(theme => ({
   }));
 
 
-export default function IndexContent()
+export default function IndexContent(props)
 {
     return(
         <Container maxWidth="xl" style={{paddingTop:'5%'}}>
@@ -43,7 +44,7 @@ export default function IndexContent()
             </Paper>
           </Grid>
           <Grid item md={4} xs={12} style={{ padding: '10px' }}>
-                <Login />
+                <Login url={props.url}/>
           </Grid>
         </Grid>
         </Container>
