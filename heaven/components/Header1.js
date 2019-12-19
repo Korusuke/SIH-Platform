@@ -53,7 +53,22 @@ export default function Header(){
                                 <h1>Internal Hackathon</h1>
                             </Center>
                         </Grid>
-                        
+                        <Grid item sm={2}>
+                        <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
+                        <Avatar alt="Karan Sheth" src="https://hack.kjscecodecell.com/assets/team/compressed/Karan.png" />
+                        </Button>
+                        <Menu
+                            id="simple-menu"
+                            anchorEl={anchorEl}
+                            keepMounted
+                            open={Boolean(anchorEl)}
+                            onClose={handleClose}
+                        >
+                            <MenuItem onClick={handleClose}>Profile</MenuItem>
+                            <MenuItem onClick={handleClose}>Dashboard</MenuItem>
+                            <MenuItem onClick={handleClose}>Logout</MenuItem>
+                        </Menu>
+                        </Grid>
                         
                     </Grid>
 
