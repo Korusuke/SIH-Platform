@@ -41,7 +41,8 @@ connection.once('open', () => {
     console.log("MongoDB database connection established successfully");
 })
 
-app.use('/ps/', require('./routes/problemStatement'));
+app.use('/delete', require('./routes/delete'));
+app.use('/ps', require('./routes/problemStatement'));
 app.use('/export', require('./routes/export.js'));
 app.use('/team', require('./routes/team'));
 app.use('/user', require('./routes/user'));
