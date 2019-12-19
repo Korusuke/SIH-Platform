@@ -1,185 +1,186 @@
-import React, { Component } from 'react';
-import '../styles/searchbar.css';
-import {Radio, FormControl, TextField, Select, RadioGroup, FormControlLabel, Checkbox, Grid, InputLabel, MenuItem} from '@material-ui/core/';
+import React, { Component } from "react";
+import "../styles/searchbar.css";
+import { CaretIcon } from "./CaretIcon";
+import RRS from 'react-responsive-select';
+import "react-responsive-select/dist/ReactResponsiveSelect.css";
 
-import Center from 'react-center'
+import {
+  Radio,
+  FormControl,
+  TextField,
+  Select,
+  RadioGroup,
+  FormControlLabel,
+  Checkbox,
+  Grid,
+  InputLabel,
+  MenuItem
+} from "@material-ui/core/";
+
+import Center from "react-center";
 const radiostyle = {
-  color: '#fff'
-}
+  color: "#fff"
+};
 
-
-let orgs = [], ideas =[]
+let orgs = [],
+  ideas = [];
 class SearchBar extends Component {
-  constructor(props)
-  {
+  constructor(props) {
     super();
     this.props = props;
     this.state = {
       software: true,
       hardware: true,
       searchfilter: "",
-      org:"",
-      ideabucket: "",
-
-
-    }
+      org: "",
+      ideabucket: ""
+    };
     // console.log(this.props)
     this.handleChange = this.handleChange.bind(this);
+    this.onChange = this.onChange.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
   }
 
-  componentDidMount()
-  {
+  componentDidMount() {
+    let orgset = new Set();
+    let ideaset = new Set();
 
-    let orgset = new Set()
-  let ideaset = new Set()
-    
-    this.props.cards.forEach(obj =>
-      {
-          orgset.add(
-            obj.Company
-            
-            
-          )
-          ideaset.add(
-            
-            obj.Domain
-            
-            )
-      })
-      orgset = Array.from(orgset);
-      ideaset = Array.from(ideaset);
+    this.props.cards.forEach(obj => {
+      orgset.add(obj.Company);
+      ideaset.add(obj.Domain);
+    });
+    orgset = Array.from(orgset);
+    ideaset = Array.from(ideaset);
 
-      orgset.forEach(e=>
-        {
-          orgs.push(
-            
-            <MenuItem value={e}>{e}</MenuItem>
-            
-            )
-        })
+    orgset.forEach(e => {
+      orgs.push(<MenuItem value={e}>{e}</MenuItem>);
+    });
 
-        ideaset.forEach(e=>
+    ideaset.forEach(e => {
+      ideas.push(<MenuItem value={e}>{e}</MenuItem>);
+    });
+  }
+
+  handleChange(event) {
+    let { name, type, value, checked } = event.target;
+
+    type != "checkbox"
+      ? this.setState(
           {
-            ideas.push(
-              
-              <MenuItem value={e}>{e}</MenuItem>
-              
-              )
-          })
+            [name]: value
+          },
+          () => {
+            this.props.filter(Object.assign({}, this.state));
+          }
+        )
+      : this.setState(
+          {
+            [name]: checked
+          },
+          () => {
+            this.props.filter(Object.assign({}, this.state));
+          }
+        );
   }
 
-  handleChange(event)
-  {
-    let {name, type, value, checked} = event.target
-    
-    type != "checkbox"? this.setState(
-      {
-        [name] : value
-      }, ()=>
-      {
-        this.props.filter(Object.assign({}, this.state));
-      }
-    ): this.setState(
-      {
-        [name]: checked
-      }, ()=>{
-        this.props.filter(Object.assign({}, this.state));
-      }
-    )
 
-    
-  }
+   onChange(newValue){console.log('onChange', newValue);}
+   onSubmit(){console.log('onSubmit');}
 
   render() {
     return (
-      <div>
-      <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" rel="stylesheet" />
-      <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
-      <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
-      <div>
-        
-        <div className="mainbar">
-            <Grid container 
-            direction="row" style={{
-              padding: '20px 0'
-            }}>
-              <Grid item md={3} sm={12}> 
-              <div className="beftext">
-                
-                
-                
-                  <FormControlLabel
-                    value="software"
-                    control={<Checkbox color="primary" style={radiostyle} checked = {this.state.software}  onChange={this.handleChange}/>}
-                    label="Software"
-                    name="software"
+      <Grid style={{ backgroundColor: "#260B2C" }}>
+        <Grid container item xs={9} spacing={3} style={{ margin: "auto" }}>
+          <Grid container item xs={3} spacing={3}>
+            <Grid item>
+              <FormControlLabel
+                value="software"
+                control={
+                  <Checkbox
+                    color="primary"
+                    style={radiostyle}
+                    checked={this.state.software}
+                    onChange={this.handleChange}
                   />
-                  <FormControlLabel
-                    value="hardware"
-                    control={<Checkbox color="primary" style={radiostyle} checked = {this.state.hardware}  onChange={this.handleChange}/>}
-                    label="Hardware"
-                    name="hardware"
-                  />
-                
-              </div>
-            </Grid>
-            <Grid item md={6} sm={12} container direction="row" >
-             
-                <Grid item sm={4}>
-                <Center style={{height:'100%'}}>
-                  <div className="filtertext">Filter by</div>
-                </Center >
-                  </Grid>
-                  <Grid item sm={4}>
-            <FormControl variant="outlined" className="firstlist" >
-            <InputLabel id="demo-simple-select-outlined-label">
-              Organisation
-           </InputLabel>
-            <Select style={{
-              background: 'white'
-            }} onChange={this.handleChange} name="org">
-              <MenuItem value="">
-                <em>None</em>
-              </MenuItem>
-                {orgs}
-            </Select>
-            </FormControl>
-            </Grid>
-            <Grid item sm={4}>
-            <FormControl variant="outlined" className="secondlist" >
-            <InputLabel id="demo-simple-select-outlined-label">
-              Idea Bucket
-           </InputLabel>
-            <Select style={{
-              background: 'white'
-            }} onChange={this.handleChange} name="ideabucket">
-                <MenuItem value="">
-            <em>None</em>
-          </MenuItem>
-          {ideas}
-            </Select>
-            </FormControl>
-            </Grid>
-            </Grid>
-            <Grid item md={3} sm={12}>
-              <div style={
-                {
-                margin: 'auto'
                 }
-              }>
-                <FormControl className="searchbox">
-                <TextField id="filled-basic" label="Search" variant="filled" onChange={this.handleChange} name="searchfilter" value={this.state.searchfilter} style={{
-                  background: 'white'
+                label="Software"
+                name="software"
+                style={{color:'white'}}
+              />
+            </Grid>
+            <Grid item>
+              <FormControlLabel
+                value="hardware"
+                control={
+                  <Checkbox
+                    color="primary"
+                    style={radiostyle}
+                    checked={this.state.hardware}
+                    onChange={this.handleChange}
+                  />
+                }
+                label="Hardware"
+                name="hardware"
+                style={{color:'white'}}
+              />
+            </Grid>
+          </Grid>
+          <Grid container item xs={6} spacing={3}>
+            <Grid item style={{color:'white'}} >
+              <Center style={{ height: '100%' }}>
+                Filter by:
+              </Center>
+            </Grid>
+            <Grid item xs={5}>
+              <form>
+                <RRS
+                multiselect
+                  name="Organization"
+                  prefix="Organization: "
+                  options={[
+                    { text: 'All', value: 'null' },
+                    { text: 'Oldsmobile', value: 'oldsmobile', markup: <span>Oldsmobile</span> },
+                    { text: 'Ford', value: 'ford', markup: <span>Ford</span> }
+                  ]}
+                  selectedValue="All"
+                  onSubmit={this.onSubmit}
+                  onChange={this.onChange}
+                  caretIcon={<CaretIcon />}
+                  style={{width:'300px'}}
+                />
+              </form>
+            </Grid>
+            <Grid item style={{width:'max-content'}}>
+              <form>
+                <RRS
+                multiselect
+                name="Bucket"
+                prefix="Bucket: "
+                  options={[
+                    { text: 'All', value: 'null' },
+                    { text: 'Oldsmobile', value: 'oldsmobile', markup: <span>Oldsmobile</span> },
+                    { text: 'Ford', value: 'ford', markup: <span>Ford</span> }
+                  ]}
+                  selectedValue="oldsmobile"
+                  onSubmit={this.onSubmit}
+                  onChange={this.onChange}
+                  caretIcon={<CaretIcon />}
+                  style={{width:'300px'}}
+                />
+              </form>
+            </Grid>
+          </Grid>
+          <Grid container item xs={3} spacing={3}>
+            <Grid item xs={12}>
+            <TextField id="search" label="Search" variant="outlined" onChange={this.handleChange} name="searchfilter" value={this.state.searchfilter} style={{
+                  background: 'white',  height: '100%', width: '100%', borderRadius:'5px'
                 }}/>
-                </FormControl>
-            </div>
             </Grid>
-            
-            </Grid>
-        </div>
-      </div>
-      </div>
-    );
+          </Grid>
+
+        </Grid>
+      </Grid>
+    ); 
   }
 }
 
