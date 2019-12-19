@@ -77,7 +77,7 @@ export default class BottomCardMerge extends React.Component{
                 this.setState(
                     {
                         show: newShow,
-                        InviteCode: obj.InviteCode,
+                        inviteCode: obj.inviteCode,
                         snack: true,
                         team: obj.team
                     }
