@@ -32,22 +32,33 @@ class App extends Component {
     }
 
     handleSubmit() {
-        fetch(`${this.props.url}/team/create/`, {
-            method: "POST",
-            credentials: "include",
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-              },
-            body:JSON.stringify( {
-                TeamName: this.state.teamname
-            })
-        }).then(res => res.json())
-        .then(data => {
-            if (data.status == "success")
-                this.props.changeParentState(3, data);
-            else this.props.changeParentState(-1, data);
-        });
+        try{
+            fetch(`${this.props.url}/team/create/`, {
+                method: "POST",
+                credentials: "include",
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body:JSON.stringify( {
+                    TeamName: this.state.teamname
+                })
+            }).then(res => res.json())
+            .then(data => {
+                if (data.status == "success")
+                    this.props.changeParentState(3, data);
+                else this.props.changeParentState(-1, data);
+            });
+        }
+        catch(e)
+        {
+            console.log(e)
+            data = {
+                status: 'error',
+                msg: 'Something went wrong :('
+            }
+            this.props.changeParentState(-1, data);
+        }
     }
 
     render() {
