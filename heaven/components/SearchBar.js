@@ -1,9 +1,5 @@
 import React, { Component } from "react";
 import "../styles/searchbar.css";
-import { CaretIcon } from "./CaretIcon";
-import RRS from 'react-responsive-select';
-import "react-responsive-select/dist/ReactResponsiveSelect.css";
-
 import {
   Radio,
   FormControl,
@@ -13,17 +9,27 @@ import {
   FormControlLabel,
   Checkbox,
   Grid,
-  InputLabel,
-  MenuItem
+  MenuItem,
 } from "@material-ui/core/";
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import Input from '@material-ui/core/Input';
+import InputLabel from '@material-ui/core/InputLabel';
+import ListItemText from '@material-ui/core/ListItemText';
+
 
 import Center from "react-center";
 const radiostyle = {
   color: "#fff"
 };
 
-let orgs = [],
-  ideas = [];
+const customTheme = createMuiTheme({
+  palette: {
+    primary: { main: '#000' },
+    secondary: { main: '#000' }
+  }
+});
+
+
 class SearchBar extends Component {
   constructor(props) {
     super();
@@ -32,33 +38,12 @@ class SearchBar extends Component {
       software: true,
       hardware: true,
       searchfilter: "",
-      org: "",
-      ideabucket: ""
+      orgs: [],
+      ideas: [],
     };
     // console.log(this.props)
     this.handleChange = this.handleChange.bind(this);
-    this.onChange = this.onChange.bind(this);
-    this.onSubmit = this.onSubmit.bind(this);
-  }
 
-  componentDidMount() {
-    let orgset = new Set();
-    let ideaset = new Set();
-
-    this.props.cards.forEach(obj => {
-      orgset.add(obj.Company);
-      ideaset.add(obj.Domain);
-    });
-    orgset = Array.from(orgset);
-    ideaset = Array.from(ideaset);
-
-    orgset.forEach(e => {
-      orgs.push(<MenuItem value={e}>{e}</MenuItem>);
-    });
-
-    ideaset.forEach(e => {
-      ideas.push(<MenuItem value={e}>{e}</MenuItem>);
-    });
   }
 
   handleChange(event) {
@@ -80,18 +65,57 @@ class SearchBar extends Component {
           () => {
             this.props.filter(Object.assign({}, this.state));
           }
-        );
+      );
   }
 
-
-   onChange(newValue){console.log('onChange', newValue);}
-   onSubmit(){console.log('onSubmit');}
-
   render() {
+
+    let orgset = new Set();
+    let ideaset = new Set();
+    let orgs = [],
+      ideas = [];
+    this.props.cards.forEach(obj => {
+      orgset.add(obj.Company);
+      ideaset.add(obj.Domain);
+    });
+
+    orgset = Array.from(orgset);
+    ideaset = Array.from(ideaset);
+
+    orgset.forEach(e => {
+      orgs.push(<MenuItem key={e} value={e}>
+        <Checkbox
+          checked={this.state.orgs.indexOf(e) > -1} />
+        <ListItemText primary={e} />
+      </MenuItem>);
+    });
+
+
+
+    ideaset.forEach(e => {
+      ideas.push(<MenuItem key={e} value={e}>
+        <Checkbox
+          checked={this.state.ideas.indexOf(e) > -1} />
+        <ListItemText primary={e} />
+      </MenuItem>);
+    });
+
+    const ITEM_HEIGHT = 48;
+    const ITEM_PADDING_TOP = 8;
+    const MenuProps = {
+      PaperProps: {
+        style: {
+          maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+          width: 350,
+          backgroundColor:'white'
+        },
+      },
+    };
+    console.log(orgs);
     return (
       <Grid style={{ backgroundColor: "#260B2C" }}>
-        <Grid container item xs={9} spacing={3} style={{ margin: "auto" }}>
-          <Grid container item xs={3} spacing={3}>
+        <Grid container item xl={9} md={11} spacing={3} style={{ margin: "auto" }}>
+
             <Grid item>
               <FormControlLabel
                 value="software"
@@ -124,63 +148,79 @@ class SearchBar extends Component {
                 style={{color:'white'}}
               />
             </Grid>
-          </Grid>
-          <Grid container item xs={6} spacing={3}>
+
+
             <Grid item style={{color:'white'}} >
               <Center style={{ height: '100%' }}>
                 Filter by:
               </Center>
             </Grid>
             <Grid item xs={5}>
-              <form>
-                <RRS
-                multiselect
-                  name="Organization"
-                  prefix="Organization: "
-                  options={[
-                    { text: 'All', value: 'null' },
-                    { text: 'Oldsmobile', value: 'oldsmobile', markup: <span>Oldsmobile</span> },
-                    { text: 'Ford', value: 'ford', markup: <span>Ford</span> }
-                  ]}
-                  selectedValue="All"
-                  onSubmit={this.onSubmit}
-                  onChange={this.onChange}
-                  caretIcon={<CaretIcon />}
-                  style={{width:'300px'}}
-                />
-              </form>
+            <FormControl style={{
+              minWidth: 120,
+              maxWidth: 300,
+              backgroundColor: 'white',
+              borderRadius:'5px'}}>
+              <InputLabel id="organization" >Organization</InputLabel>
+              <Select
+                labelId="organization"
+                id="organization-mutiple-checkbox"
+                multiple
+                value={this.state.orgs}
+                name='orgs'
+                onChange={this.handleChange}
+                input={<Input />}
+                renderValue={selected => selected.join(', ')}
+                MenuProps={MenuProps}
+                variant="outlined"
+              >
+                {orgs}
+              </Select>
+            </FormControl>
             </Grid>
             <Grid item style={{width:'max-content'}}>
-              <form>
-                <RRS
-                multiselect
-                name="Bucket"
-                prefix="Bucket: "
-                  options={[
-                    { text: 'All', value: 'null' },
-                    { text: 'Oldsmobile', value: 'oldsmobile', markup: <span>Oldsmobile</span> },
-                    { text: 'Ford', value: 'ford', markup: <span>Ford</span> }
-                  ]}
-                  selectedValue="oldsmobile"
-                  onSubmit={this.onSubmit}
-                  onChange={this.onChange}
-                  caretIcon={<CaretIcon />}
-                  style={{width:'300px'}}
-                />
-              </form>
+            <FormControl style={{
+              minWidth: 120,
+              maxWidth: 300,
+              backgroundColor: 'white',
+              borderRadius: '5px'
+            }}>
+              <InputLabel id="ideas" >ideas</InputLabel>
+              <Select
+                labelId="ideas"
+                id="ideas-mutiple-checkbox"
+                multiple
+                value={this.state.ideas}
+                name='ideas'
+                onChange={this.handleChange}
+                input={<Input />}
+                renderValue={selected => selected.join(', ')}
+                MenuProps={MenuProps}
+                variant="outlined"
+              >
+                {ideas}
+              </Select>
+            </FormControl>
             </Grid>
-          </Grid>
-          <Grid container item xs={3} spacing={3}>
-            <Grid item xs={12}>
-            <TextField id="search" label="Search" variant="outlined" onChange={this.handleChange} name="searchfilter" value={this.state.searchfilter} style={{
-                  background: 'white',  height: '100%', width: '100%', borderRadius:'5px'
-                }}/>
-            </Grid>
-          </Grid>
 
+
+          <Grid item xs={3}>
+            <Center style={{ height: '100%' }}>
+              <MuiThemeProvider theme={customTheme}>
+                <TextField id="search" label="Search" variant="filled"
+                  onChange={this.handleChange}
+                  name="searchfilter"
+                  value={this.state.searchfilter}
+                  style={{
+                    borderRadius: '5px',
+                    backgroundColor:'white',
+                    }} />
+              </MuiThemeProvider>
+            </Center>
+          </Grid>
         </Grid>
       </Grid>
-    ); 
+    );
   }
 }
 
