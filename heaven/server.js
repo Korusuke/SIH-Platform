@@ -19,9 +19,8 @@ app.prepare().then(() => {
     })
 
     server.get('/profile', (req, res) => {
-        console.log(req)
         if(req.cookies && req.cookies.token)
-            return app.render(req, res, '/profileMember', req.query)
+            return app.render(req, res, '/profile', req.query)
         return res.redirect('/')
     })
 
@@ -31,6 +30,10 @@ app.prepare().then(() => {
 
     server.get('/problem/:id', (req, res) => {
         return app.render(req, res, `/problem/${req.params.id}`, req.query)
+    })
+
+    server.get('/upload', (req, res) => {
+        return app.render(req, res, '/upload', req.query)
     })
 
     server.all('*', (req, res) => {
