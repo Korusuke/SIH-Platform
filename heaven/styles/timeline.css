@@ -5,3 +5,63 @@
 .vertical-timeline-element-content-arrow {
     transform: translateY(50%);
 }
+
+.orange-timeline-element > div > div{
+    background-color: #fff;
+    color: #599D71;
+    border-top: 5px solid #F4902D;
+    margin-top: -5vh;
+}
+
+.green-timeline-element > div > div{
+    background-color: #fff;
+    color: #F4902D;
+    border-top: 5px solid #599D71;
+    margin-top: -5vh;
+}
+
+.orange-timeline-element > div > span{
+    margin-left: -7.5px !important ;
+    margin-top: 30px !important ;
+    height: 15px !important ;
+    width: 15px !important ;
+    background-color: #fff;
+    color: #707070 !important ; 
+    border: #707070 !important ;
+    box-shadow: 0 0 0 3px #707070, 
+            inset 0 2px 0 rgba(0,0,0,.08), 
+            0 3px 0 4px rgba(0,0,0,.05);
+}
+
+.green-timeline-element > div > span{
+    margin-left: -7.5px !important ;
+    margin-top: -15px !important ;
+    height: 15px !important ;
+    width: 15px !important ;
+    background-color: #fff !important ;
+    color: #707070 !important ;
+    border: #707070 !important ;
+    box-shadow: 0 0 0 3px #707070, 
+            inset 0 2px 0 rgba(0,0,0,.08), 
+            0 3px 0 4px rgba(0,0,0,.05);
+}
+
+@media only screen and (max-width: 1169px){
+    .orange-timeline-element > div > div{
+        margin-top: 5vh !important ;
+    }
+    
+    .green-timeline-element > div > div{
+        margin-top: 5vh !important ;
+    }
+    
+    .orange-timeline-element > div > span{
+        margin-left: 12px !important ;
+        margin-top: 30px !important ;
+    }
+    
+    .green-timeline-element > div > span{
+        margin-left: 12px !important ;
+        margin-top:  30px !important ;
+    }
+}
