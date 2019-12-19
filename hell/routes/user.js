@@ -9,32 +9,6 @@ client.on('error', (err) => {
   console.log('Something went wrong ', err);
 });
 
-async function verifyToken(req, res, next) {
-    const token = req.cookies.token;
-    if(!token){
-      res.json({
-        'msg': 'Token not present'
-      });
-      return;
-    }
-    blacklistedTokens = await client.lrange('blacklistedTokens',0,-1);
-    if(token in blacklistedTokens){
-      res.json({
-        "msg":"Token invalidated, please sign in again",
-      });
-      return;
-    } 
-    jwt.verify(token, privateKey, (err, decoded) => {
-      if (err) {
-        res.json({'msg': 'Token expired'});
-      }
-      else{
-        req.token = token;
-        req.decoded = decoded;
-        next();
-      }
-    });
-}
 
 router.post('/', (req, res) => {
     // if using verifyToken middleware replace req.body.email with req.decoded.email
