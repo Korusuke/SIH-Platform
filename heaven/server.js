@@ -18,7 +18,7 @@ app.prepare().then(() => {
 
     server.get('/profile', (req, res) => {
         if(req.cookie && req.cookie.token)
-            return app.render(req, res, '/profile', req.query)
+            return app.render(req, res, '/profileMember', req.query)
         return res.redirect('/')
     })
 
