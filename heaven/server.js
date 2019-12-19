@@ -1,31 +1,48 @@
-const { createServer } = require('http')
-const { parse } = require('url')
 const next = require('next')
-
+const express = require('express')
+const axios = require('axios')
+const cookieParser = require('cookie-parser');
+const port = parseInt(process.env.PORT, 10) || 3000
 const dev = process.env.NODE_ENV !== 'production'
 const app = next({ dev })
 const handle = app.getRequestHandler()
 
 app.prepare().then(() => {
-    createServer((req, res) => {
-    // Be sure to pass `true` as the second argument to `url.parse`.
-    // This tells it to parse the query portion of the URL.
-        const parsedUrl = parse(req.url, true)
-        const { pathname, query } = parsedUrl
-        if (pathname === '/') {
-            console.log(req.cookie);
-            app.render(req, res, '/index', query)
-        } else if (pathname === '/problems') {
-            app.render(req, res, '/problems', query)
-        } else if (pathname === '/profile') {
-            console.log("profile page");
-            app.render(req, res, '/profileMember', query)
-        }
-        else {
-            handle(req, res, parsedUrl)
-        }
-    }).listen(3000, err => {
+    const server = express()
+
+    server.use(cookieParser());
+
+    server.get('/', (req, res) => {
+        if(req.cookies && req.cookies.token)
+            return res.redirect('/profile')
+        return app.render(req, res, '/index', req.query)
+    })
+
+    server.get('/profile', (req, res) => {
+        if(req.cookies && req.cookies.token)
+            return app.render(req, res, '/profile', req.query)
+        return res.redirect('/')
+    })
+
+    server.get('/problems', (req, res) => {
+        return app.render(req, res, '/problems', req.query)
+    })
+
+    server.get('/problem/:id', (req, res) => {
+        return app.render(req, res, `/problem/${req.params.id}`, req.query)
+    })
+
+    server.get('/upload', (req, res) => {
+        return app.render(req, res, '/upload', req.query)
+    })
+
+    server.all('*', (req, res) => {
+        return handle(req, res)
+    })
+
+    server.listen(port, err => {
         if (err) throw err
-        console.log('> Ready on http://localhost:3000')
+        console.log(`> Ready on http://localhost:${port}`)
     })
 })
+

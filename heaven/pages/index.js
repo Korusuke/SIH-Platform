@@ -10,8 +10,10 @@ export default function Index() {
     
     return (
         <div>
-            <Header />
-            <IndexContent url="http://localhost:8080"/>
+            <div id="content-wrap">
+                <Header />
+                <IndexContent url="http://localhost:8080" />
+            </div>
             <Footer/>
         </div>
     );
