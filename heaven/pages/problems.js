@@ -61,14 +61,14 @@ export default class Problems extends React.Component {
   }
 
     render(){
-      console.log(this.state.found.length)
+      // console.log(this.state.found.length)
       return (
           <div>
               <Header />
-              <NoiceBanner text="Problem Statements"/>
+              <NoiceBanner text="Problem Statements" backgroundImage={"/assets/images/banner.jpg"} /> 
               <SearchBar filter={this.applyFilter} cards={this.props.problems} />
-              <ProblemsContainer cards={this.state.found} />
-              {/* <Footer/> */}
+              <ProblemsContainer cards={this.state.found} /> 
+              <Footer/>
           </div>
       );
     }
