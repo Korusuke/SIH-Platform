@@ -49,11 +49,10 @@ export default function VerticalSlider() {
       }
       i += 1
       return <VerticalTimelineElement
-        className="vertical-timeline-element--work"
-        contentStyle={{ marginTop: `${c}vh`, background: '#fff', color: '#599D71', borderTop:'5px solid #F4902D' }}
+        className="orange-timeline-element"
+        contentStyle={{ marginTop: `${c}vh`}}
         contentArrowStyle={{ borderRight: '7px solid #F4902D' }}
         date={timeline[i-1].date}
-        iconStyle={{ marginLeft: '-0.51vw', marginTop: '4.19vh', height:'1vw', width:'1vw', background: '#fff', color: '#707070', border: '#707070',boxShadow:'0 0 0 3px #707070, inset 0 2px 0 rgba(0,0,0,.08), 0 3px 0 4px rgba(0,0,0,.05)'}}
       >
     <h3 className="vertical-timeline-element-title">{timeline[i-1].title}</h3>
 
@@ -63,11 +62,9 @@ export default function VerticalSlider() {
       i += 1
       c = -5
       return <VerticalTimelineElement
-        className="vertical-timeline-element--work"
-        contentStyle={{ marginTop: `${c}vh`, background: '#fff', color: '#599D71', borderTop:'5px solid #599D71' }}
+        className="green-timeline-element"
         contentArrowStyle={{ borderRight: '7px solid #599D71' }}
         date={timeline[i-1].date}
-        iconStyle={{ marginLeft: '-0.51vw', marginTop: `-1.3vh`, height: '1vw', width: '1vw', background: '#fff', color: '#707070', border: '#707070',boxShadow:'0 0 0 3px #707070, inset 0 2px 0 rgba(0,0,0,.08), 0 3px 0 4px rgba(0,0,0,.05)'}}
       >
         <h3 className="vertical-timeline-element-title">{timeline[i-1].title}</h3>
 
@@ -81,7 +78,8 @@ export default function VerticalSlider() {
         '&..before':{
             background:'#707070'
         }
-    }}>
+    }}
+    >
 
     {time_component()}
 

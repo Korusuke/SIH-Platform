@@ -30,23 +30,31 @@ const useStyles = makeStyles(theme => ({
 export default function IndexContent(props)
 {
     return(
-        <Container maxWidth="xl" style={{paddingTop:'5%'}}>
-        <Grid
-            container
-            direction="row"
-            spacing={3}
-        >
-          <Grid item md={8} xs={12} style={{ padding: '10px' }}>
-            <Paper>
-              <div style={{ width: '100%', margin:'auto' }}>
-                <Timeline />
-              </div>
-            </Paper>
+        <Container maxWidth="lg" style={{paddingTop:'5%',paddingBottom: '45px'}}>
+          <Grid
+              container
+              direction="row"
+              spacing={3}
+              justify = 'center'
+          >
+            <Grid item md={8} xs={10} style={{ padding: '10px' }}>
+              <Paper>
+                <div style={{ width: '100%', margin:'auto' }}>
+                  <Timeline />
+                </div>
+              </Paper>
+            </Grid>
+            <Grid item md={4} xs={10} style={{ padding: '10px' }}>
+              <Grid item xs={12} style={{ padding: '10px' }}>
+                    <Login url={props.url}/>
+              </Grid>
+              <Grid item xs={12} style={{ padding: '10px' }}>
+                <Paper style={{ padding: '10px' }}>
+                  In Case of any issues please contact teamprobably@gmail.com
+                </Paper>
+              </Grid>
+            </Grid>
           </Grid>
-          <Grid item md={4} xs={12} style={{ padding: '10px' }}>
-                <Login url={props.url}/>
-          </Grid>
-        </Grid>
         </Container>
     )
 }
