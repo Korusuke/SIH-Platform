@@ -123,7 +123,7 @@ class SearchBar extends Component {
                 
               </div>
             </Grid>
-            <Grid item md={6} sm={12} container direction="row" spacing={3}>
+            <Grid item md={6} sm={12} container direction="row" >
              
                 <Grid item sm={4}>
                 <Center style={{height:'100%'}}>

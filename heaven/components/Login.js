@@ -123,7 +123,7 @@ export default class LoginBox extends React.Component{
     handleSignUpSubmit = () => {
         const { SignUpData } = this.state.signup;
 
-        axios.post('http://876c5fcc.ngrok.io/signup', SignUpData).then(
+        axios.post(`${this.props.url}/signup/`, SignUpData).then(
             res => {
                 console.log(res)
                 if (res.status == 200) {
@@ -150,7 +150,8 @@ export default class LoginBox extends React.Component{
 
     handleLoginSubmit = () => {
         const { loginData } = this.state.login;
-        axios.post('http://876c5fcc.ngrok.io/login', loginData).then(
+        const { email } = loginData
+        axios.post(`${this.props.url}/login/`, loginData).then(
             res => {
                 console.log(res.data)
                 if (res.status == 200) {
@@ -178,7 +179,8 @@ export default class LoginBox extends React.Component{
 
     handleOTPVerify = () => {
         const { SignUpData } = this.state.signup;
-        axios.post('http://876c5fcc.ngrok.io/verify', SignUpData).then(
+        const { email } = SignUpData
+        axios.post(`${this.props.url}/verify/`, SignUpData).then(
             res => {
                 console.log(res.data)
                 if (res.status == 200) {
@@ -215,7 +217,7 @@ export default class LoginBox extends React.Component{
         });
 
         ValidatorForm.addValidationRule('isEmailSomaiya', (value) => {
-            if (value.slice(-11) !== 'somaiya.edu') {
+            if (value.slice(-11) !== 'somaiya.edu' && value.slice(-11) !== 'yopmail.com') {
                 return false;
             }
             return true;
@@ -229,12 +231,14 @@ export default class LoginBox extends React.Component{
         });
     }
 
-    componentWillMount() {
-        const cookies = new Cookies();
-        if (cookies.get('token')) {
-            location.href = '/problems';
-        }
-    }
+    // componentWillMount() {
+    //     const cookies = new Cookies();
+    //     if (cookies.get('token')) {
+    //         location.href = '/problems';
+    //     }
+    // }
+
+
     render() {
         const { loginData } = this.state.login;
         const { SignUpData } = this.state.signup;
