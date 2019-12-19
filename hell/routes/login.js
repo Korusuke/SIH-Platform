@@ -6,6 +6,51 @@ const router = express.Router();
 const User = require('../models/user.model');
 const LoginData = require('../models/logindata.model');
 const { verifyToken } = require('./token');
+const redis = require('redis');
+
+const client = redis.createClient();
+client.on('error', (err) => {
+  console.log('Something went wrong ', err);
+});
+
+
+// Redirect from reset link to password reset page if success. From there call update password
+router.post('/reset/*', (req, res)=>{
+    let url = req.originalUrl.split("/");
+    let token = url[url.length-1];
+    client.get(token, (err, user)=>{
+        if(err){
+            console.log(err);
+            res.sendStatus(500);
+            return;
+        }
+        if(user===null){
+            res.json({
+                msg:'You do not have a generated otp'
+            });
+            return;
+        }
+        console.log(user);
+        await client.del(token);
+        res.send(200).json({
+            msg:'Reset link okay',
+            user: user,
+        });
+    });
+});
+
+router.post('/update', (req, res)=>{
+    const { user, password } = req.body;
+    User.findOne({email: user}, (err, doc)=>{
+        if(err){
+            console.log(err);
+            res.sendStatus(500);
+            return;
+        }
+        doc.password = password;
+        doc.save();
+    });
+});
 
 router.post('/test', verifyToken, (req, res)=>{
   console.log("test");
