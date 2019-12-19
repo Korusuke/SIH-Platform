@@ -229,12 +229,14 @@ export default class LoginBox extends React.Component{
         });
     }
 
-    componentWillMount() {
-        const cookies = new Cookies();
-        if (cookies.get('token')) {
-            location.href = '/problems';
-        }
-    }
+    // componentWillMount() {
+    //     const cookies = new Cookies();
+    //     if (cookies.get('token')) {
+    //         location.href = '/problems';
+    //     }
+    // }
+
+
     render() {
         const { loginData } = this.state.login;
         const { SignUpData } = this.state.signup;
