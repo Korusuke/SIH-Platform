@@ -35,7 +35,7 @@ router.post('/create', (req, res)=>{
     const decodedData = jwt.decode(req.cookies.token, {complete: true});
     console.log('Decode: %s',decodedData)
     // Remove req.body.email for production env
-    const leader = decodedData.payload.Email?decodedData.payload.Email:req.body.email;
+    const leader = decodedData.payload.email || decodedData.payload.Email;
     let members = [leader];
     inviteCode = otpGenerator.generate(6, { specialChars: false });
     teamId = uuid(); 
@@ -64,9 +64,10 @@ router.post('/create', (req, res)=>{
 
 router.post('/join', (req, res)=>{
   const { inviteCode } = req.body;
+  console.log(req.body)
   const decodedData = jwt.decode(req.cookies.token, {complete: true});
-  console.log('Decode: %s',decodedData)
-  const user = decodedData.payload.Email;
+  console.log('Decode:',decodedData)
+  const user = decodedData.payload.email || decodedData.payload.Email;
   Team.findOne({'inviteCode': inviteCode}, (err, result)=>{
     if(err){
       res.send(500);
@@ -101,7 +102,7 @@ router.post('/join', (req, res)=>{
 
 router.post('/currentTeam', (req, res)=>{
   const decodedData = jwt.decode(req.cookies.token, {complete: true});
-  const user = decodedData.payload.Email;
+  const user = decodedData.payload.email || decodedData.payload.Email;
   Team.findOne({"members" : {"$in" : [user]}}, (err, result)=>{
     if(err){
       res.send(500);
@@ -129,31 +130,29 @@ router.post('/currentTeam', (req, res)=>{
 
 router.post('/exit', verifyToken, (req,res)=>{
   const decodedData = jwt.decode(req.cookies.token, {complete: true});
-  const user = decodedData.payload.Email?decodedData.payload.Email:req.body.email;
-  Team.findOne({members:user},async (err, data)=>{
+  const user = decodedData.payload.email || decodedData.payload.Email;
+  Team.findOne({"members" : {"$in" : [user]}},async (err, data)=>{
     if(err){
       console.log(err);
       res.send(500)
       return;
     }
-    if(data.leader === user){
-      await removeUser(user);
-      if(data.members.length()==0){
-        deleteTeam(user);
-        res.status(200).json({
-          msg:'Deleted team since no other member present'
-        })
-        return;
-      }
-      data.leader=members[0]
+
+      let index = data.members.indexOf(user);
+    
+      if (index > -1)
+        data.members.splice(index, 1);
+      
+      if(data.members)
+        data.leader=data.members[0]
       data.save();
-      res.send(200).json({msg: 'Exited team'});
-    }
+      res.json({status: 'success', msg: 'Exited team'});
+    
   });
 });
 
 async function removeUser(user){
-  await User.findOneAndUpdate({members: user}, {$pull:{members: user}},{new: true} ,(err, data)=>{
+  await Team.findOneAndUpdate({members: user}, {$pull:{members: user}},{new: true} ,(err, data)=>{
     if(err){
       console.log(err);
       res.send(500);

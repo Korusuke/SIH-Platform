@@ -2,7 +2,7 @@ const express = require('express');
 const redis = require('redis');
 const router = express.Router(); 
 const User = require('../models/user.model');
-
+const jwt = require('jsonwebtoken');
 const client = redis.createClient();
 client.on('error', (err) => {
   console.log('Something went wrong ', err);
@@ -11,14 +11,12 @@ client.on('error', (err) => {
 
 router.post('/', (req, res) => {
     // if using verifyToken middleware replace req.body.email with req.decoded.email
-    if (!req.body.email){
-        res.json({
-            'status': 'failure',
-            'msg': 'Invalid Fields'
-        })
-    }
+    const decodedData = jwt.decode(req.cookies.token, {complete: true});
+    console.log('Decode: ',decodedData)
+    const email = decodedData.payload.email || decodedData.payload.Email;
+    
     const filter = {
-        email: req.body.email
+        email: email
     }
 
     User.findOne(filter)
@@ -37,14 +35,13 @@ router.post('/', (req, res) => {
 
 router.get('/', (req, res) => {
     // if using verifyToken middleware replace req.body.email with req.decoded.email
-    if (!req.body.email){
-        res.json({
-            'status': 'failure',
-            'msg': 'Invalid Fields'
-        })
-    }
+    
+    const decodedData = jwt.decode(req.cookies.token, {complete: true});
+    console.log('Decode:',decodedData)
+    const email = decodedData.payload.email || decodedData.payload.Email;
+    
     const filter = {
-        email: req.body.email
+        email: email
     }
 
     User.findOne(filter)
