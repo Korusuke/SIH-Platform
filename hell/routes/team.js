@@ -17,8 +17,8 @@ client.on('error', (err) => {
 router.use('/invite', require('./invitation'));
 
 router.post('/create', (req, res)=>{
-  const { TeamName } = req.body;
-  Team.findOne({'TeamName': TeamName}, (err, result)=>{
+  const { teamName } = req.body;
+  Team.findOne({'teamName': teamName}, (err, result)=>{
     if(err){
       console.log(err);
       res.send(500);
@@ -36,10 +36,10 @@ router.post('/create', (req, res)=>{
     const decodedData = jwt.decode(req.cookies.token, {complete: true});
     console.log('Decode: %s',decodedData)
     // Remove req.body.email for production env
-    const leader =decodedData.payload.Email || req.body.email;
+    const leader = decodedData.payload.Email || req.body.email;
     let members = [leader];
-    InviteCode = otpGenerator.generate(6, { specialChars: false });
-    TeamId = uuid(); 
+    inviteCode = otpGenerator.generate(6, { specialChars: false });
+    teamId = uuid(); 
     const doc = {
       teamName,
       leader,
@@ -56,7 +56,7 @@ router.post('/create', (req, res)=>{
       res.json({
         'status': 'success',
         'msg': 'Team Created Successfully',
-        'InviteCode':InviteCode,
+        'inviteCode':inviteCode,
         team: team1
       });
     });
@@ -64,11 +64,11 @@ router.post('/create', (req, res)=>{
 });
 
 router.post('/join', (req, res)=>{
-  const { InviteCode } = req.body;
+  const { inviteCode } = req.body;
   const decodedData = jwt.decode(req.cookies.token, {complete: true});
   console.log('Decode: %s',decodedData)
   const user = decodedData.payload.Email;
-  Team.findOne({'InviteCode': InviteCode}, (err, result)=>{
+  Team.findOne({'inviteCode': inviteCode}, (err, result)=>{
     if(err){
       res.send(500);
       return;
