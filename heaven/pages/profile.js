@@ -17,11 +17,12 @@ export default function ProfileMember(){
     return(
         <div>
         <Header/>
-        <Container maxWidth="xl">
+        <Container maxWidth="lg">
         <Paper style={{
-            padding: '40px'
+            padding: '40px',
+            marginTop: '50px',
         }}>
-        < Profile />
+            < Profile />
         
         </Paper >
         <br/>

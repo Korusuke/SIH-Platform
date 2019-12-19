@@ -54,6 +54,7 @@ const customTheme = createMuiTheme({
 
 const divStyle = {
     width: '100%',
+    transition: '* 0.2s ease-out',
 };
 
 const customInputTheme = createMuiTheme({
@@ -160,8 +161,7 @@ export default class LoginBox extends React.Component{
                         const cookies = new Cookies();
                         cookies.set('token', res.data.token, { path: '/' });
                         console.log(cookies.get('token')); // Pacman
-                        const router = useRouter();
-                        router.push('/problems');
+                        location.href = '/problems'
 
                     }
                     this.snackcontent = <Snackbar type={res.data.status} msg={res.data.msg} />;
@@ -189,8 +189,8 @@ export default class LoginBox extends React.Component{
                         const cookies = new Cookies();
                         cookies.set('token', res.data.token, { path: '/' });
                         console.log(cookies.get('token')); // Pacman
-                        const router = useRouter();
-                        router.push('/problems');
+                        
+                        location.href='/problems'
 
                     }
                     this.snackcontent = <Snackbar type={res.data.status} msg={res.data.msg} />;
@@ -358,9 +358,9 @@ export default class LoginBox extends React.Component{
                 {this.state.snack ? this.snackcontent : null}
                 <Paper style={divStyle}>
                     <AppBar position="static">
-                        <Tabs value={this.state.value} onChange={this.handleChange} aria-label="simple tabs example">
-                            <Tab label="Login" {...a11yProps(0)} style={{width:'50%'}}/>
-                            <Tab label="Sign Up" {...a11yProps(1)} style={{ width: '50%' }}/>
+                        <Tabs value={this.state.value} onChange={this.handleChange} aria-label="simple tabs example" style={{width:'100%'}}>
+                            <Tab label="Login" {...a11yProps(0)} style={{minWidth:'50%', maxWidth:'50%'}}/>
+                            <Tab label="Sign Up" {...a11yProps(1)} style={{ minWidth: '50%', maxWidth:'50%' }}/>
                         </Tabs>
                     </AppBar>
                     <TabPanel value={this.state.value} index={0}>
