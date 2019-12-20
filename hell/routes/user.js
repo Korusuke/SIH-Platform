@@ -2,6 +2,7 @@ const express = require('express');
 const redis = require('redis');
 const router = express.Router(); 
 const User = require('../models/user.model');
+const jwt = require('jsonwebtoken');
 const _ = require("lodash")
 
 const client = redis.createClient();
@@ -12,14 +13,12 @@ client.on('error', (err) => {
 
 router.post('/', (req, res) => {
     // if using verifyToken middleware replace req.body.email with req.decoded.email
-    if (!req.body.email){
-        res.json({
-            'status': 'failure',
-            'msg': 'Invalid Fields'
-        })
-    }
+    const decodedData = jwt.decode(req.cookies.token, {complete: true});
+    console.log('Decode: ',decodedData)
+    const email = decodedData.payload.email || decodedData.payload.Email;
+    
     const filter = {
-        email: req.body.email
+        email: email
     }
     let shape = ["squares", "isogrids", "space invaders"];
     let numberColours = [2,3,4];
@@ -29,7 +28,7 @@ router.post('/', (req, res) => {
         for(var key in req.body){
             user[key] = req.body[key];
         }
-        user[profilePic] = `https://www.tinygraphs.com/#?name=${req.body.email}&shape=${_.sample(shape)}&theme=${_.sample(theme)}&numcolors=${_.sample(numberColours)}#tryitout`
+        user['profilePic'] = `https://www.tinygraphs.com/#?name=${req.body.email}&shape=${_.sample(shape)}&theme=${_.sample(theme)}&numcolors=${_.sample(numberColours)}#tryitout`
         user.save()
             .then(() => {
                 res.json({'status': 'success', 'msg': 'user updated'});
@@ -41,14 +40,13 @@ router.post('/', (req, res) => {
 
 router.get('/', (req, res) => {
     // if using verifyToken middleware replace req.body.email with req.decoded.email
-    if (!req.body.email){
-        res.json({
-            'status': 'failure',
-            'msg': 'Invalid Fields'
-        })
-    }
+    
+    const decodedData = jwt.decode(req.cookies.token, {complete: true});
+    console.log('Decode:',decodedData)
+    const email = decodedData.payload.email || decodedData.payload.Email;
+    
     const filter = {
-        email: req.body.email
+        email: email
     }
 
     User.findOne(filter)

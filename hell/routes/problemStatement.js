@@ -4,6 +4,7 @@ const ProblemStatement = require('../models/problemStatement.model')
 const Team = require('../models/team.model');
 const User = require('../models/user.model');
 const router = express.Router();
+const jwt = require('jsonwebtoken');
 
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -36,12 +37,16 @@ router.post('/add_label', (req, res) => {
 });
 
 router.get('/comments', (req, res) => {
-    const email = req.query.email;
+    
+    const decodedData = jwt.decode(req.cookies.token, {complete: true});
+    //console.log(decodedData)
+    //console.log(decodedData.payload.email)
+    const email = decodedData.payload.email || decodedData.payload.Email;
     const { psid } = req.query
     console.log(email, psid);
     if (!email || !psid) {
         return res.json({
-            'status': 'success',
+            'status': 'error',
             'msg': 'Invalid Fields'
         })
     }
@@ -78,7 +83,9 @@ router.get('/comments', (req, res) => {
 });
 
 router.post('/comments', (req, res) => {
-    const email = req.body.email;
+    const decodedData = jwt.decode(req.cookies.token, {complete: true});
+    console.log('post')
+    const email = decodedData.payload.email || decodedData.payload.Email;
     const { psid, comment } = req.body;
     if (!email || !psid || !comment) {
         return res.json({
@@ -86,9 +93,21 @@ router.post('/comments', (req, res) => {
             'msg': 'Invalid Fields'
         })
     }
+
+    console.log(psid, comment)
+
+    
+
     User.findOne({email: email})
         .then(user => {
             console.log("user found");
+            console.log(comment)
+            if(user.firstName && user.lastName)
+                comment.author = `${user.firstName} ${user.lastName}`
+            else
+                comment.author = email
+
+            console.log(comment)
             user.comments.push({
                 'psid': psid,
                 'id': user.comments_count,
@@ -99,9 +118,33 @@ router.post('/comments', (req, res) => {
             console.log(user);
             user.save()
                 .then(() => {
+                    console.log('saved', user)
+
+                    var comments = [];
+                    for (var i in user.comments) {
+                        if(user.comments[i].psid == psid)
+                            comments.push(user.comments[i]);
+                    }
+                    console.log(comments, user.comments);
+                    if(user.teamId)
+                        Team.findOne({'teamId': user.teamId})
+                            .then(team => {
+                                var members = team.members;
+                                for(var i in members) {
+                                    console.log("fetching member comments");
+                                    if(members[i]!=email)
+                                        User.findOne({email: email, comments: {psid: psid}})
+                                            .then(user => {
+                                                comments = comments.concat(user.comments);
+                                            }).catch(err => res.status(500))
+                                }
+                                console.log(comments);
+                            }).catch(err => res.status(500));
+            
+
                     res.json({
                         'status': 'success', 
-                        'msg': 'All comments fetched', 
+                        'msg': 'Comment added',
                         'comments': comments
                     });
                 })
