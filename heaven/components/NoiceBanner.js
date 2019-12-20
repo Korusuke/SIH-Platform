@@ -4,14 +4,14 @@ import {Grid} from '@material-ui/core'
 
 export default function NoiceBanner(props)
 {
-    return ( 
+    return (
         <div style ={{
             backgroundImage: props.backgroundImage ? `url(${props.backgroundImage})` : null,
             background: props.backgroundImage ? null : "purple",
             backgroundSize: 'cover',
             height : '30vh',
             maxHeight: '250px',
-            width:"100%" 
+            width:"100%"
         }}>
             <Grid container direction="row" style={{height:'100%'}}>
                 <Grid item md={7} sm={12} style={{height:'100%'}}>
