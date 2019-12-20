@@ -1,10 +1,10 @@
 import React from 'react';
-import Chaand from '../components/chaand';
+import Filter from '../components/Filter';
 
 export default function chaand(){
     return(
         <div>
-        <Chaand />
+            <Filter/>
         </div>
     );
 }
