@@ -1,21 +1,22 @@
 import React, { Component } from 'react'
 import Link from 'next/link';
 import FitText from '@kennethormandy/react-fittext';
-import '../styles/problemcard.css';
 import { Grid, Card, Avatar, ButtonBase } from '@material-ui/core'
 import Divider from '@material-ui/core/Divider';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCode, faMicrochip } from '@fortawesome/free-solid-svg-icons'
+// import '../styles/problemcard.css';
+
 class ProblemCard extends Component {
 
   type(t) {
     if (t == 'Software') {
       return <Grid item xs={12} style={{color:'orange'}}>
-        <FontAwesomeIcon icon={faCode} />
+        <FontAwesomeIcon icon={faCode} width="18" />
       </Grid>
     } else {
-      return <Grid item xs={12} style={{ color: 'green' }}>
-        <FontAwesomeIcon icon={faMicrochip} />
+      return <Grid item xs={12} style={{ color: 'green'}}>
+        <FontAwesomeIcon icon={faMicrochip} width="18"/>
       </Grid>
     }
   }
@@ -33,7 +34,13 @@ class ProblemCard extends Component {
       <Card onMouseOver={this.toggleRaised}
         onMouseOut={this.toggleRaised}
         raised={this.state.raised}
-        style={{ width: '100%' }} className="maincard">
+            style={{
+              width: '100%',
+              minHeight: '250px',
+              padding: '20px',
+              position: 'relative'
+            }}
+          >
 
           <Grid container direction="column" >
           <Grid container item xs={12} direction="row" alignItems="center" spacing={2}>
