@@ -29,8 +29,9 @@ const useStyles = makeStyles(theme => ({
 
 export default function IndexContent(props)
 {
+  let theme = props.theme
     return(
-        <Container maxWidth="lg" style={{paddingTop:'5%',paddingBottom: '45px'}}>
+        <Container maxWidth="lg" style={{paddingTop:'5%',paddingBottom: '45px'}} >
           <Grid
               container
               direction="row"
@@ -40,16 +41,16 @@ export default function IndexContent(props)
             <Grid item md={8} xs={10} style={{ padding: '10px' }}>
               <Paper>
                 <div style={{ width: '100%', margin:'auto' }}>
-                  <Timeline />
+                <Timeline theme={props.theme}/>
                 </div>
               </Paper>
             </Grid>
             <Grid item md={4} xs={10} style={{ padding: '10px' }}>
               <Grid item xs={12} style={{ padding: '10px' }}>
-                    <Login url={props.url}/>
+                <Login url={props.url} theme={props.theme}/>
               </Grid>
               <Grid item xs={12} style={{ padding: '10px' }}>
-                <Paper style={{ padding: '10px' }}>
+              <Paper style={{ padding: '10px' }} >
                   In Case of any issues please contact teamprobably@gmail.com
                 </Paper>
               </Grid>
