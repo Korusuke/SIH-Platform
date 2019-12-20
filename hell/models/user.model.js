@@ -14,7 +14,7 @@ const userSchema = new Schema({
     },
     firstName: {type: String},
     middleName: {type: String},
-    lastName: [String],
+    lastName: {type: String},
     phone: {type: Number},
     gender: {type: String},
     dob: {type: Date},
@@ -28,7 +28,10 @@ const userSchema = new Schema({
         {
             psid: String,
             id: Number,
-            comment: String,
+            comment: {
+                author: String,
+                message: String
+            },
             time: Date
         }
     ],

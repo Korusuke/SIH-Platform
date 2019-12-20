@@ -49,7 +49,7 @@ class App extends Component {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    InviteCode: this.state.teamcode
+                    inviteCode: this.state.teamcode
                 })
             }).then(res => res.json())
             .then(data => {

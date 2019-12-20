@@ -24,18 +24,22 @@ class Profile extends React.Component{
     super()
     this.props = props
     this.handleChange = this.handleChange.bind(this)
+    this.update = this.update.bind(this)
 
     this.state = {
-      firstname:"",
-      middlename:"",
-      lastname:"",
-      email:"",
-      phonenumber:"",
-      gender:"",
-      division:"",
-      department:"",
-      year:"",
-      rollno:""
+      user:{
+        firstName:"",
+        middleName:"",
+        lastName:"",
+        phone:"",
+        gender:"",
+        division:"",
+        department:"",
+        year:"",
+        rollNo:"",
+        email:""
+      },
+      updating: false
     }
   }
 
@@ -43,24 +47,103 @@ class Profile extends React.Component{
     {
       let {name, type, value} = event.target
       console.log(event.target)
-      this.setState(
-        {
-          [name]:value
-        }
-      )
+      if(this.state.user.hasOwnProperty(name))
+      {
+        this.setState((prevState)=>{
+          console.log('setting')
+          let user = Object.assign({}, prevState.user)
+          user[name] = value
+          console.log(user)
+          return ({
+            user: user
+          })
+        }, () => {
+          console.log('ns', this.state);
+      })
+          
+      }
+      else{
+        this.setState(
+          {
+            [name]:value
+          }
+        )
+      }
 
       console.log(name+": "+value)
     }
 
+    componentDidMount()
+    {
+      fetch('http://localhost:8080/user/', {
+                
+                credentials: "include",
+                
+          }).then(res=>res.json()).then(data=>{
+            console.log(data)
+
+            let user = {}
+            for(let key in data.data)
+            {
+              console.log(key)
+              if(this.state.user.hasOwnProperty(key) && this.state.user[key] !== data.data[key])
+              {
+                  user[key]= data.data[key]
+              }
+            }
+            console.log(user)
+            
+            this.setState(
+              {
+                user: user
+              })
+          })
+    }
+
+      update()
+      {
+        this.setState(
+          {
+            updating: true
+          }
+        )
+
+        try{
+          fetch('http://localhost:8080/user/', {
+                method: "POST",
+                credentials: "include",
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(this.state.user)
+          }).then(res=>res.json()).then(data=>{
+            console.log(data)
+
+            this.setState(
+              {
+                updating: false
+              }
+            )
+            
+          })
+        }catch(e)
+        {
+          console.log(e)
+          this.setState({
+            updating: false
+          })
+        }
+      }
     render(){
      // const inputLabel = React.useRef(null);
     return (
           <Grid justify={this.getJustify()} container spacing ={3}>
         <Grid justify={this.getJustify()} style={{padding:"1% 1% 1% 1%"}} item xs ={8} sm ={3}>
           <div style={{width:"100%",position:"relative",}}>
-            <Avatar style={{width:"100%", height:"100%"}} 
-                    alt="Remy Sharp" 
-                    src="https://hack.kjscecodecell.com/assets/team/compressed/Karan.png"  />
+            <Avatar className="profilePagePhoto" style={{width:"100%", height:"100%" }} 
+                    
+                    src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"  />
           </div>
         </Grid>
         <Grid justify={this.getJustify()} style={{paddingTop:"2%"}} container item spacing={3} xs={12} sm={9} >
@@ -69,19 +152,22 @@ class Profile extends React.Component{
                 <TextField fullWidth='true'
                 required
                 id="outlined-required"
-                name = "firstname"
+                name = "firstName"
                 label="First Name"
                 variant="outlined"
+                value={this.state.user.firstName}
                 onChange={this.handleChange}
               />
             </Grid>
             <Grid justify={this.getJustify()} item xs={12} md={4}>
               <TextField fullWidth='true'
                 required
+                
                 id="outlined-required"
-                name="middlename"
+                name="middleName"
                 label="Middle name"
                 variant = "outlined"
+                value={this.state.user.middleName}
                 onChange={this.handleChange}
               />
             </Grid>
@@ -89,9 +175,10 @@ class Profile extends React.Component{
               <TextField fullWidth='true'
                 required
                 id="outlined-required"
-                name="lastname"
+                name="lastName"
                 label="Last name"
                 variant = "outlined"
+                value={this.state.user.lastName}
                 onChange={this.handleChange}
               />
             </Grid>
@@ -101,10 +188,11 @@ class Profile extends React.Component{
               <TextField fullWidth='true'
                 required
                 id="outlined-full-width"
-                name="email"
                 label="Email"
                 fullwidth="true"
                 variant = "outlined"
+                disabled="true"
+                value={this.state.user.email}
                 onChange={this.handleChange}
               />
             </Grid>
@@ -114,8 +202,9 @@ class Profile extends React.Component{
               <TextField fullWidth='true'
                 required
                 id="outlined-full-width"
-                name="phonenumber"
+                name="phone"
                 label="Phone Number"
+                value={this.state.user.phone}
                 InputProps={{
                   startAdornment: <InputAdornment position="start">+91</InputAdornment>,
                 }}
@@ -132,6 +221,7 @@ class Profile extends React.Component{
               select
               label="Gender"
               name="gender"
+              value={this.state.user.gender}
               onChange={this.handleChange}
               variant="outlined">
                 <option value={"Male"}>Male</option>
@@ -147,7 +237,8 @@ class Profile extends React.Component{
             <TextField fullWidth='true'
               required
               id="outlined-required"
-              name="rollno"
+              name="rollNo"
+              value={this.state.user.rollNo}
               label="Roll No."
               variant = "outlined"
               onChange={this.handleChange}
@@ -160,6 +251,7 @@ class Profile extends React.Component{
               select
               label="Year"
               name="year" 
+              value={this.state.user.year}
               onChange={this.handleChange}
               variant="outlined">
               <option value={"First"}>First</option>
@@ -177,6 +269,7 @@ class Profile extends React.Component{
               select
               label="Department"
               name="department" 
+              value={this.state.user.department}
               onChange={this.handleChange}
               variant="outlined">
                 <option value={"Computers"}>Computers</option>
@@ -194,6 +287,7 @@ class Profile extends React.Component{
               id="outlined-required"
               name="division"
               label="Division"
+              value={this.state.user.division}
               variant = "outlined"
               onChange={this.handleChange}
             />
@@ -203,7 +297,7 @@ class Profile extends React.Component{
 
 
               <Grid justify={this.getJustify()} item xs={6} sm={2}>
-              <Button onClick={this.update}>Update</Button>
+              <Button variant="contained" onClick={this.update} disabled={this.state.updating}>{this.state.updating? 'Updating..': 'Update'}</Button>
               </Grid>
             </Grid>
           </Grid>

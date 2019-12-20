@@ -1,5 +1,6 @@
 import React from 'react'
 import Center from 'react-center'
+import CommentsContainer from './CommentsContainer'
 import {Grid, Container, Box, ButtonBase} from '@material-ui/core'
 
 export default class ProblemDefinition extends React.Component{
@@ -29,9 +30,9 @@ export default class ProblemDefinition extends React.Component{
                             heigth: '200px',
                             background:'white',
                             width: '80%', margin:'auto', marginTop: '50px',
-                        }}><ButtonBase style={{width:'100%'}}>
-                            <Center><h1>Comments</h1></Center>
-                            </ButtonBase>
+                        }}><div style={{width:'100%'}}>
+                            <CommentsContainer psid={this.props.problem.Number}/>
+                            </div>
                         </Box>
                     </Grid>
                     <Grid item md={5}>

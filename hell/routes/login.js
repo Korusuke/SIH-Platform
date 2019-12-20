@@ -31,7 +31,7 @@ router.post('/reset/*', (req, res)=>{
             return;
         }
         console.log(user);
-        await client.del(token);
+        /*await*/ client.del(token);
         res.send(200).json({
             msg:'Reset link okay',
             user: user,
