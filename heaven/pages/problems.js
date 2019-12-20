@@ -2,10 +2,10 @@ import React from 'react'
 import NoiceBanner from '../components/NoiceBanner'
 import Footer from '../components/Footer'
 import Header from '../components/Header'
-import SearchBar from '../components/SearchBar'
-import '../styles/index.css'
+import Filter from '../components/Filter'
 import fetch from 'isomorphic-unfetch';
 import ProblemsContainer from '../components/ProblemsContainer'
+import Head from 'next/head'
 
 export default class Problems extends React.Component {
     // console.log(props.problems);
@@ -63,13 +63,21 @@ export default class Problems extends React.Component {
     render(){
       // console.log(this.state.found.length)
       return (
-          <div>
-              <Header />
-              <NoiceBanner text="Problem Statements" backgroundImage={"/assets/images/banner.jpg"} />
-              <SearchBar filter={this.applyFilter} cards={this.props.problems} />
-              <ProblemsContainer cards={this.state.found} />
-              {/* <Footer/> */}
-          </div>
+        <div>
+          <Head>
+            <title>Problem Statements</title>
+            <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
+            <meta
+              name="viewport"
+              content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no"
+            />
+          </Head>
+          <Header />
+          <NoiceBanner text="Problem Statements" backgroundImage={"/assets/images/banner.jpg"} />
+          <Filter filter={this.applyFilter} cards={this.props.problems} />
+          <ProblemsContainer cards={this.state.found} />
+          {/* <Footer/> */}
+      </div>
       );
     }
   }
