@@ -189,7 +189,7 @@ export default class LoginBox extends React.Component{
                         const cookies = new Cookies();
                         cookies.set('token', res.data.token, { path: '/' });
                         console.log(cookies.get('token')); // Pacman
-                        
+
                         location.href='/problems'
 
                     }
