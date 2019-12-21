@@ -1,7 +1,10 @@
 const redis = require('redis');
-const jwt = require('jsonwebtoken');  
+const jwt = require('jsonwebtoken');
 
-const client = redis.createClient();
+const client = redis.createClient({
+  host: 'redis-server',
+  port: 6379
+});
 client.on('error', (err) => {
   console.log('Something went wrong ', err);
 });
@@ -25,7 +28,7 @@ async function verifyToken(req, res, next) {
           "msg":"Token invalidated, please sign in again",
         });
         return;
-      } 
+      }
       jwt.verify(token, process.env.KEY, (err) => {
         if (err) {
           res.json({'msg': 'Token expired'});

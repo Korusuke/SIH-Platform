@@ -1,14 +1,17 @@
 const express = require('express');
-const jwt = require('jsonwebtoken'); 
+const jwt = require('jsonwebtoken');
 const otpGenerator = require('otp-generator');
 const nodemailer = require('nodemailer');
-const router = express.Router(); 
+const router = express.Router();
 const User = require('../models/user.model');
 const LoginData = require('../models/logindata.model');
 const { verifyToken } = require('./token');
 const redis = require('redis');
 
-const client = redis.createClient();
+const client = redis.createClient({
+    host: 'redis-server',
+    port: 6379
+});
 client.on('error', (err) => {
   console.log('Something went wrong ', err);
 });
@@ -86,7 +89,7 @@ router.post('/login', (req, res) => {
                     token,
                 });
               });
-            
+
         })
         .catch(err => res.status(500));
 });
@@ -135,7 +138,7 @@ router.post('/verify', (req, res) => {
                     .catch(err => {console.log(err);res.status(500)})
             }
             else
-                res.status(200).json({'status': 'failure', 'msg': 'OTP already verified'});  
+                res.status(200).json({'status': 'failure', 'msg': 'OTP already verified'});
         })
         .catch(err => {console.log(err);res.status(500)});
 })
@@ -143,7 +146,7 @@ router.post('/verify', (req, res) => {
 router.post('/signup', (req, res) => {
     const { email, password } = req.body;
     const otp = otpGenerator.generate(6, { specialChars: false });
-    
+
     console.log(email, password, email.slice(-11));
 
     if(!email || email.slice(-11)!='somaiya.edu' || password.length < 8) {
@@ -155,7 +158,7 @@ router.post('/signup', (req, res) => {
     }
 
     User.find({email})
-        .then(user => {          
+        .then(user => {
             if(user.length>0){
                 res.json({
                     'status': 'failure',
@@ -168,7 +171,7 @@ router.post('/signup', (req, res) => {
                 newlogindata.save()
                 .then(() => {
                     const emailId = process.env.EMAIL;
-                    const password = process.env.PASSWORD; 
+                    const password = process.env.PASSWORD;
                     var transporter = nodemailer.createTransport({
                         service: "gmail",
                         auth:{
@@ -208,10 +211,10 @@ router.post('/signup', (req, res) => {
                     })
                 })
                 .catch(err => {res.status(500); console.log(err);})
-            }      
+            }
         })
         .catch(err => res.status(500));
-    
+
 })
 
 router.post('/logout', verifyToken,(req,res)=>{
