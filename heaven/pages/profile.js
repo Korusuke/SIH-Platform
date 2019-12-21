@@ -13,21 +13,41 @@ import {Container, Paper} from '@material-ui/core'
 
 import '../styles/index.css'
 
-export default function ProfileMember(){
-    return(
-        <div>
-        <Header/>
-        <Container maxWidth="lg">
-        <Paper style={{
-            padding: '40px',
-            marginTop: '50px',
-        }}>
-            < Profile />
+export default class ProfileMember extends React.Component{
+    constructor(props)
+    {
+        super()
+        this.props = props
+        this.state = {
+            allowTeam: false
+        }
 
-        </Paper >
-        <br/>
-            <BottomCardMerge url="http://localhost:8080"/>
-        </Container>
-        </div>
-    );
+        this.changeState = this.changeState.bind(this)
+
+    }
+
+    changeState(obj)
+    {
+        this.setState(obj)
+    }
+
+    render()
+    {
+        return(
+            <div>
+            <Header/>
+            <Container maxWidth="lg">
+            <Paper style={{
+                padding: '40px',
+                marginTop: '50px',
+            }}>
+                < Profile changeParentState={this.changeState}/>
+
+            </Paper >
+            <br/>
+                <BottomCardMerge url="http://localhost:8080" allowTeam={this.state.allowTeam}/>
+            </Container>
+            </div>
+        );
+    }
 }
