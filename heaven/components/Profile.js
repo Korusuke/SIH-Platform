@@ -54,20 +54,18 @@ class Profile extends React.Component {
 
     handleChange(event) {
         let { name, type, value } = event.target;
-        console.log(event.target);
+        //console.log('STATE', this.state)
+        //console.log(event.target, this.state);
         if (this.state.user.hasOwnProperty(name)) {
             this.setState(
                 prevState => {
-                    console.log("setting");
+                    //console.log("setting");
                     let user = Object.assign({}, prevState.user);
                     user[name] = value;
-                    console.log(user);
+                    // console.log(user);
                     return {
                         user: user
                     };
-                },
-                () => {
-                    console.log("ns", this.state);
                 }
             );
         } else {
@@ -76,7 +74,7 @@ class Profile extends React.Component {
             });
         }
 
-        console.log(name + ": " + value);
+        // console.log(name + ": " + value);
     }
 
     componentDidMount() {
@@ -85,13 +83,13 @@ class Profile extends React.Component {
         })
             .then(res => res.json())
             .then(data => {
-                console.log(data);
+                //console.log('DATA', data);
 
-                console.log(this.state.user)
+                //console.log(this.state.user)
 
-                let user = {};
+                let user = Object.assign({}, this.state.user)
                 for (let key in data.data) {
-                    console.log(key);
+                    // console.log(key);
                     if (
                         this.state.user.hasOwnProperty(key) 
                     ) {
@@ -208,19 +206,20 @@ class Profile extends React.Component {
         return (
             <Grid justify={this.getJustify()} container spacing={3}>
                 <Grid
-                    justify={this.getJustify()}
+                    // justify={this.getJustify()}
                     style={{ padding: "1% 1% 1% 1%" }}
                     item
                     xs={8}
                     sm={3}
                 >
-                    <div style={{ width: "100%", position: "relative" }}>
-                        <Avatar
-                            className="profilePagePhoto"
-                            style={{ width: "100%", height: "100%" }}
-                            src={profileImg}
-                            onClick={this.handlePhotoClick}
-                        />
+                   
+                    <div style={{overflow:'hidden', borderRadius:'50%', 
+                    width: '100%', paddingTop: '100%', 
+                    position: 'relative', background: 'grey'}} 
+                    onClick={this.handlePhotoClick} className="profilePagePhoto">
+                                <img style={{width:'100%', height: 'auto',
+                                        position: 'absolute', top: 0, left: 0}} src={profileImg}></img>
+                          
                         <input
                             type="file"
                             id="file"
@@ -248,9 +247,11 @@ class Profile extends React.Component {
                         spacing={3}
                         direction="row"
                     >
-                        <Grid justify={this.getJustify()} item xs={12} md={4}>
+                        <Grid 
+                        // justify={this.getJustify()} 
+                        item xs={12} md={4}>
                             <TextField
-                                fullWidth="true"
+                                fullWidth={true}
                                 required
                                 id="outlined-required"
                                 name="firstName"
@@ -260,9 +261,11 @@ class Profile extends React.Component {
                                 onChange={this.handleChange}
                             />
                         </Grid>
-                        <Grid justify={this.getJustify()} item xs={12} md={4}>
+                        <Grid 
+                        // justify={this.getJustify()} 
+                        item xs={12} md={4}>
                             <TextField
-                                fullWidth="true"
+                                fullWidth={true}
                                 required
                                 id="outlined-required"
                                 name="middleName"
@@ -272,9 +275,11 @@ class Profile extends React.Component {
                                 onChange={this.handleChange}
                             />
                         </Grid>
-                        <Grid justify={this.getJustify()} item xs={12} md={4}>
+                        <Grid 
+                        // justify={this.getJustify()} 
+                        item xs={12} md={4}>
                             <TextField
-                                fullWidth="true"
+                                fullWidth={true}
                                 required
                                 id="outlined-required"
                                 name="lastName"
@@ -293,15 +298,17 @@ class Profile extends React.Component {
                         spacing={3}
                         direction="row"
                     >
-                        <Grid justify={this.getJustify()} item xs={12} md={8}>
+                        <Grid 
+                        // justify={this.getJustify()} 
+                        item xs={12} md={8}>
                             <TextField
-                                fullWidth="true"
+                                fullWidth={true}
                                 required
                                 id="outlined-full-width"
                                 label="Email"
-                                fullwidth="true"
+                                fullWidth={true}
                                 variant="outlined"
-                                disabled="true"
+                                disabled={true}
                                 value={this.state.user.email}
                                 onChange={this.handleChange}
                             />
@@ -313,17 +320,17 @@ class Profile extends React.Component {
                         item
                         xs={12}
                         spacing={3}
-                        direction="coloumn"
+                        direction="row"
                     >
                         <Grid
-                            justify={this.getJustify()}
+                            // justify={this.getJustify()}
                             item
                             xs={12}
                             sm={8}
                             lg={4}
                         >
                             <TextField
-                                fullWidth="true"
+                                fullWidth={true}
                                 required
                                 id="outlined-full-width"
                                 name="phone"
@@ -336,20 +343,20 @@ class Profile extends React.Component {
                                         </InputAdornment>
                                     )
                                 }}
-                                fullwidth="true"
+                                fullWidth={true}
                                 variant="outlined"
                                 onChange={this.handleChange}
                             />
                         </Grid>
                         <Grid
-                            justify={this.getJustify()}
+                            // justify={this.getJustify()}
                             item
                             xs={12}
                             sm={4}
                             lg={4}
                         >
                             <TextField
-                                fullWidth="true"
+                                fullWidth={true}
                                 id="gender-select"
                                 select
                                 label="Gender"
@@ -371,17 +378,17 @@ class Profile extends React.Component {
                         item
                         xs={12}
                         spacing={3}
-                        direction="coloumn"
+                        direction="row"
                     >
                         <Grid
-                            justify={this.getJustify()}
+                            // justify={this.getJustify()}
                             item
                             xs={12}
                             sm={6}
                             md={4}
                         >
                             <TextField
-                                fullWidth="true"
+                                fullWidth={true}
                                 required
                                 id="outlined-required"
                                 name="rollNo"
@@ -392,14 +399,14 @@ class Profile extends React.Component {
                             />
                         </Grid>
                         <Grid
-                            justify={this.getJustify()}
+                            // justify={this.getJustify()}
                             item
                             xs={12}
                             sm={6}
                             md={3}
                         >
                             <TextField
-                                fullWidth="true"
+                                fullWidth={true}
                                 id="year-select"
                                 select
                                 label="Year"
@@ -415,14 +422,14 @@ class Profile extends React.Component {
                             </TextField>
                         </Grid>
                         <Grid
-                            justify={this.getJustify()}
+                            // justify={this.getJustify()}
                             item
                             xs={12}
                             sm={8}
                             md={3}
                         >
                             <TextField
-                                fullWidth="true"
+                                fullWidth={true}
                                 id="dept-select"
                                 select
                                 label="Department"
@@ -439,14 +446,14 @@ class Profile extends React.Component {
                             </TextField>
                         </Grid>
                         <Grid
-                            justify={this.getJustify()}
+                            // justify={this.getJustify()}
                             item
                             xs={12}
                             sm={4}
                             md={2}
                         >
                             <TextField
-                                fullWidth="true"
+                                fullWidth={true}
                                 required
                                 id="outlined-required"
                                 name="division"
@@ -458,7 +465,9 @@ class Profile extends React.Component {
                         </Grid>
                     </Grid>
 
-                    <Grid justify={this.getJustify()} item xs={6} sm={2}>
+                    <Grid 
+                    // justify={this.getJustify()} 
+                    item xs={6} sm={2}>
                         <Button
                             variant="contained"
                             onClick={this.update}

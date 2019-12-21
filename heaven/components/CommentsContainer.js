@@ -8,7 +8,6 @@ import Center from 'react-center'
 import '../styles/index.css'
 import {Paper, Button, Grid} from '@material-ui/core'
 
-
 export default class CommentsContainer extends React.Component {
 
     constructor(props)
@@ -23,6 +22,7 @@ export default class CommentsContainer extends React.Component {
 
         this.handleChange = this.handleChange.bind(this)
         this.handleClick = this.handleClick.bind(this)
+        this.handleDelete = this.handleDelete.bind(this)
         
     }
 
@@ -77,7 +77,9 @@ export default class CommentsContainer extends React.Component {
             }
             ).then(res => res.json())
             .then(data => {
+                console.log(data)
                 this.setState({
+                    
                     comments: data.comments,
                     newcomment: "",
                     posting: false
@@ -99,6 +101,32 @@ export default class CommentsContainer extends React.Component {
         )
     }
 
+    handleDelete(cid)
+    {
+        console.log('deleting', cid)
+        fetch('http://localhost:8080/ps/comments/'
+        ,
+        {
+            method: "DELETE",
+            credentials: "include",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                comment_id: cid,
+                psid: this.props.psid
+            })
+        }
+        ).then(res => res.json())
+        .then(data => {
+            console.log(data)
+            this.setState({
+                comments: data.comments
+            })
+        })
+    }
+
     render()
     {
         let arr = []
@@ -108,7 +136,7 @@ export default class CommentsContainer extends React.Component {
                 e=>{
                     arr.push(
                         <div style={{padding: '10px'}}>
-                        <Comment name={e.comment.author}  delComment = {true} message={
+                        <Comment name={e.comment.author} cid={e['id']}  deletable = {e.deletable} onDelete={this.handleDelete} message={
                             e.comment.message
                         }/>
                         </div>
