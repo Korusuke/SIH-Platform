@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-var otpGenerator = require('otp-generator');    
+var otpGenerator = require('otp-generator');
 const { uuid } = require('uuidv4');
 const Team = require('../models/team.model');
 const User = require('../models/user.model');
@@ -8,7 +8,10 @@ const redis = require('redis')
 const jwt = require('jsonwebtoken');
 const {verifyToken} = require('./token');
 
-const client = redis.createClient();
+const client = redis.createClient({
+  host: 'redis-server',
+  port: 6379
+});
 client.on('error', (err) => {
   console.log('Something went wrong ', err);
 });
@@ -38,7 +41,7 @@ router.post('/create', (req, res)=>{
     const leader = decodedData.payload.email || decodedData.payload.Email;
     let members = [leader];
     inviteCode = otpGenerator.generate(6, { specialChars: false });
-    teamId = uuid(); 
+    teamId = uuid();
     const doc = {
       teamName,
       leader,
@@ -118,13 +121,13 @@ router.post('/currentTeam', (req, res)=>{
       return;
     }
     console.log(result);
-    
+
     res.json({
       status: 'success',
       state: 3,
       team:result
     });
-    
+
   });
 });
 
@@ -139,15 +142,15 @@ router.post('/exit', verifyToken, (req,res)=>{
     }
 
       let index = data.members.indexOf(user);
-    
+
       if (index > -1)
         data.members.splice(index, 1);
-      
+
       if(data.members)
         data.leader=data.members[0]
       data.save();
       res.json({status: 'success', msg: 'Exited team'});
-    
+
   });
 });
 
