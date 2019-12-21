@@ -1,6 +1,7 @@
 import React from 'react'
 import Center from 'react-center'
 import CommentsContainer from './CommentsContainer'
+import LabelsBox from './LabelsBox'
 import {Grid, Container, Box, Paper} from '@material-ui/core'
 
 export default class ProblemDefinition extends React.Component{
@@ -87,6 +88,8 @@ export default class ProblemDefinition extends React.Component{
                             </div>
                             
                         </Paper>
+
+                        <LabelsBox />
                     </Grid>
                 </Grid>
             </Container>
