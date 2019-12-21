@@ -1,11 +1,14 @@
 const express = require('express');
 const redis = require('redis');
-const router = express.Router(); 
+const router = express.Router();
 const User = require('../models/user.model');
 const jwt = require('jsonwebtoken');
 const _ = require("lodash")
 
-const client = redis.createClient();
+const client = redis.createClient({
+    host: 'redis-server',
+    port: 6379
+});
 client.on('error', (err) => {
   console.log('Something went wrong ', err);
 });
@@ -16,7 +19,7 @@ router.post('/', (req, res) => {
     const decodedData = jwt.decode(req.cookies.token, {complete: true});
     console.log('Decode: ',decodedData)
     const email = decodedData.payload.email || decodedData.payload.Email;
-    
+
     const filter = {
         email: email
     }
@@ -40,11 +43,11 @@ router.post('/', (req, res) => {
 
 router.get('/', (req, res) => {
     // if using verifyToken middleware replace req.body.email with req.decoded.email
-    
+
     const decodedData = jwt.decode(req.cookies.token, {complete: true});
     console.log('Decode:',decodedData)
     const email = decodedData.payload.email || decodedData.payload.Email;
-    
+
     const filter = {
         email: email
     }
