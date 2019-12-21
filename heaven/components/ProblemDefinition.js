@@ -1,7 +1,7 @@
 import React from 'react'
 import Center from 'react-center'
 import CommentsContainer from './CommentsContainer'
-import {Grid, Container, Box, ButtonBase} from '@material-ui/core'
+import {Grid, Container, Box, Paper} from '@material-ui/core'
 
 export default class ProblemDefinition extends React.Component{
     constructor(props)
@@ -20,16 +20,16 @@ export default class ProblemDefinition extends React.Component{
                 
                 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
                 <Grid container direction="row">
-                    <Grid item md={7}>
+                    <Grid item md={7} style={{marginBottom: '150px'}}>
                         <div style={{width: '80%', margin:'auto'}}>
                         <div style={{whiteSpace: 'pre-wrap'}}>
                             {this.props.problem.Description}
                             </div>
                         </div>
                         <Box boxShadow={3} style={{
-                            heigth: '200px',
+                            minHeight: '200px',
                             background:'white',
-                            width: '80%', margin:'auto', marginTop: '50px',
+                            width: '90%', margin:'auto', marginTop: '50px',
                         }}><div style={{width:'100%'}}>
                             <CommentsContainer psid={this.props.problem.Number}/>
                             </div>
@@ -37,8 +37,8 @@ export default class ProblemDefinition extends React.Component{
                     </Grid>
                     <Grid item md={5}>
 
-                        <Box style={{minHeight: '400px', transform:'translate(0, -100px)', background:'white'}} boxShadow={3}>
-                            <ButtonBase style={{width:'100%'}}>
+                        <Paper style={{minHeight: '400px', transform:'translate(0, -100px)', background:'white', wordBreak: 'break-all'}} >
+                            
                             <div style={{
                                 padding: '20px'
                             }}>
@@ -85,8 +85,8 @@ export default class ProblemDefinition extends React.Component{
                                     }
                                 </div>
                             </div>
-                            </ButtonBase>
-                        </Box>
+                            
+                        </Paper>
                     </Grid>
                 </Grid>
             </Container>
