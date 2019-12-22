@@ -46,15 +46,27 @@ export default class ProfileMember extends React.Component{
         this.handler = this.handler.bind(this)
     }
 
+    componentDidMount()
+    {
+        if(localStorage.getItem('siteTheme') && this.state.theme != localStorage.getItem('siteTheme') )
+        {
+            this.setState({theme:localStorage.getItem('siteTheme')})
+        }
+    }
+
 
     handler() {
         if (this.state.theme == 'light') {
             this.setState({
                 theme: 'dark'
+            }, ()=>{
+                localStorage.setItem('siteTheme', 'dark')
             })
         } else {
             this.setState({
                 theme: 'light'
+            }, ()=>{
+                localStorage.setItem('siteTheme', 'dark')
             })
         }
     }
@@ -75,7 +87,7 @@ export default class ProfileMember extends React.Component{
 
         return(
             <ThemeProvider theme={customtheme}>
-            <div style={{minHeight:'100vh'}}>
+            <div style={{minHeight:'100vh', background: curtheme.background, color: curtheme.text}}>
                 <Chaand handler={this.handler} chaand={this.state.theme == 'light' ? 1 : 0} />
                 <div id="content-wrap" style={{ backgroundColor: `${curtheme.background}`, color: `${curtheme.text}` }}>
             <Header loggedin={true}/>

@@ -47,12 +47,23 @@ function a11yProps(index) {
 }
 
 
-const customTheme = createMuiTheme({
+const customTheme = {
+    light: createMuiTheme({
     palette: {
+        type: 'light',
         primary: { main: '#ffffff' },
         secondary: { main: '#000000' }
     }
-});
+}),
+    dark:createMuiTheme({
+        
+        palette: {
+            type: 'dark',
+            primary: { main: '#000000' },
+            secondary: { main: '#ffffff' }
+        }
+    })
+}
 
 const divStyle = {
     width: '100%',
@@ -355,7 +366,7 @@ export default class LoginBox extends React.Component{
         }
 
         return (
-            <MuiThemeProvider theme={customTheme}>
+            <MuiThemeProvider theme={customTheme[this.props.themeState]}>
                 {this.state.snack ? this.snackcontent : null}
                 <Paper style={divStyle}>
                     <AppBar position="static">
