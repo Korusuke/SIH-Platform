@@ -14,6 +14,8 @@ import Snackbar from './snackbar';
 import Cookies from 'universal-cookie';
 import { useRouter, Router } from 'next/router'
 
+import envvar from '../env'
+
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
 
@@ -189,8 +191,7 @@ export default class LoginBox extends React.Component{
                         const cookies = new Cookies();
                         cookies.set('token', res.data.token, { path: '/' });
                         console.log(cookies.get('token')); // Pacman
-
-                        location.href='/problems'
+                        location.href='/profile'
 
                     }
                     this.snackcontent = <Snackbar type={res.data.status} msg={res.data.msg} />;

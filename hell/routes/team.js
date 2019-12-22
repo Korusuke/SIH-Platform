@@ -9,7 +9,7 @@ const jwt = require('jsonwebtoken');
 const {verifyToken} = require('./token');
 
 const client = redis.createClient({
-  host: 'redis-server',
+  host: 'localhost',
   port: 6379
 });
 client.on('error', (err) => {
@@ -120,14 +120,28 @@ router.post('/currentTeam', (req, res)=>{
       );
       return;
     }
-    console.log(result);
 
+    var members_list = result.members;
+    var members = []
+    for (var i in members_list){
+      User.findOne({email: members_list[i]})
+        .then(user => {
+console.log(user);
+          members.push({
+            email: user.email,
+            leader: user.email == result.leader ? true : false,
+            name: user.firstName +  user.lastName
+          })
+        })
+    }
+
+    result.members = members;
+    console.log(result);
     res.json({
       status: 'success',
       state: 3,
       team:result
     });
-
   });
 });
 

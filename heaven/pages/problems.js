@@ -7,6 +7,8 @@ import fetch from 'isomorphic-unfetch';
 import ProblemsContainer from '../components/ProblemsContainer'
 import Head from 'next/head'
 
+import envvar from '../env'
+
 export default class Problems extends React.Component {
     // console.log(props.problems);
     constructor(props)
@@ -36,9 +38,12 @@ export default class Problems extends React.Component {
         found = this.props.problems.filter(obj => obj.Category == 'Software' || obj.Category=='Hardware')
       else if (software)
         found = this.props.problems.filter(obj => obj.Category == 'Software' )
-      else
+      else if(hardware)
         found = this.props.problems.filter(obj => obj.Category == 'Hardware' )
+      else
+        found = this.props.problems.filter(obj => false )
 
+      console.log('ORG', org)
       if(org)
         found = found.filter(obj => obj.Company == org )
 
@@ -75,7 +80,7 @@ export default class Problems extends React.Component {
           <Header />
           <NoiceBanner text="Problem Statements" backgroundImage={"/assets/images/banner.jpg"} />
           <Filter filter={this.applyFilter} cards={this.props.problems} />
-          <ProblemsContainer cards={this.state.found} />
+          <ProblemsContainer cards={this.state.found} url={envvar.REACT_APP_SERVER_URL}/>
           {/* <Footer/> */}
       </div>
       );
@@ -83,9 +88,7 @@ export default class Problems extends React.Component {
   }
 
   Problems.getInitialProps = async function() {
-    const res = await fetch('https://cors-anywhere.herokuapp.com/http://possessive-bait.surge.sh/ps.json', {headers:{
-      'origin':'google.com'
-    }});
+    const res = await fetch(`${envvar.REACT_APP_SERVER_URL}/ps`);
     const data = await res.json();
 
     //console.log(data);

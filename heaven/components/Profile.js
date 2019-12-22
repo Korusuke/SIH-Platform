@@ -12,6 +12,31 @@ import {
 } from "@material-ui/core";
 import withWidth, { isWidthUp } from "@material-ui/core/withWidth";
 import InputAdornment from "@material-ui/core/InputAdornment";
+import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
+import Input from '@material-ui/core/Input';
+import {
+    Radio,
+    RadioGroup,
+    FormControlLabel,
+    Checkbox,
+} from "@material-ui/core/";
+import ListItemText from '@material-ui/core/ListItemText';
+
+
+
+import envvar from '../env'
+
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+    PaperProps: {
+        style: {
+            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+            width: 350,
+            backgroundColor: 'white'
+        },
+    },
+};
 
 class Profile extends React.Component {
     getJustify() {
@@ -78,7 +103,7 @@ class Profile extends React.Component {
     }
 
     componentDidMount() {
-        fetch("http://localhost:8080/user/", {
+        fetch(`${envvar.REACT_APP_SERVER_URL}/user/`, {
             credentials: "include"
         })
             .then(res => res.json())
@@ -91,7 +116,7 @@ class Profile extends React.Component {
                 for (let key in data.data) {
                     // console.log(key);
                     if (
-                        this.state.user.hasOwnProperty(key) 
+                        this.state.user.hasOwnProperty(key)
                     ) {
                         user[key] = data.data[key];
                     }
@@ -114,6 +139,7 @@ class Profile extends React.Component {
     }
 
     update() {
+        console.log('hello');
         this.setState({
             updating: true
         });
@@ -131,7 +157,7 @@ class Profile extends React.Component {
 
             console.log(fdata.get("email"));
 
-            fetch("http://localhost:8080/user/", {
+            fetch(`${envvar.REACT_APP_SERVER_URL}/user/`, {
                 method: "POST",
                 credentials: "include",
                 body: fdata
@@ -196,10 +222,12 @@ class Profile extends React.Component {
             });
     }
     render() {
+
+        console.log('PROCESS', process.env)
         // const inputLabel = React.useRef(null);
         let profileImg = this.state.user.profilePic
             ? this.state.user.profilePic[0] == "/"
-                ? `http://localhost:8080${this.state.user.profilePic}`
+                ? `${envvar.REACT_APP_SERVER_URL}${this.state.user.profilePic}`
                 : this.state.user.profilePic
             : "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png";
         // console.log(profileImg);
@@ -212,14 +240,14 @@ class Profile extends React.Component {
                     xs={8}
                     sm={3}
                 >
-                   
-                    <div style={{overflow:'hidden', borderRadius:'50%', 
-                    width: '100%', paddingTop: '100%', 
-                    position: 'relative', background: 'grey'}} 
+
+                    <div style={{overflow:'hidden', borderRadius:'50%',
+                    width: '100%', paddingTop: '100%',
+                    position: 'relative', background: 'grey'}}
                     onClick={this.handlePhotoClick} className="profilePagePhoto">
                                 <img style={{width:'100%', height: 'auto',
                                         position: 'absolute', top: 0, left: 0}} src={profileImg}></img>
-                          
+
                         <input
                             type="file"
                             id="file"
@@ -239,6 +267,12 @@ class Profile extends React.Component {
                     xs={12}
                     sm={9}
                 >
+                    <ValidatorForm
+                        ref="form"
+                        onSubmit={this.update}
+                        onError={errors => console.log(errors)}
+                        style={{ width: '100%' }}
+                    >
                     <Grid
                         justify={this.getJustify()}
                         container
@@ -247,8 +281,8 @@ class Profile extends React.Component {
                         spacing={3}
                         direction="row"
                     >
-                        <Grid 
-                        // justify={this.getJustify()} 
+                        <Grid
+                        // justify={this.getJustify()}
                         item xs={12} md={4}>
                             <TextField
                                 fullWidth={true}
@@ -261,8 +295,8 @@ class Profile extends React.Component {
                                 onChange={this.handleChange}
                             />
                         </Grid>
-                        <Grid 
-                        // justify={this.getJustify()} 
+                        <Grid
+                        // justify={this.getJustify()}
                         item xs={12} md={4}>
                             <TextField
                                 fullWidth={true}
@@ -275,8 +309,8 @@ class Profile extends React.Component {
                                 onChange={this.handleChange}
                             />
                         </Grid>
-                        <Grid 
-                        // justify={this.getJustify()} 
+                        <Grid
+                        // justify={this.getJustify()}
                         item xs={12} md={4}>
                             <TextField
                                 fullWidth={true}
@@ -298,8 +332,8 @@ class Profile extends React.Component {
                         spacing={3}
                         direction="row"
                     >
-                        <Grid 
-                        // justify={this.getJustify()} 
+                        <Grid
+                        // justify={this.getJustify()}
                         item xs={12} md={8}>
                             <TextField
                                 fullWidth={true}
@@ -355,20 +389,37 @@ class Profile extends React.Component {
                             sm={4}
                             lg={4}
                         >
-                            <TextField
-                                fullWidth={true}
-                                id="gender-select"
-                                select
-                                label="Gender"
-                                name="gender"
-                                value={this.state.user.gender}
-                                onChange={this.handleChange}
+                            <FormControl
                                 variant="outlined"
+                                style={{
+                                    minWidth:200
+                                }}
                             >
-                                <option value={"Male"}>Male</option>
-                                <option value={"Female"}>Female</option>
-                                <option value={"Other"}>Other</option>
-                            </TextField>
+
+                                <InputLabel id="gender" >Gender</InputLabel>
+                                <Select
+                                    labelId="gender"
+                                    label="Gender"
+                                    name="gender"
+                                    value={this.state.user.gender}
+                                    onChange={this.handleChange}
+                                    autoWidth
+
+                                >
+
+                                    <MenuItem key='Male' value='Male'>
+                                            Male
+                                    </MenuItem>
+                                    <MenuItem key='Female' value='Female'>
+                                            Female
+                                    </MenuItem>
+                                    <MenuItem key='Prefer Not to Answer' value='Prefer Not to Answer'>
+                                        Prefer Not to Answer
+                                    </MenuItem>
+
+
+                                </Select>
+                            </FormControl>
                         </Grid>
                     </Grid>
 
@@ -405,21 +456,41 @@ class Profile extends React.Component {
                             sm={6}
                             md={3}
                         >
-                            <TextField
-                                fullWidth={true}
-                                id="year-select"
-                                select
-                                label="Year"
-                                name="year"
-                                value={this.state.user.year}
-                                onChange={this.handleChange}
+                            <FormControl
                                 variant="outlined"
+                                style={{
+                                    minWidth: 200
+                                }}
                             >
-                                <option value={"First"}>First</option>
-                                <option value={"Second"}>Second</option>
-                                <option value={"Third"}>Third</option>
-                                <option value={"Fourth"}>Fourth</option>
-                            </TextField>
+
+                                <InputLabel id="year-select" >Year</InputLabel>
+                                <Select
+                                    labelId="year-select"
+                                    label="Year"
+                                    name="year"
+                                    value={this.state.user.year}
+                                    onChange={this.handleChange}
+                                    autoWidth
+
+                                >
+
+                                    <MenuItem key='First' value='First'>
+                                        First
+                                    </MenuItem>
+                                    <MenuItem key='Second' value='Second'>
+                                        Second
+                                    </MenuItem>
+                                    <MenuItem key='Third' value='Third'>
+                                        Third
+                                    </MenuItem>
+                                    <MenuItem key='Fourth' value='Fourth'>
+                                        Fourth
+                                    </MenuItem>
+
+
+
+                                </Select>
+                            </FormControl>
                         </Grid>
                         <Grid
                             // justify={this.getJustify()}
@@ -428,22 +499,30 @@ class Profile extends React.Component {
                             sm={8}
                             md={3}
                         >
-                            <TextField
-                                fullWidth={true}
-                                id="dept-select"
-                                select
-                                label="Department"
-                                name="department"
-                                value={this.state.user.department}
-                                onChange={this.handleChange}
+                            <FormControl
                                 variant="outlined"
+                                style={{
+                                    minWidth: 200
+                                }}
                             >
-                                <option value={"Computers"}>Computers</option>
-                                <option value={"IT"}>IT</option>
-                                <option value={"Mechanical"}>Mechanical</option>
-                                <option value={"EXTC"}>EXTC</option>
-                                <option value={"ETRX"}>ETRX</option>
-                            </TextField>
+
+                                <InputLabel id="department-select" >Department</InputLabel>
+                                <Select
+                                    labelId="department-select"
+                                    label="Department"
+                                    name="department"
+                                    value={this.state.user.department}
+                                    onChange={this.handleChange}
+                                    autoWidth
+
+                                >
+
+                                    {['Comps','IT','ETRX','EXTC','MECH'].map(e => (<MenuItem key={e} value={e}>
+                                        {e}
+                                    </MenuItem>))}
+
+                                </Select>
+                            </FormControl>
                         </Grid>
                         <Grid
                             // justify={this.getJustify()}
@@ -465,18 +544,22 @@ class Profile extends React.Component {
                         </Grid>
                     </Grid>
 
-                    <Grid 
-                    // justify={this.getJustify()} 
+                    <Grid
+                    // justify={this.getJustify()}
                     item xs={6} sm={2}>
+                        <br/>
                         <Button
                             variant="contained"
-                            onClick={this.update}
+                            // onClick={this.update}
+                            type="submit"
                             disabled={this.state.updating}
                         >
                             {this.state.updating ? "Updating.." : "Update"}
                         </Button>
-                    </Grid>
+                        </Grid>
+                    </ValidatorForm>
                 </Grid>
+
             </Grid>
         );
     }
