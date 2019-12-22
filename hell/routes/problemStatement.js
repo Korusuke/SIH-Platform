@@ -53,12 +53,18 @@ router.get('/comments', (req, res) => {
     User.findOne({email: email})
         .then(user => {
             console.log('finding comments');
-            var comments = [];
+            let comments = [];
             for (var i in user.comments) {
                 if(user.comments[i].psid == psid)
                     comments.push(user.comments[i]);
             }
-            console.log(comments, user.comments);
+            // console.log(comments)
+            comments = comments.map(e=> {
+                e.deletable = true
+                return e
+            } )
+
+            // console.log('AFTER: ', comments)
             if(user.teamId)
                 Team.findOne({'teamId': user.teamId})
                     .then(team => {
@@ -71,7 +77,7 @@ router.get('/comments', (req, res) => {
                                         comments = comments.concat(user.comments);
                                     }).catch(err => res.status(500))
                         }
-                        console.log(comments);
+                       // console.log(comments);
                     }).catch(err => res.status(500));
             res.json({
                 'status': 'success', 
@@ -115,17 +121,22 @@ router.post('/comments', (req, res) => {
                 'time': new Date(), 
             })
             user.comments_count += 1;
-            console.log(user);
+            // console.log(user);
             user.save()
                 .then(() => {
-                    console.log('saved', user)
+                    //console.log('saved', user)
 
-                    var comments = [];
+                    let comments = [];
                     for (var i in user.comments) {
                         if(user.comments[i].psid == psid)
                             comments.push(user.comments[i]);
                     }
-                    console.log(comments, user.comments);
+
+                    comments = comments.map(e=> {
+                        e.deletable = true
+                        return e
+                    } )
+                    
                     if(user.teamId)
                         Team.findOne({'teamId': user.teamId})
                             .then(team => {
@@ -138,10 +149,10 @@ router.post('/comments', (req, res) => {
                                                 comments = comments.concat(user.comments);
                                             }).catch(err => res.status(500))
                                 }
-                                console.log(comments);
+                                
                             }).catch(err => res.status(500));
             
-
+                    console.log(comments);
                     res.json({
                         'status': 'success', 
                         'msg': 'Comment added',
@@ -154,8 +165,11 @@ router.post('/comments', (req, res) => {
 });
 
 router.delete('/comments', (req, res) => {
-    const email = req.body.email;
-    const { comment_id } = req.body;
+    const decodedData = jwt.decode(req.cookies.token, {complete: true});
+    console.log('delete')
+    const email = decodedData.payload.email || decodedData.payload.Email;
+    
+    const { comment_id, psid } = req.body;
     if (!email || !comment_id) {
         return res.json({
             'status': 'success',
@@ -164,23 +178,51 @@ router.delete('/comments', (req, res) => {
     }
     User.findOne({email: email})
         .then(user => {
-            var comments = [];
-            console.log(user.comments);
-            for (var i in user.comments) {
-                if(user.comments[i].id != comment_id)
-                    comments.push(user.comments[i]);
-            }
-            user.comments = comments;
+            
+            user.comments = user.comments.filter((e)=>e.id!=comment_id);
             console.log(user.comments)
             user.save()
                 .then(() => {
-                    res.json({
-                        'status': 'success',
-                        'msg': 'Comment deleted'
-                    })
+                    
+                        // console.log('saved', user)
+    
+                        let comments = [];
+                        for (var i in user.comments) {
+                            if(user.comments[i].psid == psid)
+                                comments.push(user.comments[i]);
+                        }
+    
+                        comments = comments.map(e=> {
+                            e.deletable = true
+                            return e
+                        } )
+                        
+                        if(user.teamId)
+                            Team.findOne({'teamId': user.teamId})
+                                .then(team => {
+                                    var members = team.members;
+                                    for(var i in members) {
+                                        console.log("fetching member comments");
+                                        if(members[i]!=email)
+                                            User.findOne({email: email, comments: {psid: psid}})
+                                                .then(user => {
+                                                    comments = comments.concat(user.comments);
+                                                }).catch(err => res.status(500))
+                                    }
+                                    
+                                }).catch(err => res.status(500));
+                
+                        console.log(comments);
+                        res.json({
+                            'status': 'success', 
+                            'msg': 'Comment deleted',
+                            'comments': comments
+                        });
+                    
                 }).catch(() => res.status(500));
         }).catch(() => res.status(500))
 })
+
 
 router.post('/ps_add_label', (req, res) => {
     const email = req.decoded.email;

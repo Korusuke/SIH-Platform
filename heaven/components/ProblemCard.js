@@ -1,21 +1,22 @@
 import React, { Component } from 'react'
 import Link from 'next/link';
 import FitText from '@kennethormandy/react-fittext';
-import '../styles/problemcard.css';
 import { Grid, Card, Avatar, ButtonBase } from '@material-ui/core'
 import Divider from '@material-ui/core/Divider';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCode, faMicrochip } from '@fortawesome/free-solid-svg-icons'
+import { faCode, faMicrochip, faShareAlt } from '@fortawesome/free-solid-svg-icons'
+// import '../styles/problemcard.css';
+
 class ProblemCard extends Component {
 
   type(t) {
     if (t == 'Software') {
       return <Grid item xs={12} style={{color:'orange'}}>
-        <FontAwesomeIcon icon={faCode} />
+        <FontAwesomeIcon icon={faCode} width="18" />
       </Grid>
     } else {
-      return <Grid item xs={12} style={{ color: 'green' }}>
-        <FontAwesomeIcon icon={faMicrochip} />
+      return <Grid item xs={12} style={{ color: 'green'}}>
+        <FontAwesomeIcon icon={faMicrochip} width="18"/>
       </Grid>
     }
   }
@@ -29,11 +30,17 @@ class ProblemCard extends Component {
 
     return (
       <ButtonBase style={{ width: '100%' }}>
-        <Link href="/problem/[id]" as={`/problem/${this.props.card['_id']}`}>
+        <Link href={`/problem/${this.props.card['_id']}`} >
       <Card onMouseOver={this.toggleRaised}
         onMouseOut={this.toggleRaised}
         raised={this.state.raised}
-        style={{ width: '100%' }} className="maincard">
+            style={{
+              width: '100%',
+              minHeight: '250px',
+              padding: '20px',
+              position: 'relative'
+            }}
+          >
 
           <Grid container direction="column" >
           <Grid container item xs={12} direction="row" alignItems="center" spacing={2}>
@@ -66,7 +73,10 @@ class ProblemCard extends Component {
               <span>
                 {this.props.card.Title}
               </span>
-            </Grid>
+              </Grid>
+              {/* <Grid container item xs={12} direction="row" justify="flex-end" style={{ textAlign: 'end' }}>
+                <FontAwesomeIcon icon={faShareAlt} width="18" />
+              </Grid> */}
           </Grid>
 
           </Card>
