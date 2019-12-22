@@ -30,10 +30,13 @@ export default class ProblemPage extends React.Component {
         }
     }
 
+
     constructor(props) {
         super(props)
         this.state = {
-            theme: 'light'
+            theme: 'light',
+            dataPresent: true,
+            problem: {}
         }
         this.handler = this.handler.bind(this)
     }
@@ -69,6 +72,39 @@ export default class ProblemPage extends React.Component {
         {
             this.setState({theme:localStorage.getItem('siteTheme')})
         }
+
+        if(localStorage.getItem('problems'))
+        {
+            let  numberPattern = /\d+/g;
+            
+            let problems = JSON.parse(localStorage.getItem('problems'))
+            let problem = problems.filter(obj => obj["Number"] == this.props.Num)[0]
+
+            this.setState({
+                problem: problem,
+                dataPresent: true
+            })
+        }
+        else{
+            fetch(`${envvar.REACT_APP_SERVER_URL}/ps`)
+            .then(res => res.json())
+            .then((data) => {
+                let  numberPattern = /\d+/g;
+                
+                let problem = data.filter(obj => obj["Number"] == this.props.Num)[0]
+
+                this.setState({
+                    problem: problem,
+                    dataPresent: true
+                })
+            })
+        
+            //console.log(data);
+            
+            // return {
+            //     problem: data.filter(obj => obj["Number"] == Number)[0]
+            // };
+        }
     }
 
     render() {
@@ -78,6 +114,9 @@ export default class ProblemPage extends React.Component {
             },
         });
         let curtheme = this.state.theme == 'light' ? this.theme.light : this.theme.dark;
+        
+        
+        
         return (
             <ThemeProvider theme={customtheme}>
             <div style={{minHeight:'100vh', background: curtheme.background, color: curtheme.text}} >
@@ -89,7 +128,9 @@ export default class ProblemPage extends React.Component {
                     backgroundImage={"/assets/images/banner.jpg"}
                 />
                 <ProblemDefinition
-                    problem={this.props.problem}
+                    num={this.props.Num}
+                    problem={this.state.problem}
+                    dataPresent = {this.state.dataPresent}
                     url={envvar.REACT_APP_SERVER_URL}
                 />
                 </div>
@@ -101,16 +142,21 @@ export default class ProblemPage extends React.Component {
 }
 
 ProblemPage.getInitialProps = async function(context) {
-    const res = await fetch(`${envvar.REACT_APP_SERVER_URL}/ps`, {
-        headers: {
-            origin: "google.com"
-        }
-    });
-    const data = await res.json();
+    
+    // const res = await fetch(`${envvar.REACT_APP_SERVER_URL}/ps`, {
+    //     headers: {
+    //         origin: "google.com"
+    //     }
+    // });
+    // const data = await res.json();
 
-    //console.log(data);
-    const { Number } = context.query;
+    // //console.log(data);
+    const Numb = context.query.Number;
     return {
-        problem: data.filter(obj => obj["Number"] === Number)[0]
-    };
-};
+        Num: Numb
+    }
+//     return {
+//         problem: data.filter(obj => obj["Number"] === Number)[0]
+//     };
+// };
+}
