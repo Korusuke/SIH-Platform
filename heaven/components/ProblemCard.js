@@ -46,7 +46,7 @@ class ProblemCard extends Component {
               <Grid container item xs={12} direction="row" alignItems="center" spacing={2}>
                 <Grid item >
                   <Avatar style={{ width: '75px', height: '75px', border: '1.5px solid black' }}>
-                    <img src={`${this.props.url}${this.props.card.Logo}`} />
+                    <img src={`${this.props.url}${this.props.card.Logo}`} style={{width:'100%'}}/>
                   </Avatar>
                 </Grid>
 

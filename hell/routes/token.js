@@ -10,7 +10,7 @@ client.on('error', (err) => {
 });
 
 
-async function verifyToken(req, res, next) {
+function verifyToken(req, res, next) {
   const token = req.cookies.token;
     if(!token){
       res.json({
