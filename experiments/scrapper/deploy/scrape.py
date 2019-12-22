@@ -105,7 +105,7 @@ for i in range(1, pages + 1):
              ps_title, ps_desc, yt_link, ds_link, logo_url]
         count += 1
         all.append(g)
-    # print('xxxxxxx')
+    print('xxxxxxx')
 print(count)
 
 
@@ -131,7 +131,7 @@ with csvfile:
 from pymongo import MongoClient
 
 # Push to MongoDB
-mongodb_uri = "mongodb://probably:pr0b4bly@ds255857.mlab.com:55857/sih_platform"
+mongodb_uri = "mongodb://probably:pr0b4bly@ds255857.mlab.com:55857/sih_platform?retryWrites=false"
 client = MongoClient(mongodb_uri)
 db = client.sih_platform
 col = db.ps
@@ -154,7 +154,7 @@ try:
             "Logo": ps[8],
         }
         # print(col.find({'Number': data['Number']}))
-        if col.find({'id': data['id']}).count() == 0:
+        if col.find({'Number': data['Number']}).count() == 0:
             print(ps[1])
             col.insert(data)
 except Exception as err:
