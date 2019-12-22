@@ -146,10 +146,14 @@ export default class Problems extends React.Component {
                             <Filter
                                 filter={this.applyFilter}
                                 cards={this.props.problems}
+                                theme={customtheme}
+                                themeState={this.state.theme}
                             />
                             <ProblemsContainer
                                 cards={this.state.found}
                                 url={envvar.REACT_APP_SERVER_URL}
+                                theme={customtheme}
+                                themeState={this.state.theme}
                             />
                         </div>
                         <Footer />
