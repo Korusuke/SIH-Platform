@@ -24,6 +24,93 @@ router.get('/', (req, res) => {
         .catch(err => res.status(400).json('Error: ' + err));
 });
 
+router.get('/labels', (req, res) => {
+    // Team.findOne({member})
+    const decodedData = jwt.decode(req.cookies.token, {complete: true});
+    // console.log('Decode:',decodedData)
+    const email = decodedData.payload.email || decodedData.payload.Email;
+    const psid = req.query.psid;
+    if (!email || !psid) {
+        return res.json([])
+    }
+    User.findOne({email: email})
+        .then(user => {
+            console.log('finding labels');
+            let labels = [];
+            for (var i in user.labels) {
+                if(user.labels[i].psid == psid)
+                    labels.push(user.labels[i]);
+            }
+            // console.log(comments)
+            labels = labels.map( e=> {
+                e.deletable = true
+                return e
+            } )
+
+            // console.log('AFTER: ', comments)
+            if(user.teamId)
+                Team.findOne({'teamId': user.teamId})
+                    .then(team => {
+                        var members = team.members;
+                        for(var i in members) {
+                            console.log("fetching member labels");
+                            if(members[i]!=email)
+                                User.findOne({email: email, labels: {psid: psid}})
+                                    .then(user => {
+                                        labels = labels.concat(user.labels);
+                                    }).catch(err => res.status(500))
+                        }
+                       // console.log(comments);
+                    }).catch(err => res.status(500));
+            res.json(labels);
+        })
+        .catch(() => res.status(500));
+})
+
+router.post('/labels', (req, res) => {
+    const decodedData = jwt.decode(req.cookies.token, {complete: true});
+    // console.log('Decode:',decodedData)
+    const email = decodedData.payload.email || decodedData.payload.Email;
+    const { psid, label, color } = req.body;
+    User.findOne({email: email})
+        .then(user => {
+            if(!user || color==label)
+                return res.json("Invalid fields");
+            if(user.labels.length==0){
+                user.labels = [];
+            }
+            user.labels.push({
+                psid,
+                label,
+                color
+            })
+            console.log("Adding labels");
+            user.save()
+                .then(() => {
+                    return res.json("Added");
+                })
+                .catch(res.status(500))
+        })
+        .catch(err => res.status(500));
+})
+
+router.delete('/labels', (req, res) => {
+    const decodedData = jwt.decode(req.cookies.token, {complete: true});
+    // console.log('Decode:',decodedData)
+    const email = decodedData.payload.email || decodedData.payload.Email;
+    const { psid, label, color } = req.body;
+    User.findOne({email: email})
+        .then(user => {
+            if(!user)
+                return res.json("Label doesn't exist");
+
+            user.labels = user.labels.filter(Label => !(Label.psid===psid && Label.label===label && Label.color===color))
+            user.save()
+                .then(res.json("Label deleted"))
+                .catch(err => res.status(500))
+        }).catch(err => res.status(500))
+})
+
 router.post('/add_label', (req, res) => {
     const email = req.decoded.email;
     User.find({email})
@@ -37,7 +124,7 @@ router.post('/add_label', (req, res) => {
 });
 
 router.get('/comments', (req, res) => {
-    
+
     const decodedData = jwt.decode(req.cookies.token, {complete: true});
     //console.log(decodedData)
     //console.log(decodedData.payload.email)
@@ -80,8 +167,8 @@ router.get('/comments', (req, res) => {
                        // console.log(comments);
                     }).catch(err => res.status(500));
             res.json({
-                'status': 'success', 
-                'msg': 'All comments fetched', 
+                'status': 'success',
+                'msg': 'All comments fetched',
                 'comments': comments
             });
         })
@@ -102,7 +189,7 @@ router.post('/comments', (req, res) => {
 
     console.log(psid, comment)
 
-    
+
 
     User.findOne({email: email})
         .then(user => {
@@ -118,7 +205,7 @@ router.post('/comments', (req, res) => {
                 'psid': psid,
                 'id': user.comments_count,
                 'comment': comment,
-                'time': new Date(), 
+                'time': new Date(),
             })
             user.comments_count += 1;
             // console.log(user);
@@ -136,7 +223,7 @@ router.post('/comments', (req, res) => {
                         e.deletable = true
                         return e
                     } )
-                    
+
                     if(user.teamId)
                         Team.findOne({'teamId': user.teamId})
                             .then(team => {
@@ -149,12 +236,12 @@ router.post('/comments', (req, res) => {
                                                 comments = comments.concat(user.comments);
                                             }).catch(err => res.status(500))
                                 }
-                                
+
                             }).catch(err => res.status(500));
-            
+
                     console.log(comments);
                     res.json({
-                        'status': 'success', 
+                        'status': 'success',
                         'msg': 'Comment added',
                         'comments': comments
                     });
@@ -168,7 +255,7 @@ router.delete('/comments', (req, res) => {
     const decodedData = jwt.decode(req.cookies.token, {complete: true});
     console.log('delete')
     const email = decodedData.payload.email || decodedData.payload.Email;
-    
+
     const { comment_id, psid } = req.body;
     if (!email || !comment_id) {
         return res.json({
@@ -178,25 +265,25 @@ router.delete('/comments', (req, res) => {
     }
     User.findOne({email: email})
         .then(user => {
-            
+
             user.comments = user.comments.filter((e)=>e.id!=comment_id);
             console.log(user.comments)
             user.save()
                 .then(() => {
-                    
+
                         // console.log('saved', user)
-    
+
                         let comments = [];
                         for (var i in user.comments) {
                             if(user.comments[i].psid == psid)
                                 comments.push(user.comments[i]);
                         }
-    
+
                         comments = comments.map(e=> {
                             e.deletable = true
                             return e
                         } )
-                        
+
                         if(user.teamId)
                             Team.findOne({'teamId': user.teamId})
                                 .then(team => {
@@ -209,16 +296,16 @@ router.delete('/comments', (req, res) => {
                                                     comments = comments.concat(user.comments);
                                                 }).catch(err => res.status(500))
                                     }
-                                    
+
                                 }).catch(err => res.status(500));
-                
+
                         console.log(comments);
                         res.json({
-                            'status': 'success', 
+                            'status': 'success',
                             'msg': 'Comment deleted',
                             'comments': comments
                         });
-                    
+
                 }).catch(() => res.status(500));
         }).catch(() => res.status(500))
 })
@@ -234,16 +321,16 @@ router.post('/ps_add_label', (req, res) => {
             }
             const { psid, label_id } = req.body;
             const filter = {
-                'teamId': user[0].teamId, 
-                'assigned_labels': {psid}, 
+                'teamId': user[0].teamId,
+                'assigned_labels': {psid},
                 'labels': {
-                    $elemMatch: 
+                    $elemMatch:
                     {
                         'id': label_id
                     }
                 }
             };
-            const update = { 
+            const update = {
                 $push: {
                     'assigned_labels': {
                         'label_id': label_id

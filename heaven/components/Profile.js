@@ -392,7 +392,7 @@ class Profile extends React.Component {
                             <FormControl
                                 variant="outlined"
                                 style={{
-                                    minWidth:200
+                                    width:'100%'
                                 }}
                             >
 
@@ -459,7 +459,7 @@ class Profile extends React.Component {
                             <FormControl
                                 variant="outlined"
                                 style={{
-                                    minWidth: 200
+                                    width: '100%'
                                 }}
                             >
 
@@ -502,7 +502,7 @@ class Profile extends React.Component {
                             <FormControl
                                 variant="outlined"
                                 style={{
-                                    minWidth: 200
+                                    width: '100%'
                                 }}
                             >
 
