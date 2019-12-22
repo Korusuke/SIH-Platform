@@ -30,10 +30,7 @@ class ProblemCard extends Component {
 
     return (
       <ButtonBase style={{ width: '100%' }}>
-        <Link to={{
-          pathname: `/problem/${this.props.card['Number']}`
-        }}
-          >
+        <Link href='/problem/[Number]' as={`/problem/${this.props.card.Number}`} >
           <Card onMouseOver={this.toggleRaised}
             onMouseOut={this.toggleRaised}
             raised={this.state.raised}
