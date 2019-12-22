@@ -4,7 +4,7 @@ import Center from 'react-center';
 import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
-
+import Router from "next/router";
 import {MuiThemeProvider, createMuiTheme} from '@material-ui/core'
 
 import Cookies from 'universal-cookie';
@@ -13,13 +13,13 @@ export default function Header(props){
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [profilePic, setProfilePic] = React.useState(null);
 
-    const handleProfile = () => 
+    const handleProfile = () =>
     {
-        location.href='/profile'
+        Router.push("/profile");
     }
-    const handleProblems = () => 
+    const handleProblems = () =>
     {
-        location.href='/problems'
+        Router.push("/problems");
     }
     const handleClick = event => {
         console.log('open')
@@ -28,7 +28,7 @@ export default function Header(props){
     const handleLogout = () =>{
         const cookies = new Cookies()
         cookies.remove('token')
-        location.href = '/'
+        Router.push("/");
     }
     const handleClose = () => {
         console.log('close')
@@ -93,13 +93,13 @@ export default function Header(props){
                                 <MenuItem onClick={handleLogout}>Logout</MenuItem>
                             </Menu>
                             </Center>
-                        </Grid> 
+                        </Grid>
                         :
                         null
                         }
-                        
-                        
-                        
+
+
+
                     </Grid>
 
                 </Toolbar>
