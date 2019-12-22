@@ -9,14 +9,18 @@ import fetch from 'isomorphic-unfetch';
 
 import envvar from '../../env'
 
+import { useTheme, createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+
+
 export default function ProblemPage(props) {
   const router = useRouter();
 
   return (
     <div>
-      <Header />
+      <Header loggedin={true}/>
       <NoiceBanner text="Problem Statements" backgroundImage={"/assets/images/banner.jpg"}/>
       <ProblemDefinition problem={props.problem} url={envvar.REACT_APP_SERVER_URL}/>
+      <Footer/>
     </div>
   );
 }
