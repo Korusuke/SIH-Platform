@@ -3,7 +3,7 @@ import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import NoiceBanner from "../../components/NoiceBanner";
 import ProblemDefinition from "../../components/ProblemDefinition";
-
+import Head from "next/head";
 import "../../styles/index.css";
 import fetch from "isomorphic-unfetch";
 import Chaand from '../../components/chaand';
@@ -78,7 +78,19 @@ export default class ProblemPage extends React.Component {
             },
         });
         let curtheme = this.state.theme == 'light' ? this.theme.light : this.theme.dark;
-        return (
+      return (
+        <div>
+        <Head>
+          <title>SIH - KJSCE</title>
+          <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+          />
+          <meta
+            name="viewport"
+            content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no"
+          />
+        </Head>
             <ThemeProvider theme={customtheme}>
             <div style={{minHeight:'100vh', background: curtheme.background, color: curtheme.text}} >
                 <Chaand handler={this.handler} chaand={this.state.theme == 'light' ? 1 : 0} />
@@ -95,7 +107,8 @@ export default class ProblemPage extends React.Component {
                 </div>
                 <Footer />
                 </div>
-            </ThemeProvider>
+          </ThemeProvider>
+        </div>
         );
     }
 }
