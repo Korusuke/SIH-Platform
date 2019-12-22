@@ -7,7 +7,7 @@ const User = require('../models/user.model');
 const LoginData = require('../models/logindata.model');
 const { verifyToken } = require('./token');
 const redis = require('redis');
-
+const _ = require('lodash')
 const client = redis.createClient({
     host: 'localhost',
     port: 6379
@@ -118,11 +118,13 @@ router.post('/verify', (req, res) => {
                         'msg': 'Already verified. Proceed to sign in',});
                         return
                     }
-                    let shape = ["squares", "isogrids", "space invaders"];
+                    let shape = ["squares", "isogrids", "spaceinvaders"];
                     let numberColours = [2,3,4];
                     let theme = ["frogideas","heatwave","sugarsweets","daisygarden","seascape","berrypie","bythepool"];
-
-                    const newUser = new User({email, password, profilePic: `https://www.tinygraphs.com/#?name=${email}&shape=${_.sample(shape)}&theme=${_.sample(theme)}&numcolors=${_.sample(numberColours)}#tryitout`});
+                    const newUser = new User({
+                        email, password,
+                        profilePic: `https://www.tinygraphs.com/${_.sample(shape)}/${email}?theme=${_.sample(theme)}&numcolors=${_.sample(numberColours)}&size=220&fmt=svg`
+                    });
                     newUser.save()
                         .then(() => {
                             jwt.sign({email}, process.env.KEY, { expiresIn: "30d" }, (er, token) => {

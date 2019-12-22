@@ -45,12 +45,13 @@ export default class BottomCardMerge extends React.Component{
 
         }).then(res=>res.json()).then(data=>{
             console.log('hiii')
-            console.log(data)
-                this.setState({
-                    show: data.state? data.state: 0,
-                    team: data.team? data.team: {}
-                }
-            )
+            console.log(data);
+            this.setState({
+                show: data.state ? data.state : 0,
+                team: data.team ? data.team : {}
+            });
+            console.log(data);
+
         })
 
         //console.log(data);
