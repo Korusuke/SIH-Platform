@@ -132,7 +132,7 @@ export default class CommentsContainer extends React.Component {
     render()
     {
         let arr = []
-        //console.log(this.state.comments)
+        console.log(this.state.comments)
         if(this.state.comments){
             this.state.comments.forEach(
                 e=>{
