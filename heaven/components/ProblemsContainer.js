@@ -22,7 +22,7 @@ export default class ProblemsContainer extends React.Component
 
         }
 
-        console.log(this.props.cards.length)
+        console.log(this.props.cards.length);
         this.handleClick = this.handleClick.bind(this);
     }
 
