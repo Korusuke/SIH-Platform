@@ -30,7 +30,7 @@ export default class Problems extends React.Component {
   {
       let found
 
-      let {software, hardware, ideabucket, searchfilter, org} = stateInput;
+      let {software, hardware, ideas, searchfilter, orgs} = stateInput;
 
       console.log(stateInput)
 
@@ -43,12 +43,15 @@ export default class Problems extends React.Component {
       else
         found = this.props.problems.filter(obj => false )
 
-      console.log('ORG', org)
-      if(org)
-        found = found.filter(obj => obj.Company == org )
+      console.log('ORG', orgs, found[0].Company)
+      console.log(orgs.includes(found[0].Company))
+      //console.log(found)
+      if(orgs.length > 0)
+        found = found.filter(obj => orgs.includes(obj.Company))
 
-      if(ideabucket)
-        found = found.filter(obj => obj.Domain == ideabucket )
+      console.log('IDEAS', ideas)
+      if(ideas.length > 0)
+        found = found.filter(obj => ideas.includes(obj.Domain) )
 
 
 
