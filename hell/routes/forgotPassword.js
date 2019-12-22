@@ -7,7 +7,7 @@ const redis = require('redis');
 const EXPIRE_IN = 60*60; // 1 hr
 
 const client = redis.createClient({
-  host: 'redis-server',
+  host: 'localhost',
   port: 6379
 });
 client.on('error', (err) => {

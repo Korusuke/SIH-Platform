@@ -9,6 +9,8 @@ import Chaand from '../components/chaand';
 import '../styles/index.css';
 import { useTheme, createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 
+import envvar from '../env'
+
 export default class extends React.Component  {
 
     theme = {
@@ -57,7 +59,7 @@ export default class extends React.Component  {
                 <Chaand handler={this.handler} chaand={this.state.theme == 'light' ? 1 : 0} />
                 <div id="content-wrap" style={{ backgroundColor: `${curtheme.background}`, color: `${curtheme.text}` }}>
                     <Header />
-                    <IndexContent url="http://localhost:8080" theme={this.state.theme == 'light' ? this.theme.light : this.theme.dark}/>
+                    <IndexContent url={envvar.REACT_APP_SERVER_URL} theme={this.state.theme == 'light' ? this.theme.light : this.theme.dark}/>
                 </div>
                 <Footer />
                 </div>

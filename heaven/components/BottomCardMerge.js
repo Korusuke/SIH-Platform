@@ -28,13 +28,13 @@ export default class BottomCardMerge extends React.Component{
         this.changeState = this.changeState.bind(this)
     }
 
-    snackcontent = ''
+    snackcontent = '';
 
     componentDidMount()
     {
         console.log('hii')
     try{
-        fetch(`${this.props.url}/team/currentTeam`, 
+        fetch(`${this.props.url}/team/currentTeam`,
         {
             credentials: "include",
             headers: {
@@ -52,9 +52,9 @@ export default class BottomCardMerge extends React.Component{
                 }
             )
         })
-    
+
         //console.log(data);
-        
+
     }catch(e){
         console.log(e)
         return {
@@ -125,4 +125,3 @@ export default class BottomCardMerge extends React.Component{
         )
     }
 }
-

@@ -13,6 +13,8 @@ import {Container, Paper} from '@material-ui/core'
 
 import '../styles/index.css'
 
+import envvar from '../env'
+
 export default class ProfileMember extends React.Component{
     constructor(props)
     {
@@ -41,11 +43,11 @@ export default class ProfileMember extends React.Component{
                 padding: '40px',
                 marginTop: '50px',
             }}>
-                < Profile changeParentState={this.changeState}/>
+                <Profile changeParentState={this.changeState}/>
 
             </Paper >
             <br/>
-                <BottomCardMerge url="http://localhost:8080" allowTeam={this.state.allowTeam}/>
+                <BottomCardMerge url={envvar.REACT_APP_SERVER_URL} allowTeam={this.state.allowTeam}/>
             </Container>
             </div>
         );
