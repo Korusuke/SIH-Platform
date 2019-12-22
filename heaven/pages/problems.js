@@ -18,6 +18,8 @@ import {
 
 import envvar from "../env";
 
+
+let cache = {};
 export default class Problems extends React.Component {
     // console.log(props.problems);
 
@@ -120,6 +122,8 @@ export default class Problems extends React.Component {
         {
             this.setState({theme:localStorage.getItem('siteTheme')})
         }
+
+        localStorage.setItem('problems', JSON.stringify(this.props.problems))
     }
 
     render() {
@@ -129,7 +133,12 @@ export default class Problems extends React.Component {
             }
         });
         let curtheme =
-            this.state.theme == "light" ? this.theme.light : this.theme.dark;
+        this.state.theme == "light" ? this.theme.light : this.theme.dark;
+
+        if (process.browser) {
+            cache['problems'] = this.props.problems;
+        }
+    
 
         // console.log(this.state.found.length)
         return (
@@ -188,10 +197,17 @@ export default class Problems extends React.Component {
 }
 
 Problems.getInitialProps = async function() {
-    const res = await fetch(`${envvar.REACT_APP_SERVER_URL}/ps`);
-    const data = await res.json();
+    let res; 
+    let data; 
 
-    //console.log(data);
+    
+    //if data is in cache then use the cache
+    if (cache['problems']) {
+        data = cache['problems']
+    } else {
+        res = await fetch(`${envvar.REACT_APP_SERVER_URL}/ps`);
+        data = await res.json();
+    }
 
     return {
         problems: data

@@ -25,7 +25,7 @@ export default class ProblemDefinition extends React.Component{
                         <Grid item md={11}>
                             <div style={{margin:'auto'}}>
                                 <div style={{ whiteSpace: 'pre-wrap' }}>
-                                    {ReactHtmlParser(this.props.problem.Description)}
+                                    {this.props.dataPresent? ReactHtmlParser(this.props.problem.Description): null}
                                 </div>
                             </div>
                             <Box boxShadow={2} style={{
@@ -33,7 +33,7 @@ export default class ProblemDefinition extends React.Component{
                                 margin: 'auto',
                                 marginTop: '50px',
                             }}><div style={{width:'100%'}}>
-                                <CommentsContainer psid={this.props.problem.Number}/>
+                                <CommentsContainer psid={this.props.num}/>
                                 </div>
                                 </Box>
                         </Grid>
@@ -58,7 +58,7 @@ export default class ProblemDefinition extends React.Component{
                                             width: '100px',
                                             height: '100px',
                                         }}>
-                                            <img src={this.props.url + this.props.problem.Logo} style={{
+                                            <img src={this.props.dataPresent ? (this.props.url + this.props.problem.Logo) : null} style={{
                                                 width: '100px',
                                                 height: '100px',
                                                 position: 'absolute',
@@ -71,27 +71,32 @@ export default class ProblemDefinition extends React.Component{
                                 </div>
                                 <div className="rightDesc">
                                     <span style={{ fontWeight: 700, fontSize: 18 }}>Problem Code<br/></span>
-                                    <span style={{fontWeight:400,fontSize:18}}>{this.props.problem.Number}</span>
+                                    <span style={{fontWeight:400,fontSize:18}}>{this.props.num}</span>
                                 </div>
                                 <div className="rightDesc">
-                                    <span style={{ fontWeight: 700, fontSize: 18 }}>{this.props.problem.Category}</span><br/>
-                                    <span style={{ fontWeight: 700, fontSize: 18 }}>{this.props.problem.Domain}</span>
+                                    <span style={{ fontWeight: 700, fontSize: 18 }}>{this.props.dataPresent ? this.props.problem.Category: null}</span><br/>
+                                    <span style={{ fontWeight: 700, fontSize: 18 }}>{this.props.dataPresent ? this.props.problem.Domain : null}</span>
                                 </div>
                                 <div className="rightDesc">
-                                    {
+                                    {this.props.dataPresent ?
                                         this.props.problem.Youtube ? (<div><span style={{ fontWeight: 700, fontSize: 18 }}>Youtube Link</span> <br /><span style={{ fontWeight: 400, fontSize: 16 }}><a href={this.props.problem.Youtube} >{this.props.problem.Youtube}</a></span></div>) : (<span style={{ fontWeight: 400, fontSize: 16 }}>No Youtube Video Available</span> )
+                                    :
+                                    null
                                     }
                                 </div>
                                 <div className="rightDesc">
                                 {
+                                    this.props.dataPresent ?
                                         this.props.problem.DataSet ? (<div><span style={{ fontWeight: 700, fontSize: 18 }}>DataSet Link</span> <br /><span style={{ fontWeight: 400, fontSize: 16 }}><a href={this.props.problem.DataSet} >{this.props.problem.DataSet}</a></span></div>) : (<span style={{ fontWeight: 400, fontSize: 16 }}>No Dataset Available</span> )
+                                    :
+                                    null
                                     }
                                 </div>
                             </div>
 
                         </Paper>
 
-                        <LabelsBox psid={this.props.problem.Number} />
+                        <LabelsBox psid={this.props.num} />
                     </Grid>
                 </Grid>
             </Container>
