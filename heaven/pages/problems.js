@@ -38,22 +38,34 @@ export default class Problems extends React.Component {
         //console.log(this.props)
         this.state = {
             found: this.props.problems.filter(obj => true),
-            theme: "light"
+            theme:  "light"
         };
 
         this.applyFilter = this.applyFilter.bind(this);
         this.handler = this.handler.bind(this);
     }
 
+    // componentDidMount()
+    // {
+    //     if(localStorage.getItem('siteTheme') && this.state.theme != localStorage.getItem('siteTheme') )
+    //     {
+    //         this.setState({theme:localStorage.getItem('siteTheme')})
+    //     }
+    // }
+
     handler() {
-        if (this.state.theme == "light") {
+        if (this.state.theme == 'light') {
             this.setState({
-                theme: "dark"
-            });
+                theme: 'dark'
+            }, ()=>{
+                localStorage.setItem('siteTheme', 'dark')
+            })
         } else {
             this.setState({
-                theme: "light"
-            });
+                theme: 'light'
+            }, ()=>{
+                localStorage.setItem('siteTheme', 'dark')
+            })
         }
     }
 
@@ -102,6 +114,14 @@ export default class Problems extends React.Component {
         });
     }
 
+    componentDidMount()
+    {
+        if(localStorage.getItem('siteTheme') && this.state.theme != localStorage.getItem('siteTheme') )
+        {
+            this.setState({theme:localStorage.getItem('siteTheme')})
+        }
+    }
+
     render() {
         const customtheme = createMuiTheme({
             palette: {
@@ -113,7 +133,10 @@ export default class Problems extends React.Component {
 
         // console.log(this.state.found.length)
         return (
-            <div>
+            <div style={{
+                backgroundColor: `${curtheme.background}`,
+                color: `${curtheme.text}`
+            }}>
                 <Head>
                     <title>Problem Statements</title>
                     <link
@@ -146,10 +169,14 @@ export default class Problems extends React.Component {
                             <Filter
                                 filter={this.applyFilter}
                                 cards={this.props.problems}
+                                theme={customtheme}
+                                themeState={this.state.theme}
                             />
                             <ProblemsContainer
                                 cards={this.state.found}
                                 url={envvar.REACT_APP_SERVER_URL}
+                                theme={customtheme}
+                                themeState={this.state.theme}
                             />
                         </div>
                         <Footer />
