@@ -136,7 +136,7 @@ export default class Filter extends React.Component{
             <Paper style={{padding:8}}>
                 <Grid container style={{ flexGrow: 1, }} direction='row' justify='center'>
                     <Grid container item xs={12} md={4} justify='center'>
-                        <TextField id="ps-search" label="Search" name="search" style={{width:'30vw',maxWidth:'400px'}}/>
+                        <TextField id="ps-search" label="Search" name="searchfilter" style={{width:'30vw',maxWidth:'400px'}} onChange={this.handleChange}/>
                     </Grid>
 
                     <Grid container item xs={12} md={4} justify='center' align="center" style={{marginLeft:10}}>

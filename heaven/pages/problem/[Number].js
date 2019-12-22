@@ -7,27 +7,29 @@ import ProblemDefinition from '../../components/ProblemDefinition'
 import '../../styles/index.css'
 import fetch from 'isomorphic-unfetch';
 
+import envvar from '../../env'
+
 export default function ProblemPage(props) {
   const router = useRouter();
 
   return (
     <div>
       <Header />
-      <NoiceBanner text="Problem Statements"/>
-      <ProblemDefinition problem={props.problem}/>
+      <NoiceBanner text="Problem Statements" backgroundImage={"/assets/images/banner.jpg"}/>
+      <ProblemDefinition problem={props.problem} url={envvar.REACT_APP_SERVER_URL}/>
     </div>
   );
 }
 
 ProblemPage.getInitialProps = async function(context) {
-    const res = await fetch('https://cors-anywhere.herokuapp.com/http://possessive-bait.surge.sh/ps.json', {headers:{
+    const res = await fetch(`${envvar.REACT_APP_SERVER_URL}/ps`, {headers:{
       'origin':'google.com'
     }});
     const data = await res.json();
-  
+
     //console.log(data);
-    const {id} = context.query
+  const { Number } = context.query
     return {
-      problem: data.filter(obj => obj['_id'] === id)[0]
+      problem: data.filter(obj => obj['Number'] === Number)[0]
     };
   };
