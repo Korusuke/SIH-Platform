@@ -36,6 +36,13 @@ const userSchema = new Schema({
             time: Date
         }
     ],
+    labels: [
+        {
+            psid: String,
+            label: String,
+            color: String
+        }
+    ],
     comments_count: {type: Number, default: 0}
 }, {
     timestamps: true,

@@ -91,7 +91,7 @@ export default class ProblemDefinition extends React.Component{
 
                         </Paper>
 
-                        <LabelsBox />
+                        <LabelsBox psid={this.props.problem.Number} />
                     </Grid>
                 </Grid>
             </Container>
