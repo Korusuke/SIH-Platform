@@ -55,7 +55,7 @@ export default class extends React.Component  {
 
         return (
             <ThemeProvider theme={customtheme}>
-            <div>
+            <div style={{minHeight:'100vh'}}>
                 <Chaand handler={this.handler} chaand={this.state.theme == 'light' ? 1 : 0} />
                 <div id="content-wrap" style={{ backgroundColor: `${curtheme.background}`, color: `${curtheme.text}` }}>
                     <Header />
