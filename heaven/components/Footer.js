@@ -13,7 +13,6 @@ export default function Footer(){
                bottom:0,
                width: '100%',
                height:'45px',
-               background:'white',
                boxSizing: 'border-box',
             }}
 

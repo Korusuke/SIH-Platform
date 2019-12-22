@@ -23,7 +23,7 @@ export default class chaand extends React.Component{
         if (props.chaand !== state.chaand) {
             return { chaand: props.chaand };
         }
-        console.log('possible error');
+        // console.log('possible error');
         return null;
     }
 
@@ -42,7 +42,7 @@ export default class chaand extends React.Component{
         }
         return (
             <div style={{
-                position: 'fixed', right:'50px', bottom:'50px'
+                position: 'fixed', right:'50px', bottom:'50px', zIndex:9999
             }}>
 
              {chaand}
