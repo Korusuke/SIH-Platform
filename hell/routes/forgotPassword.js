@@ -4,9 +4,12 @@ const nodemailer = require('nodemailer');
 const emailId = process.env.EMAIL;
 const password = process.env.PASSWORD;
 const redis = require('redis');
-const EXPIRE_IN = 60*60; // 1 hr 
+const EXPIRE_IN = 60*60; // 1 hr
 
-const client = redis.createClient();
+const client = redis.createClient({
+  host: 'redis-server',
+  port: 6379
+});
 client.on('error', (err) => {
   console.log('Something went wrong ', err);
 });
@@ -48,7 +51,7 @@ router.post('/',(req,res)=>{
       },
       port: 465,
       secureConnection: true,
-    });    
+    });
     var mailOptions = {
       from: emailId,
       to: user,

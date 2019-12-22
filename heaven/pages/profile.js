@@ -14,7 +14,7 @@ import { useTheme, createMuiTheme, ThemeProvider } from '@material-ui/core/style
 import Chaand from '../components/chaand';
 import '../styles/index.css'
 
-export default class extends React.Component{
+export default class ProfileMember extends React.Component{
     theme = {
         dark: {
             background: '#121212',
@@ -29,10 +29,18 @@ export default class extends React.Component{
     constructor(props) {
         super(props)
         this.state = {
-            theme: 'light'
+            theme: 'light',
+            allowTeam: false
         }
         this.handler = this.handler.bind(this)
+        this.changeState = this.changeState.bind(this)
     }
+
+    changeState(obj)
+    {
+        this.setState(obj)
+    }
+
 
     handler() {
         if (this.state.theme == 'light') {
@@ -65,7 +73,7 @@ export default class extends React.Component{
             padding: '40px',
             marginTop: '50px',
         }}>
-            < Profile />
+            < Profile changeParentState={this.changeState}/>
 
         </Paper >
         <br/>

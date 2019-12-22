@@ -1,0 +1,23 @@
+version: '3.0'
+
+services:
+  heaven:
+    build: heaven
+    ports:
+    - "3000:3000"
+
+  hell:
+    build: hell
+    ports:
+    - "8080:8080"
+    links:
+    - database
+    - redis-server
+
+  redis-server:
+    image: redis
+
+  database:
+    image: mongo
+    ports:
+    - "27017:27017"

@@ -11,6 +11,7 @@ export default class bottomcardfirst extends Component {
   render() {
     return (
       <div className="maindiv">
+        {(!this.props.allowTeam)? <Center>Fill in the details first</Center>: null}
           <Center style={{height:"100%"}}>
       <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" rel="stylesheet" />
       <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
@@ -26,11 +27,11 @@ export default class bottomcardfirst extends Component {
     spacing={0}
     >
         <Grid item xs={4} align="center">
-        <Button variant="contained" className="leftbutton" color="primary" onClick={()=>{this.props.changeParentState(1)}}>Join Team</Button>        </Grid>
+        <Button variant="contained" className="leftbutton" color="primary" onClick={()=>{this.props.changeParentState(1)}} disabled={!this.props.allowTeam}>Join Team</Button>        </Grid>
         <Grid item xs={1} align="center">OR
         </Grid>
         <Grid item xs={4} align="center">
-        <Button variant="contained" className="rightbutton" color="primary" onClick={()=>{this.props.changeParentState(2)}}>Create Team</Button>
+        <Button variant="contained" className="rightbutton" color="primary" onClick={()=>{this.props.changeParentState(2)}}  disabled={!this.props.allowTeam}>Create Team</Button>
         </Grid>
     </Grid>
     </Center>

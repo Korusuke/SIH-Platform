@@ -101,7 +101,7 @@ export default class BottomCardMerge extends React.Component{
         let toShow
         if(this.state.show === 0)
         {
-            toShow = <Bottomcardfirst  changeParentState={this.changeState} url={this.props.url}/>
+            toShow = <Bottomcardfirst  changeParentState={this.changeState} url={this.props.url} allowTeam={this.props.allowTeam}/>
         }
         else if(this.state.show === 1)
         {

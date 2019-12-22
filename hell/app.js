@@ -48,6 +48,8 @@ app.use('/team', require('./routes/team'));
 app.use('/user', require('./routes/user'));
 app.use('/', require('./routes/login'));
 
+app.use('/images', express.static(__dirname + '/storage/userphotos'));
+
 const port = 8080;
 app.listen(port, () => {
 	console.log('Hey, listening on port %s', port);
