@@ -46,15 +46,27 @@ export default class ProfileMember extends React.Component{
         this.handler = this.handler.bind(this)
     }
 
+    componentDidMount()
+    {
+        if(localStorage.getItem('siteTheme') && this.state.theme != localStorage.getItem('siteTheme') )
+        {
+            this.setState({theme:localStorage.getItem('siteTheme')})
+        }
+    }
+
 
     handler() {
         if (this.state.theme == 'light') {
             this.setState({
                 theme: 'dark'
+            }, ()=>{
+                localStorage.setItem('siteTheme', 'dark')
             })
         } else {
             this.setState({
                 theme: 'light'
+            }, ()=>{
+                localStorage.setItem('siteTheme', 'dark')
             })
         }
     }

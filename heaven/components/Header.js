@@ -5,6 +5,8 @@ import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 
+import {MuiThemeProvider, createMuiTheme} from '@material-ui/core'
+
 import Cookies from 'universal-cookie';
 import AppsIcon from '@material-ui/icons/Apps';
 export default function Header(props){
