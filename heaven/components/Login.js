@@ -12,8 +12,7 @@ import Center from 'react-center';
 import axios from 'axios';
 import Snackbar from './snackbar';
 import Cookies from 'universal-cookie';
-import { useRouter, Router } from 'next/router'
-
+import { withRouter } from 'next/router';
 import envvar from '../env'
 
 function TabPanel(props) {
@@ -56,7 +55,7 @@ const customTheme = {
     }
 }),
     dark:createMuiTheme({
-        
+
         palette: {
             type: 'dark',
             primary: { main: '#000000' },
@@ -86,7 +85,7 @@ const customOTPTheme = createMuiTheme({
     }
 });
 
-export default class LoginBox extends React.Component{
+class LoginBox extends React.Component{
     state = {
         value: 0,
         login: {
@@ -174,7 +173,9 @@ export default class LoginBox extends React.Component{
                         const cookies = new Cookies();
                         cookies.set('token', res.data.token, { path: '/' });
                         console.log(cookies.get('token')); // Pacman
-                        location.href = '/problems'
+                        // location.href = '/problems'
+                        const { router } = this.props;
+                        router.push('/problems');
 
                     }
                     this.snackcontent = <Snackbar type={res.data.status} msg={res.data.msg} />;
@@ -202,7 +203,9 @@ export default class LoginBox extends React.Component{
                         const cookies = new Cookies();
                         cookies.set('token', res.data.token, { path: '/' });
                         console.log(cookies.get('token')); // Pacman
-                        location.href='/profile'
+                        const { router } = this.props;
+                        router.push('/profile');
+                        // location.href='/profile'
 
                     }
                     this.snackcontent = <Snackbar type={res.data.status} msg={res.data.msg} />;
@@ -438,3 +441,5 @@ export default class LoginBox extends React.Component{
         );
     }
 }
+
+export default withRouter(LoginBox);
