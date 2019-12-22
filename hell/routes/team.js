@@ -93,12 +93,22 @@ router.post('/create', (req, res)=>{
       if(err){
         return console.log(err);
       }
-      console.log("Saved", result);
-      res.json({
-        'status': 'success',
-        'msg': 'Team Created Successfully',
-        'inviteCode':inviteCode,
-        team: team1
+      User.findOne({email: leader})
+        .then(user => {
+          console.log("Saved", result);
+          res.json({
+            'status': 'success',
+            'msg': 'Team Created Successfully',
+            'inviteCode':inviteCode,
+            team: {
+              teamName: result.teamName,
+              members: [{
+              email: user.email,
+              role: 'leader',
+              name: user.firstName + " " + user.lastName
+            }]
+          }
+        })
       });
     });
   });
@@ -124,21 +134,38 @@ router.post('/join', (req, res)=>{
       );
       return;
     }
+    if(result.members.length==6) {
+      return res.json(
+        {
+          status: 'error',
+          msg: 'Team already full'
+        }
+      );
+    }
+    if(result.members)
     result.members.push(user);
     result.save();
-    res.json({
-      status: 'success',
-      msg:'Joined Successfully',
-      team: result
-    });
-    User.findOne({'email': user}, (err, user)=>{
-      if(err){
-        res.send(500);
-        return;
-      }
-      user.teamId = result.teamId;
-      user.save();
-    });
+    let members = []
+    User.find({email: {'$in': result.members}})
+      .then(users => {
+          for(var i in users){
+            members.push({
+              email: users[i].email,
+              name: users[i].firstName + ' ' + users[i].lastName,
+              role: users[i].email==result.leader ? 'leader' : 'member'
+            });
+          }
+          return res.json({
+            status: 'success',
+            msg:'Joined Successfully',
+            inviteCode: result.inviteCode,
+            team: {
+              teamName: result.teamName,
+              members
+            }
+          });
+        }
+      ).catch(err => console.log(err));
   });
 });
 
@@ -194,9 +221,12 @@ router.post('/exit', verifyToken, (req,res)=>{
       if (index > -1)
         data.members.splice(index, 1);
 
-      if(data.members)
+      if(data.members.length!=0){
         data.leader=data.members[0]
-      data.save();
+        data.save();
+      }
+      else
+        data.remove();
       res.json({status: 'success', msg: 'Exited team'});
 
   });
