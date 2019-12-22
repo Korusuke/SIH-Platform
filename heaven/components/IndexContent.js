@@ -47,7 +47,7 @@ export default function IndexContent(props)
             </Grid>
             <Grid item md={4} xs={10} style={{ padding: '10px' }}>
               <Grid item xs={12} style={{ padding: '10px' }}>
-                <Login url={props.url} theme={props.theme}/>
+                <Login url={props.url} theme={props.theme} themeState={props.themeState}/>
               </Grid>
               <Grid item xs={12} style={{ padding: '10px' }}>
               <Paper style={{ padding: '10px' }} >

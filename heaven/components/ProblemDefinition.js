@@ -40,7 +40,7 @@ export default class ProblemDefinition extends React.Component{
                     </Grid>
                     <Grid item md={4}>
 
-                        <Paper style={{minHeight: '400px', transform:'translate(0, -100px)', background:'white', wordBreak: 'break-all'}} >
+                        <Paper style={{minHeight: '400px', transform:'translate(0, -100px)', wordBreak: 'break-all'}} >
 
                             <div style={{
                                 padding: '20px'
