@@ -30,7 +30,7 @@ export default class ProblemsContainer extends React.Component
         this.setState({ offset });
     }
 
-
+ 
     render(){
         let arr = this.props.cards.map((card)=>(
         <Grid  item xs={12}  md={6} style={{padding:'10px'}}>
