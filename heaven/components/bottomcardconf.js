@@ -66,18 +66,21 @@ class App extends Component {
   render() {
     let arr = []
     this.props.team.members.forEach(e=>{
-
+      console.log(e);
+      var role = "";
+      if(e.role=='leader')
+          role = <Button variant="contained"
+              style={{width: '90%', backgroundColor: '#F18F63', color: '#ffffff'}} disableElevation disableRipple>Leader</Button>
       arr.push(
-        <Grid item xs={10}>
-            <Paper style={{margin: '20px'}}>
-                <Grid container direction="row" justify="center"
-                    alignItems="center" spacing={2}>
-                    {/* <Grid item md={3} style={{fontSize: '20px'}}>{member.name}</Grid> */}
-                    <Grid item md={7} style={{fontSize: '20px'}}>{e}</Grid>
-                    {/* <Grid item md={2}>{role}</Grid> */}
-                </Grid>
+        <Grid item xs={12}>
+            <Paper>
+            <Grid container direction="row" justify="center"
+                alignItems="center" spacing={2}>
+                <Grid item md={3} style={{fontSize: '20px',textAlign:'center'}}>{e.name}</Grid>
+                <Grid item md={7} style={{fontSize: '20px'}}>{e.email}</Grid>
+                <Grid item md={2}>{role}</Grid>
+            </Grid>
             </Paper>
-            {/* <div style={{minHeight:'50px', borderBottom:'1px solid black'}} ><span className="emailmember">{e}</span><span className="rightags"></span></div> */}
         </Grid>
       )
     })

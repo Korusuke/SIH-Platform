@@ -41,10 +41,7 @@ router.get('/', (req, res) => {
           .then(users => {
               members = users;
               for(var i in users)
-                team_data.members.push({
-                  name: users[i].firstName + " " + users[i].middleName,
-                  email: users[i].email
-                });
+                team_data.members.push(users[i]);
               return team_data
             }
           ).then((team_data) => {
@@ -162,28 +159,23 @@ router.post('/currentTeam', (req, res)=>{
       );
       return;
     }
-
-    var members_list = result.members;
-    var members = []
-    for (var i in members_list){
-      User.findOne({email: members_list[i]})
-        .then(user => {
-console.log(user);
-          members.push({
-            email: user.email,
-            leader: user.email == result.leader ? true : false,
-            name: user.firstName +  user.lastName
-          })
-        })
+    var team_data = {
+      teamName: result.teamName,
+      inviteCode: result.inviteCode,
+      members: []
     }
-
-    result.members = members;
-    console.log(result);
-    res.json({
-      status: 'success',
-      state: 3,
-      team:result
-    });
+    User.find({email: {'$in': result.members}})
+      .then(users => {
+          members = users;
+          for(var i in users)
+            team_data.members.push({
+              email: users[i].email,
+              name: users[i].firstName + ' ' + users[i].lastName,
+              role: users[i].email==result.leader ? 'leader' : 'member'
+            });
+          return res.json({'status': 'success', 'state': 3, 'team': team_data});
+        }
+      ).catch(err => console.log(err));
   });
 });
 
