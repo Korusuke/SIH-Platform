@@ -2,7 +2,7 @@ const redis = require('redis');
 const jwt = require('jsonwebtoken');
 
 const client = redis.createClient({
-  host: 'localhost',
+  host: 'redis-server',
   port: 6379
 });
 client.on('error', (err) => {

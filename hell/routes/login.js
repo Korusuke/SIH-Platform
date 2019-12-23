@@ -9,7 +9,7 @@ const { verifyToken } = require('./token');
 const redis = require('redis');
 const _ = require('lodash')
 const client = redis.createClient({
-    host: 'localhost',
+    host: 'redis-server',
     port: 6379
 });
 client.on('error', (err) => {
@@ -155,15 +155,17 @@ router.post('/signup', (req, res) => {
     console.log(email, password, email.slice(-11));
 
     if(!email || email.slice(-11)!='somaiya.edu' || password.length < 8) {
+        console.log("error");
         res.json({
             'status': 'failure',
             'msg': "Invalid Fields"
         })
         return
     }
-
+    console.log(User);
     User.find({email})
         .then(user => {
+            console.log("creating user");
             if(user.length>0){
                 res.json({
                     'status': 'failure',
@@ -172,6 +174,7 @@ router.post('/signup', (req, res) => {
                 return;
             }
             else {
+                console.log("creating user");
                 const newlogindata = new LoginData({email, password, otp});
                 newlogindata.save()
                 .then(() => {
@@ -215,10 +218,16 @@ router.post('/signup', (req, res) => {
                         'msg': "Check your mail for OTP"
                     })
                 })
-                .catch(err => {res.status(500); console.log(err);})
+                .catch(err => {console.log(err); res.json({
+                    'status': 'failure',
+                    'msg': "Invalid Fields"
+                });})
             }
         })
-        .catch(err => res.status(500))
+        .catch(err =>  {console.log(err); res.json({
+            'status': 'failure',
+            'msg': "Invalid Fields"
+        });})
 })
 
 
