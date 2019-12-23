@@ -29,6 +29,7 @@ const userSchema = new Schema({
             psid: String,
             id: Number,
             deletable: {type: Boolean, default: false},
+            profilePic: {type: String},
             comment: {
                 author: String,
                 message: String
