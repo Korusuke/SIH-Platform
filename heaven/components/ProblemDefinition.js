@@ -1,8 +1,9 @@
 import React from 'react'
 import Center from 'react-center'
 import CommentsContainer from './CommentsContainer'
-import {Grid, Container, Box, ButtonBase} from '@material-ui/core'
-
+import LabelsBox from './LabelsBox'
+import {Grid, Container, Box, Paper} from '@material-ui/core'
+import ReactHtmlParser, { processNodes, convertNodeToElement, htmlparser2 } from 'react-html-parser';
 export default class ProblemDefinition extends React.Component{
     constructor(props)
     {
@@ -16,29 +17,31 @@ export default class ProblemDefinition extends React.Component{
     render()
     {
         return (
-            <Container maxWidth="xl" style={{paddingTop: '20px'}}>
-                
-                <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
-                <Grid container direction="row">
-                    <Grid item md={7}>
-                        <div style={{width: '80%', margin:'auto'}}>
-                        <div style={{whiteSpace: 'pre-wrap'}}>
-                            {this.props.problem.Description}
-                            </div>
-                        </div>
-                        <Box boxShadow={3} style={{
-                            heigth: '200px',
-                            background:'white',
-                            width: '80%', margin:'auto', marginTop: '50px',
-                        }}><div style={{width:'100%'}}>
-                            <CommentsContainer psid={this.props.problem.Number}/>
-                            </div>
-                        </Box>
-                    </Grid>
-                    <Grid item md={5}>
+            <Container maxWidth="lg" style={{paddingTop: '20px'}}>
 
-                        <Box style={{minHeight: '400px', transform:'translate(0, -100px)', background:'white'}} boxShadow={3}>
-                            <ButtonBase style={{width:'100%'}}>
+                <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,600,700&display=swap" />
+                <Grid container direction="row" spacing={3}>
+                    <Grid container item md={8} justify='center' style={{ marginBottom: '150px' }}>
+                        <Grid item md={11}>
+                            <div style={{margin:'auto'}}>
+                                <div style={{ whiteSpace: 'pre-wrap' }}>
+                                    {this.props.dataPresent? ReactHtmlParser(this.props.problem.Description): null}
+                                </div>
+                            </div>
+                            <Box boxShadow={2} style={{
+                                minHeight: '200px',
+                                margin: 'auto',
+                                marginTop: '50px',
+                            }}><div style={{width:'100%'}}>
+                                <CommentsContainer psid={this.props.num}/>
+                                </div>
+                                </Box>
+                        </Grid>
+                    </Grid>
+                    <Grid item md={4}>
+
+                        <Paper style={{minHeight: '400px', transform:'translate(0, -100px)', wordBreak: 'break-all'}} >
+
                             <div style={{
                                 padding: '20px'
                             }}>
@@ -46,16 +49,16 @@ export default class ProblemDefinition extends React.Component{
                                     <Center>
                                         <div style={{
                                             position: 'relative',
-  
- 
+
+
                                             border: '1px solid',
                                             borderRadius: '50%',
                                             overflow: 'hidden',
-                                          
+
                                             width: '100px',
                                             height: '100px',
                                         }}>
-                                            <img src="https://hack.kjscecodecell.com/assets/team/compressed/Karan.png" style={{
+                                            <img src={this.props.dataPresent ? (this.props.url + this.props.problem.Logo) : null} style={{
                                                 width: '100px',
                                                 height: '100px',
                                                 position: 'absolute',
@@ -67,26 +70,33 @@ export default class ProblemDefinition extends React.Component{
                                     </Center>
                                 </div>
                                 <div className="rightDesc">
-                                    Problem Code<br/>
-                                    {this.props.problem.Number}
+                                    <span style={{ fontWeight: 700, fontSize: 18 }}>Problem Code<br/></span>
+                                    <span style={{fontWeight:400,fontSize:18}}>{this.props.num}</span>
                                 </div>
                                 <div className="rightDesc">
-                                    {this.props.problem.Category}<br/>
-                                    {this.props.problem.Domain}
+                                    <span style={{ fontWeight: 700, fontSize: 18 }}>{this.props.dataPresent ? this.props.problem.Category: null}</span><br/>
+                                    <span style={{ fontWeight: 700, fontSize: 18 }}>{this.props.dataPresent ? this.props.problem.Domain : null}</span>
                                 </div>
                                 <div className="rightDesc">
-                                    {
-                                        this.props.problem.Youtube ? (<div>Youtube Link <br/><a href={this.props.problem.Youtube} >{this.props.problem.Youtube}</a></div>) :( <span>No Youtube Video Available</span> )  
+                                    {this.props.dataPresent ?
+                                        this.props.problem.Youtube ? (<div><span style={{ fontWeight: 700, fontSize: 18 }}>Youtube Link</span> <br /><span style={{ fontWeight: 400, fontSize: 16 }}><a href={this.props.problem.Youtube} >{this.props.problem.Youtube}</a></span></div>) : (<span style={{ fontWeight: 400, fontSize: 16 }}>No Youtube Video Available</span> )
+                                    :
+                                    null
                                     }
                                 </div>
                                 <div className="rightDesc">
                                 {
-                                        this.props.problem.DataSet ? (<div>DataSet Link <br/><a href={this.props.problem.DataSet} >{this.props.problem.DataSet}</a></div>) :( <span>No Dataset Available</span> )  
+                                    this.props.dataPresent ?
+                                        this.props.problem.DataSet ? (<div><span style={{ fontWeight: 700, fontSize: 18 }}>DataSet Link</span> <br /><span style={{ fontWeight: 400, fontSize: 16 }}><a href={this.props.problem.DataSet} >{this.props.problem.DataSet}</a></span></div>) : (<span style={{ fontWeight: 400, fontSize: 16 }}>No Dataset Available</span> )
+                                    :
+                                    null
                                     }
                                 </div>
                             </div>
-                            </ButtonBase>
-                        </Box>
+
+                        </Paper>
+
+                        <LabelsBox psid={this.props.num} />
                     </Grid>
                 </Grid>
             </Container>

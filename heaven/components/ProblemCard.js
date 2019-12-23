@@ -11,12 +11,12 @@ class ProblemCard extends Component {
 
   type(t) {
     if (t == 'Software') {
-      return <Grid item xs={12} style={{color:'orange'}}>
+      return <Grid item xs={12} style={{ color: 'orange' }}>
         <FontAwesomeIcon icon={faCode} width="18" />
       </Grid>
     } else {
-      return <Grid item xs={12} style={{ color: 'green'}}>
-        <FontAwesomeIcon icon={faMicrochip} width="18"/>
+      return <Grid item xs={12} style={{ color: 'green' }}>
+        <FontAwesomeIcon icon={faMicrochip} width="18" />
       </Grid>
     }
   }
@@ -30,10 +30,10 @@ class ProblemCard extends Component {
 
     return (
       <ButtonBase style={{ width: '100%' }}>
-        <Link href={`/problem/${this.props.card['_id']}`} >
-      <Card onMouseOver={this.toggleRaised}
-        onMouseOut={this.toggleRaised}
-        raised={this.state.raised}
+        <Link href='/problem/[Number]' as={`/problem/${this.props.card.Number}`} >
+          <Card onMouseOver={this.toggleRaised}
+            onMouseOut={this.toggleRaised}
+            raised={this.state.raised}
             style={{
               width: '100%',
               minHeight: '250px',
@@ -42,42 +42,42 @@ class ProblemCard extends Component {
             }}
           >
 
-          <Grid container direction="column" >
-          <Grid container item xs={12} direction="row" alignItems="center" spacing={2}>
-            <Grid item >
-                <Avatar style={{ width: '75px', height: '75px', border:'1.5px solid black'}}>
-                  <img src="https://hack.kjscecodecell.com/assets/team/compressed/Karan.png" />
-                </Avatar>
-            </Grid>
+            <Grid container direction="column" >
+              <Grid container item xs={12} direction="row" alignItems="center" spacing={2}>
+                <Grid item >
+                  <Avatar style={{ width: '75px', height: '75px', border: '1.5px solid black' }}>
+                    <img src={`${this.props.url}${this.props.card.Logo}`} style={{width:'100%'}}/>
+                  </Avatar>
+                </Grid>
 
-              <Grid item xs style={{ fontFamily: 'Roboto', fontSize: '2rem', textAlign: 'start' }}>
-              <FitText maxFontSize={24}>
-                  {this.props.card.Company}
-                </FitText>
-              </Grid>
-            <Grid container item direction="column" style={{ textAlign: 'end',width: 'max-content', height: 'auto' }}>
+                <Grid item xs style={{ fontFamily: 'Roboto', fontSize: '2rem', textAlign: 'start' }}>
+                  <FitText maxFontSize={24}>
+                    {this.props.card.Company}
+                  </FitText>
+                </Grid>
+                <Grid container item direction="column" style={{ textAlign: 'end', width: 'max-content', height: 'auto', lineHeight: 1.75 }}>
 
-                <Grid item xs={12}>
-                  {this.props.card.Domain}
-              </Grid>
+                  <Grid item xs={12}>
+                    {this.props.card.Domain}
+                  </Grid>
 
-                {this.type(this.props.card.Category)}
-                <Grid item xs={12}>
-                  {this.props.card.Number}
+                  {this.type(this.props.card.Category)}
+                  <Grid item xs={12}>
+                    {this.props.card.Number}
+                  </Grid>
                 </Grid>
               </Grid>
-            </Grid>
 
-          <Divider style={{ width: '100%', marginTop: '10px', marginBottom: '10px', backgroundColor: 'rgba(13, 13, 13, 0.52)'}}/>
-            <Grid container item xs={12} direction="row" style={{ textAlign: 'start'}}>
-              <span>
-                {this.props.card.Title}
-              </span>
+              <Divider style={{ width: '100%', marginTop: '10px', marginBottom: '10px', backgroundColor: 'rgba(13, 13, 13, 0.52)' }} />
+              <Grid container item xs={12} direction="row" style={{ textAlign: 'start' }}>
+                <span>
+                  {this.props.card.Title}
+                </span>
               </Grid>
               {/* <Grid container item xs={12} direction="row" justify="flex-end" style={{ textAlign: 'end' }}>
                 <FontAwesomeIcon icon={faShareAlt} width="18" />
               </Grid> */}
-          </Grid>
+            </Grid>
 
           </Card>
         </Link>

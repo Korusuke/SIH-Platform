@@ -7,7 +7,7 @@ const _ = require("lodash")
 
 const multer = require('multer');
 const client = redis.createClient({
-    host: 'redis-server',
+    host: 'localhost',
     port: 6379
 });
 
@@ -31,7 +31,7 @@ var upload = multer({ storage: storage }).single('profilePic')
 router.post('/', upload, (req, res) => {
 
     console.log(req.body, req.file, req.cookies)
-    
+
     // if using verifyToken middleware replace req.body.email with req.decoded.email
     const decodedData = jwt.decode(req.cookies.token, {complete: true});
     // console.log('Decode: ',decodedData)
@@ -41,7 +41,6 @@ router.post('/', upload, (req, res) => {
         email: email
     }
 
-    
     let shape = ["squares", "isogrids", "space invaders"];
     let numberColours = [2,3,4];
     let theme = ["frogideas","heatwave","sugarsweets","daisygarden","seascape","berrypie","bythepool"];
@@ -52,14 +51,11 @@ router.post('/', upload, (req, res) => {
                 user[key] = req.body[key];
         }
 
-        
-        // user['profilePic'] = `https://www.tinygraphs.com/#?name=${req.body.email}&shape=${_.sample(shape)}&theme=${_.sample(theme)}&numcolors=${_.sample(numberColours)}#tryitout`
-        
         if(req.file)
         {
             user['profilePic'] = `/images/${email}-${req.file.originalname}`
         }
-        
+
         user.save()
             .then(() => {
                 console.log('saved')
@@ -91,7 +87,5 @@ router.get('/', (req, res) => {
         })
         .catch(() => res.status(500));
 })
-
-
 
 module.exports = router;
