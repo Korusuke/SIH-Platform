@@ -7,6 +7,7 @@ const cookieParser = require('cookie-parser');
 require('dotenv').config();
 
 const app = express();
+app.use('/storage',express.static('storage'))
 
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
@@ -19,12 +20,12 @@ app.use(cookieParser());
 app.use(cors(
   //required for using withcredentials on front end
     {
-    
+
       origin: 'http://localhost:3000',
       credentials: true,
-    
+
     }
-  
+
 ));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
@@ -49,6 +50,7 @@ app.use('/user', require('./routes/user'));
 app.use('/', require('./routes/login'));
 
 app.use('/images', express.static(__dirname + '/storage/userphotos'));
+app.use('/storage', express.static(__dirname + '/storage'));
 
 const port = 8080;
 app.listen(port, () => {

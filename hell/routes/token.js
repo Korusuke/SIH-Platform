@@ -2,7 +2,7 @@ const redis = require('redis');
 const jwt = require('jsonwebtoken');
 
 const client = redis.createClient({
-  host: 'redis-server',
+  host: 'localhost',
   port: 6379
 });
 client.on('error', (err) => {
@@ -10,7 +10,7 @@ client.on('error', (err) => {
 });
 
 
-async function verifyToken(req, res, next) {
+function verifyToken(req, res, next) {
   const token = req.cookies.token;
     if(!token){
       res.json({
