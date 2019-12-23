@@ -20,7 +20,7 @@ app.use(cors(
   //required for using withcredentials on front end
     {
 
-      origin: 'http://localhost:3000',
+      origin: 'http://3.81.31.197:3000',
       credentials: true,
 
     }
