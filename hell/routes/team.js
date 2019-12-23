@@ -20,15 +20,7 @@ router.use('/invite', require('./invitation'));
 
 router.get('/', (req, res) => {
   var data = []
-  var filter = {};
-  if (req.body.teamId) {
-    filter = {
-      teamId: req.body.teamId,
-    }
-  }
-  else
-    filter = {}
-  Team.find(filter)
+  Team.find({})
     .then(teams => {
       for(let i in teams){
         let team_data = {
@@ -96,18 +88,22 @@ router.post('/create', (req, res)=>{
       User.findOne({email: leader})
         .then(user => {
           console.log("Saved", result);
-          res.json({
-            'status': 'success',
-            'msg': 'Team Created Successfully',
-            'inviteCode':inviteCode,
-            team: {
-              teamName: result.teamName,
-              members: [{
-              email: user.email,
-              role: 'leader',
-              name: user.firstName + " " + user.lastName
-            }]
-          }
+          user.teamId = result.teamId;
+          user.save()
+            .then(() => {
+              res.json({
+                'status': 'success',
+                'msg': 'Team Created Successfully',
+                'inviteCode':inviteCode,
+                team: {
+                  teamName: result.teamName,
+                  members: [{
+                  email: user.email,
+                  role: 'leader',
+                  name: user.firstName + " " + user.lastName
+                }]
+              }
+            })  
         })
       });
     });
@@ -154,6 +150,10 @@ router.post('/join', (req, res)=>{
               name: users[i].firstName + ' ' + users[i].lastName,
               role: users[i].email==result.leader ? 'leader' : 'member'
             });
+            if(users[i].email==user) {
+              users[i].teamId = result.teamId;
+              users[i].save();
+            }
           }
           return res.json({
             status: 'success',
@@ -215,7 +215,6 @@ router.post('/exit', verifyToken, (req,res)=>{
       res.send(500)
       return;
     }
-
       let index = data.members.indexOf(user);
 
       if (index > -1)
@@ -227,7 +226,12 @@ router.post('/exit', verifyToken, (req,res)=>{
       }
       else
         data.remove();
-      res.json({status: 'success', msg: 'Exited team'});
+      User.findOne({email: user})
+        .then(user => {
+          user.teamId = "";
+          user.save();
+          res.json({status: 'success', msg: 'Exited team'});
+        })
 
   });
 });

@@ -41,7 +41,6 @@ router.post('/', upload, (req, res) => {
         email: email
     }
 
-
     let shape = ["squares", "isogrids", "space invaders"];
     let numberColours = [2,3,4];
     let theme = ["frogideas","heatwave","sugarsweets","daisygarden","seascape","berrypie","bythepool"];
@@ -51,9 +50,6 @@ router.post('/', upload, (req, res) => {
             if(key != 'email' && key !='profilePic')
                 user[key] = req.body[key];
         }
-
-
-        // user['profilePic'] = `https://www.tinygraphs.com/#?name=${req.body.email}&shape=${_.sample(shape)}&theme=${_.sample(theme)}&numcolors=${_.sample(numberColours)}#tryitout`
 
         if(req.file)
         {
@@ -91,7 +87,5 @@ router.get('/', (req, res) => {
         })
         .catch(() => res.status(500));
 })
-
-
 
 module.exports = router;
