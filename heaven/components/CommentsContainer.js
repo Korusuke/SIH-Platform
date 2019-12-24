@@ -138,7 +138,7 @@ export default class CommentsContainer extends React.Component {
                 e=>{
                     arr.push(
                         <div style={{padding: '10px'}}>
-                        <Comment name={e.comment.author} cid={e['id']}  deletable = {e.deletable} onDelete={this.handleDelete} message={
+                        <Comment name={e.comment.author} cid={e['id']}  profilePic={e.profilePic} deletable = {e.deletable} onDelete={this.handleDelete} message={
                             e.comment.message
                         }/>
                         </div>
