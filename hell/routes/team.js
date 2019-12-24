@@ -97,6 +97,7 @@ router.post('/create', (req, res)=>{
                 'inviteCode':inviteCode,
                 team: {
                   teamName: result.teamName,
+                  inviteCode: inviteCode,
                   members: [{
                   email: user.email,
                   role: 'leader',
