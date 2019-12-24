@@ -70,13 +70,15 @@ class Profile extends React.Component {
                 year: "",
                 rollNo: "",
                 email: "",
-                profilePic: ""
+                profilePic: "",
+                resume: "",
+                bio:""
             },
             updating: false,
             profilePicFile: null
         };
     }
-
+    
     handleChange(event) {
         let { name, type, value } = event.target;
         //console.log('STATE', this.state)
@@ -126,7 +128,7 @@ class Profile extends React.Component {
                 this.setState({
                     user: user
                 }, ()=>{
-                    if(user.firstName && user.lastName && user.middleName && user.phone && user.rollNo)
+                    if(user.firstName && user.lastName && user.middleName && user.phone && user.rollNo && user.bio && user.resume)
                     this.props.changeParentState(
                         {
                             allowTeam: true
@@ -169,7 +171,7 @@ class Profile extends React.Component {
                     this.setState({
                         updating: false
                     }, ()=>{
-                        if(this.state.user.firstName && this.state.user.lastName && this.state.user.middleName && this.state.user.phone && this.state.user.rollNo)
+                        if(this.state.user.firstName && this.state.user.lastName && this.state.user.middleName && this.state.user.phone && this.state.user.rollNo && this.state.user.resume && this.state.user.bio)
                         this.props.changeParentState(
                             {
                                 allowTeam: true
@@ -542,8 +544,37 @@ class Profile extends React.Component {
                                 onChange={this.handleChange}
                             />
                         </Grid>
+                        <Grid
+                        // justify={this.getJustify()}
+                        item xs={12} md={12}>
+                            <TextField
+                                fullWidth={true}
+                                required
+                                id="outlined-full-width"
+                                label="Resume Link"
+                                fullWidth={true}
+                                variant="outlined"
+                                value={this.state.user.resume}
+                                onChange={this.handleChange}
+                            />
+                        </Grid>
+                        <Grid
+                        // justify={this.getJustify()}
+                        item xs={12} md={12}>
+                            <TextField
+                            required
+                            fullWidth={true}
+                            id="outlined-multiline-static"
+                            label="Bio"
+                            multiline
+                            rows="2"
+                            variant="outlined"
+                            value={this.state.user.bio}
+                            onChange={this.handleChange}
+                            />
+                        </Grid>
                     </Grid>
-
+                    
                     <Grid
                     // justify={this.getJustify()}
                     item xs={6} sm={2}>
