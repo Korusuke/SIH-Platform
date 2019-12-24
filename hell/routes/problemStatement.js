@@ -24,6 +24,86 @@ router.get('/', (req, res) => {
         .catch(err => res.status(400).json('Error: ' + err));
 });
 
+router.get('/all_labels', (req, res) => {
+    const decodedData = jwt.decode(req.cookies.token, {complete: true});
+    // console.log('Decode:',decodedData)
+    const email = decodedData.payload.email || decodedData.payload.Email;
+    //const psid = req.query.psid;
+    if (!email) {
+        return res.json([])
+    }
+    User.findOne({email: email})
+        .then(user => {
+            console.log('finding labels');
+            ///let labels = [];
+            let psidlabels = {}
+
+            for (var i in user.labels) {
+                
+                if(psidlabels[user.labels[i].psid] && psidlabels[user.labels[i].psid].labels){
+                    //console.log(user.labels[i].psid)
+                    psidlabels[user.labels[i].psid].labels.push({
+                        psid: user.labels[i].psid,
+                        label: user.labels[i].label,
+                        color: user.labels[i].color,
+                        deletable: true
+                    });
+                }
+                else{
+                    //console.log(user.labels[i].psid)
+                    psidlabels[user.labels[i].psid] = {labels:[]}
+                    psidlabels[user.labels[i].psid].labels.push({
+                        psid: user.labels[i].psid,
+                        label: user.labels[i].label,
+                        color: user.labels[i].color,
+                        deletable: true
+                    });
+                }
+            }
+            //console.log(psidlabels['RA25'])
+            if(typeof user.teamId!='undefined')
+                Team.findOne({'teamId': user.teamId})
+                    .then(team => {
+                        var members = team.members;
+                        User.find({email: {'$in': members}})
+                            .then(users => {
+                                for(var i in users){
+                                    console.log(users[i].email, email, users[i].labels, users[i].email!=email)
+                                    if(users[i].email!=email && users[i].labels){
+                                        // labels = labels.concat(users[i].labels.filter(
+                                        //     l => l.psid==psid
+                                        // ));
+                                        console.log('E', users[i].email, users[i].labels)
+                                        users[i].labels.forEach(e=>{
+                                            if( psidlabels[e.psid] && psidlabels[e.psid].labels){
+                                                psidlabels[e.psid].labels.push({
+                                                    psid: e.psid,
+                                                    label:e.label,
+                                                    color:e.color,
+                                                    deletable: true
+                                                });
+                                            }
+                                            else{
+                                                psidlabels[e.psid] = {labels:[]}
+                                                psidlabels[e.psid].labels.push({
+                                                    psid : e.psid,
+                                                    label: e.label,
+                                                    color: e.color,
+                                                    deletable: true
+                                                });
+                                            }
+                                        })
+                                    }
+                                }
+                                return res.json(psidlabels);
+                            }).catch(err => res.json(psidlabels));
+                    }).catch(err => res.json(psidlabels));
+            else
+                return res.json(psidlabels);
+        })
+        .catch(() => res.status(500));
+})
+
 router.get('/labels', (req, res) => {
     // Team.findOne({member})
     const decodedData = jwt.decode(req.cookies.token, {complete: true});
