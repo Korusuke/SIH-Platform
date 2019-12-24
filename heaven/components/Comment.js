@@ -39,7 +39,7 @@ export default function Comment(props)
                         </Grid>
                     </Grid>
                 </div>
-                <div style={{background: 'white', minHeight:'20px', padding: '15px'}}>
+                <div style={{minHeight:'20px', padding: '15px'}}>
                 <div style={{whiteSpace: 'pre-wrap'}}>
                     {props.message}
                 </div>
