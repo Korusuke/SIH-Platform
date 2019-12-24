@@ -126,7 +126,7 @@ class Profile extends React.Component {
                 this.setState({
                     user: user
                 }, ()=>{
-                    if(user.firstName && user.lastName && user.middleName && user.phone && user.rollNo)
+                    if(user.firstName && user.lastName && user.middleName && user.phone && user.rollNo && this.state.user.gender)
                     this.props.changeParentState(
                         {
                             allowTeam: true
@@ -169,7 +169,7 @@ class Profile extends React.Component {
                     this.setState({
                         updating: false
                     }, ()=>{
-                        if(this.state.user.firstName && this.state.user.lastName && this.state.user.middleName && this.state.user.phone && this.state.user.rollNo)
+                        if(this.state.user.firstName && this.state.user.lastName && this.state.user.middleName && this.state.user.phone && this.state.user.rollNo && this.state.user.gender)
                         this.props.changeParentState(
                             {
                                 allowTeam: true
@@ -401,6 +401,7 @@ class Profile extends React.Component {
                                     labelId="gender"
                                     label="Gender"
                                     name="gender"
+                                    required
                                     value={this.state.user.gender}
                                     onChange={this.handleChange}
                                     autoWidth

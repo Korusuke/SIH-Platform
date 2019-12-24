@@ -37,10 +37,12 @@ export default class Problems extends React.Component {
     constructor(props) {
         super();
         this.props = props;
-        //console.log(this.props)
+        // console.log(this.props.problems)
         this.state = {
             found: this.props.problems.filter(obj => true),
-            theme:  "light"
+            theme:  "light",
+            allLabels: {},
+            labelLoading: true
         };
 
         this.applyFilter = this.applyFilter.bind(this);
@@ -81,7 +83,7 @@ export default class Problems extends React.Component {
     applyFilter(stateInput) {
         let found;
 
-        let { software, hardware, ideas, searchfilter, orgs } = stateInput;
+        let { software, hardware, ideas, searchfilter, orgs, labels} = stateInput;
 
         console.log(stateInput);
 
@@ -99,8 +101,16 @@ export default class Problems extends React.Component {
             );
         else found = this.props.problems.filter(obj => false);
 
-        console.log("ORG", orgs, found[0].Company);
-        console.log(orgs.includes(found[0].Company));
+        console.log(labels)
+        if(labels.length > 0)
+        {
+            
+            found = found.filter(obj => this.state.allLabels[obj.Number] && 
+                ( this.state.allLabels[obj.Number].labels.filter(e=>labels.includes(e.label)).length > 0));
+        }
+
+        // console.log("ORG", orgs, found[0].Company);
+        // console.log(orgs.includes(found[0].Company));
         //console.log(found)
         if (orgs.length > 0)
             found = found.filter(obj => orgs.includes(obj.Company));
@@ -124,6 +134,15 @@ export default class Problems extends React.Component {
         }
 
         localStorage.setItem('problems', JSON.stringify(this.props.problems))
+
+        fetch(`${envvar.REACT_APP_SERVER_URL}/ps/all_labels`, {
+            credentials:'include',
+        }).then(res => res.json()).then(data => {
+            this.setState({
+                allLabels: data,
+                labelLoading: false
+            })
+        }).catch(e => console.log(e))
     }
 
     render() {
@@ -180,12 +199,16 @@ export default class Problems extends React.Component {
                                 cards={this.props.problems}
                                 theme={customtheme}
                                 themeState={this.state.theme}
+                                allLabels={this.state.allLabels}
+                                labelLoading={this.state.labelLoading}
                             />
                             <ProblemsContainer
                                 cards={this.state.found}
                                 url={envvar.REACT_APP_SERVER_URL}
                                 theme={customtheme}
                                 themeState={this.state.theme}
+                                allLabels={this.state.allLabels}
+                                labelLoading={this.state.labelLoading}
                             />
                         </div>
                         <Footer />
