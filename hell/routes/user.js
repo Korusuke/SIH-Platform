@@ -7,7 +7,7 @@ const _ = require("lodash")
 
 const multer = require('multer');
 const client = redis.createClient({
-    host: 'redis-server',
+    host: process.env.REDIS_KEY,
     port: 6379
 });
 

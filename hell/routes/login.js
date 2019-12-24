@@ -9,7 +9,7 @@ const { verifyToken } = require('./token');
 const redis = require('redis');
 const _ = require('lodash')
 const client = redis.createClient({
-    host: 'redis-server',
+    host: process.env.REDIS_KEY,
     port: 6379
 });
 client.on('error', (err) => {
