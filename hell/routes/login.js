@@ -9,7 +9,7 @@ const { verifyToken } = require('./token');
 const redis = require('redis');
 const _ = require('lodash')
 const client = redis.createClient({
-    host: 'redis-server',
+    host: process.env.REDIS_KEY,
     port: 6379
 });
 client.on('error', (err) => {
@@ -75,7 +75,7 @@ router.post('/login', (req, res) => {
         .then(user => {
             console.log(email, password);
             if(!user){
-                res.status(200).json({status: 'failure', msg: 'Access Granted '});
+                res.status(200).json({status: 'failure', msg: 'Access Denied '});
                 return;
             }
             jwt.sign({email}, process.env.KEY, { expiresIn: "30d" }, (er, token) => {

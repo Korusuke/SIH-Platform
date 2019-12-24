@@ -9,7 +9,7 @@ const jwt = require('jsonwebtoken');
 const {verifyToken} = require('./token');
 
 const client = redis.createClient({
-  host: 'redis-server',
+  host: process.env.REDIS_KEY,
   port: 6379
 });
 client.on('error', (err) => {
@@ -97,6 +97,7 @@ router.post('/create', (req, res)=>{
                 'inviteCode':inviteCode,
                 team: {
                   teamName: result.teamName,
+                  inviteCode: inviteCode,
                   members: [{
                   email: user.email,
                   role: 'leader',
