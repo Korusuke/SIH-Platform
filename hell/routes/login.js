@@ -75,7 +75,7 @@ router.post('/login', (req, res) => {
         .then(user => {
             console.log(email, password);
             if(!user){
-                res.status(200).json({status: 'failure', msg: 'Access Granted '});
+                res.status(200).json({status: 'failure', msg: 'Access Denied '});
                 return;
             }
             jwt.sign({email}, process.env.KEY, { expiresIn: "30d" }, (er, token) => {
