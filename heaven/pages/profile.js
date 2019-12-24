@@ -65,7 +65,7 @@ export default class ProfileMember extends React.Component{
             this.setState({
                 theme: 'light'
             }, ()=>{
-                localStorage.setItem('siteTheme', 'dark')
+                localStorage.setItem('siteTheme', 'light')
             })
         }
     }
