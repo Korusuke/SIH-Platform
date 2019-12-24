@@ -78,8 +78,8 @@ def logo_parser(company, logo_url):
     logo_url = "/storage/" + image_name
     return logo_url
 
-
-for i in range(1, pages + 1):
+#print(pages)
+for i in range(1, pages+1):
     rurl = url + str(i)
     r = requests.get(rurl)
     data = r.text
@@ -105,7 +105,7 @@ for i in range(1, pages + 1):
              ps_title, ps_desc, yt_link, ds_link, logo_url]
         count += 1
         all.append(g)
-    print('xxxxxxx')
+    print(i)
 print(count)
 
 
@@ -131,7 +131,7 @@ with csvfile:
 from pymongo import MongoClient
 
 # Push to MongoDB
-mongodb_uri = "mongodb://probably:pr0b4bly@ds255857.mlab.com:55857/sih_platform?retryWrites=false"
+mongodb_uri = "mongodb://localhost:27017/sih_platform"
 client = MongoClient(mongodb_uri)
 db = client.sih_platform
 col = db.ps

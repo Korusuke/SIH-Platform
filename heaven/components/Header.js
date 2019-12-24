@@ -6,6 +6,7 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import Router from "next/router";
 import {MuiThemeProvider, createMuiTheme} from '@material-ui/core'
+import Favicon from 'react-favicon';
 
 import Cookies from 'universal-cookie';
 import AppsIcon from '@material-ui/icons/Apps';
@@ -47,6 +48,7 @@ export default function Header(props){
     }
     return (
         <div>
+            <Favicon url="/assets/favicon/favicon.ico" />
             <AppBar position="static" style={
                 {
                     backgroundColor: 'white',

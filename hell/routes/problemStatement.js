@@ -38,31 +38,32 @@ router.get('/labels', (req, res) => {
             console.log('finding labels');
             let labels = [];
             for (var i in user.labels) {
-                if(user.labels[i].psid == psid)
-                    labels.push(user.labels[i]);
+                if(user.labels[i].psid == psid){
+                    labels.push({
+                        psid: user.labels[i].psid,
+                        label: user.labels[i].label,
+                        color: user.labels[i].color,
+                        deletable: true
+                    });
+                }
             }
-            // console.log(comments)
-            labels = labels.map( e=> {
-                e.deletable = true
-                return e
-            } )
-
-            // console.log('AFTER: ', comments)
-            if(user.teamId)
+            if(typeof user.teamId!='undefined')
                 Team.findOne({'teamId': user.teamId})
                     .then(team => {
                         var members = team.members;
-                        for(var i in members) {
-                            console.log("fetching member labels");
-                            if(members[i]!=email)
-                                User.findOne({email: email, labels: {psid: psid}})
-                                    .then(user => {
-                                        labels = labels.concat(user.labels);
-                                    }).catch(err => res.status(500))
-                        }
-                       // console.log(comments);
-                    }).catch(err => res.status(500));
-            res.json(labels);
+                        User.find({email: {'$in': members}})
+                            .then(users => {
+                                for(var i in users){
+                                    if(users[i].email!=email && typeof users[i].labels!='undefined')
+                                        labels = labels.concat(users[i].labels.filter(
+                                            l => l.psid==psid
+                                        ));
+                                }
+                                return res.json(labels);
+                            }).catch(err => res.json(labels));
+                    }).catch(err => res.json(labels));
+            else
+                return res.json(labels);
         })
         .catch(() => res.status(500));
 })
@@ -111,18 +112,6 @@ router.delete('/labels', (req, res) => {
         }).catch(err => res.status(500))
 })
 
-router.post('/add_label', (req, res) => {
-    const email = req.decoded.email;
-    User.find({email})
-        .then(user => {
-            if (user[0].teamId.length=="") {
-                res.json("User Doesn't belong to any team");
-                return
-            }
-            const { name, color } = req.body;
-    })
-});
-
 router.get('/comments', (req, res) => {
 
     const decodedData = jwt.decode(req.cookies.token, {complete: true});
@@ -145,32 +134,32 @@ router.get('/comments', (req, res) => {
                 if(user.comments[i].psid == psid)
                     comments.push(user.comments[i]);
             }
-            // console.log(comments)
             comments = comments.map(e=> {
-                e.deletable = true
+                e.deletable = true;
                 return e
             } )
 
-            // console.log('AFTER: ', comments)
-            if(user.teamId)
+            if(typeof user.teamId!='undefined')
                 Team.findOne({'teamId': user.teamId})
                     .then(team => {
                         var members = team.members;
-                        for(var i in members) {
-                            console.log("fetching member comments");
-                            if(members[i]!=email)
-                                User.findOne({email: email, comments: {psid: psid}})
-                                    .then(user => {
-                                        comments = comments.concat(user.comments);
-                                    }).catch(err => res.status(500))
-                        }
-                       // console.log(comments);
-                    }).catch(err => res.status(500));
-            res.json({
-                'status': 'success',
-                'msg': 'All comments fetched',
-                'comments': comments
-            });
+                        User.find({email: {'$in': members}})
+                            .then(users => {
+                                for(var i in users){
+                                    if(users[i].email!=email && typeof users[i].comments!='undefined') {
+                                        comments = comments.concat(users[i].comments.filter(
+                                            c => c.psid==psid
+                                        ));
+                                    }
+                                }
+                                comments = comments.sort((a, b) => {
+                                    return new Date(a.time) - new Date(b.time);
+                                })
+                                return res.json({comments});
+                            }).catch(err => res.json({comments}));
+                    }).catch(err => res.json({comments}));
+            else
+                return res.json({comments});
         })
         .catch(() => res.status(500));
 });
@@ -189,8 +178,6 @@ router.post('/comments', (req, res) => {
 
     console.log(psid, comment)
 
-
-
     User.findOne({email: email})
         .then(user => {
             console.log("user found");
@@ -205,13 +192,13 @@ router.post('/comments', (req, res) => {
                 'psid': psid,
                 'id': user.comments_count,
                 'comment': comment,
+                'profilePic': user.profilePic,
                 'time': new Date(),
             })
+
             user.comments_count += 1;
-            // console.log(user);
             user.save()
                 .then(() => {
-                    //console.log('saved', user)
 
                     let comments = [];
                     for (var i in user.comments) {
@@ -224,27 +211,26 @@ router.post('/comments', (req, res) => {
                         return e
                     } )
 
-                    if(user.teamId)
+                    if(typeof user.teamId!='undefined')
                         Team.findOne({'teamId': user.teamId})
                             .then(team => {
                                 var members = team.members;
-                                for(var i in members) {
-                                    console.log("fetching member comments");
-                                    if(members[i]!=email)
-                                        User.findOne({email: email, comments: {psid: psid}})
-                                            .then(user => {
-                                                comments = comments.concat(user.comments);
-                                            }).catch(err => res.status(500))
-                                }
-
-                            }).catch(err => res.status(500));
-
-                    console.log(comments);
-                    res.json({
-                        'status': 'success',
-                        'msg': 'Comment added',
-                        'comments': comments
-                    });
+                                User.find({email: {'$in': members}})
+                                    .then(users => {
+                                        for(var i in users){
+                                            if(users[i].email!=email && typeof users[i].comments!='undefined')
+                                                comments = comments.concat(users[i].comments.filter(
+                                                    c => c.psid==psid
+                                                ));
+                                        }
+                                        comments = comments.sort((a, b) => {
+                                            return new Date(a.time) - new Date(b.time);
+                                        })
+                                        return res.json({comments});
+                                    }).catch(err => console.log(err));
+                            }).catch(err => res.json({comments}));
+                    else
+                        return res.json({comments});
                 })
                 .catch(err => res.status(500))
         })
@@ -271,7 +257,6 @@ router.delete('/comments', (req, res) => {
             user.save()
                 .then(() => {
 
-                        // console.log('saved', user)
 
                         let comments = [];
                         for (var i in user.comments) {
@@ -284,28 +269,26 @@ router.delete('/comments', (req, res) => {
                             return e
                         } )
 
-                        if(user.teamId)
+                        if(typeof user.teamId!='undefined')
                             Team.findOne({'teamId': user.teamId})
                                 .then(team => {
                                     var members = team.members;
-                                    for(var i in members) {
-                                        console.log("fetching member comments");
-                                        if(members[i]!=email)
-                                            User.findOne({email: email, comments: {psid: psid}})
-                                                .then(user => {
-                                                    comments = comments.concat(user.comments);
-                                                }).catch(err => res.status(500))
-                                    }
-
-                                }).catch(err => res.status(500));
-
-                        console.log(comments);
-                        res.json({
-                            'status': 'success',
-                            'msg': 'Comment deleted',
-                            'comments': comments
-                        });
-
+                                    User.find({email: {'$in': members}})
+                                        .then(users => {
+                                            for(var i in users){
+                                                if(users[i].email!=email && typeof users[i].comments!='undefined')
+                                                    comments = comments.concat(users[i].comments.filter(
+                                                        c => c.psid==psid
+                                                    ));
+                                            }
+                                            comments = comments.sort((a, b) => {
+                                                return new Date(a.time) - new Date(b.time);
+                                            })
+                                            return res.json({comments});
+                                        }).catch(err => console.log(err));
+                                }).catch(err => res.json({comments}));
+                        else
+                            return res.json({comments});
                 }).catch(() => res.status(500));
         }).catch(() => res.status(500))
 })

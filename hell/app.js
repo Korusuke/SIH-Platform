@@ -7,7 +7,6 @@ const cookieParser = require('cookie-parser');
 require('dotenv').config();
 
 const app = express();
-app.use('/storage',express.static('storage'))
 
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
@@ -21,7 +20,7 @@ app.use(cors(
   //required for using withcredentials on front end
     {
 
-      origin: 'http://localhost:3000',
+      origin: 'http://3.81.31.197:3000',
       credentials: true,
 
     }
@@ -33,14 +32,11 @@ app.use(bodyParser.urlencoded({
 }));
 
 const uri = process.env.MONGODB_URI;
+console.log(uri);
 mongoose.connect(uri, {
-    useNewUrlParser: true,
-    useCreateIndex: true
-});
-const connection = mongoose.connection;
-connection.once('open', () => {
-    console.log("MongoDB database connection established successfully");
-})
+    useNewUrlParser: true
+}).then(() => console.log('MongoDB connected'))
+.catch(err => console.log(err));
 
 app.use('/delete', require('./routes/delete'));
 app.use('/ps', require('./routes/problemStatement'));
