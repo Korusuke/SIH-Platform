@@ -122,6 +122,7 @@ export default class BottomCardMerge extends React.Component{
                 </Paper>
 
                 {this.state.snack ? this.snackcontent : null}
+                <br/>
             </div>
         )
     }
