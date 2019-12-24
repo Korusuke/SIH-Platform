@@ -550,6 +550,7 @@ class Profile extends React.Component {
                             <TextField
                                 fullWidth={true}
                                 required
+                                name="resume"
                                 id="outlined-full-width"
                                 label="Resume Link"
                                 fullWidth={true}
@@ -562,8 +563,10 @@ class Profile extends React.Component {
                         // justify={this.getJustify()}
                         item xs={12} md={12}>
                             <TextField
-                            required
+                            
                             fullWidth={true}
+                            required
+                            name="bio"
                             id="outlined-multiline-static"
                             label="Bio"
                             multiline
