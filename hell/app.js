@@ -3,6 +3,8 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
+const morgan = require('morgan');
+const winston = require('./winston');
 
 require('dotenv').config();
 
@@ -15,6 +17,7 @@ app.use((req, res, next) => {
 });
 
 // Middleware functions
+app.use(morgan('combined', { stream: winston.stream }));
 app.use(cookieParser());
 app.use(cors(
   //required for using withcredentials on front end
