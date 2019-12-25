@@ -13,23 +13,23 @@ const timeline = [
   {
     "key":0,
   "title":"Initial Notification",
-  "date":"16th December"
+  "date":"18th December"
   },
 {
   "key":1,
-  "title":"Meeting and registration",
-  "date":"7th January"
+  "title":"Registrations Open",
+  "date":"26th December"
 
   },
   {
     "key":2,
-    "title":"Team/Mentor formation",
-    "date":"9th January"
+    "title":"Registrations Close",
+    "date":"28th December"
   },
   {
     "key":3,
-    "title":"Internal Hackathon",
-    "date":"15th January"
+    "title":"Idea Submissions Open",
+    "date":"29th December"
   }
 ]
 

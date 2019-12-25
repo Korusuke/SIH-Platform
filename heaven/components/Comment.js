@@ -32,7 +32,7 @@ export default function Comment(props)
                             </div>
                         </Grid>
                        <Grid item xs={8} sm={10}>
-                            <Box paddingLeft={1} height="100%" color="#444"><Center style={{height: '100%'}}><span style={{width:'100%'}}>{props.name} </span></Center></Box>
+                            <Box paddingLeft={1} height="100%" ><Center style={{height: '100%'}}><span style={{width:'100%'}}>{props.name} </span></Center></Box>
                         </Grid>
                         <Grid item xs={2} sm={1}>
                              <Center style={{height: '100%'}}><div>{ props.deletable? <FontAwesomeIcon size="1x" icon={faTrash} style={{cursor:'pointer'}} onClick={()=>{props.onDelete(props.cid)}}/> : null}</div></Center>
