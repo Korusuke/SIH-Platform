@@ -189,7 +189,7 @@ export default class Problems extends React.Component {
                                 color: `${curtheme.text}`
                             }}
                         >
-                            <Header loggedin={true} />
+                            <Header loggedin={true} theme={customtheme} themeState={this.state.theme}/>
                             <NoiceBanner
                                 text="Problem Statements"
                                 backgroundImage={"/assets/images/banner.jpg"}
