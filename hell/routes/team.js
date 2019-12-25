@@ -148,7 +148,6 @@ router.post('/join', (req, res)=>{
       qry.push({"email": decodedData.payload.email});
       console.log(qry);
       r = await User.find({$or: qry}, {'gender':1, 'email':1});
-      console.log("HELLOOOO", r);
       let genders = new Set();
       r.forEach(el=>{
         console.log("Gender", el.gender);
