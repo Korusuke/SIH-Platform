@@ -41,6 +41,7 @@ export default class CommentsContainer extends React.Component {
             }
             ).then(res => res.json())
             .then(data => {
+                console.log(this.data)
                 this.setState({
                     comments: data.comments,
                     initLoading: false

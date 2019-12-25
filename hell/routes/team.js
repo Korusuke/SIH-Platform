@@ -183,6 +183,7 @@ router.post('/join', (req, res)=>{
               inviteCode: result.inviteCode,
               team: {
                 teamName: result.teamName,
+                inviteCode:inviteCode,
                 members
               }
             });

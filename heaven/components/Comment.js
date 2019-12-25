@@ -4,6 +4,7 @@ import {Paper, Grid, Box} from '@material-ui/core'
 import Center from 'react-center'
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 
+import Delete from '@material-ui/icons/Delete'
 
 import  {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faTrash} from '@fortawesome/free-solid-svg-icons'
