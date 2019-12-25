@@ -104,7 +104,28 @@ class Profile extends React.Component {
         // console.log(name + ": " + value);
     }
 
+    handleRoll = (event) => {
+        const { user } = this.state;
+        user[event.target.name] = event.target.value;
+        this.setState({ user });
+    }
+
     componentDidMount() {
+
+        ValidatorForm.addValidationRule('isRoll', (value) => {
+            // console.log('validating roll');
+            if (value.length < 7) {
+                return false;
+            }
+
+            if (value.slice(0,2)>20 || value.slice(0,2)<15) {
+                return false;
+            }
+
+            return true;
+        });
+
+
         fetch(`${envvar.REACT_APP_SERVER_URL}/user/`, {
             credentials: "include"
         })
@@ -124,7 +145,7 @@ class Profile extends React.Component {
                     }
                 }
                 console.log(user);
-
+         
                 this.setState({
                     user: user
                 }, ()=>{
@@ -441,7 +462,7 @@ class Profile extends React.Component {
                             sm={6}
                             md={4}
                         >
-                            <TextField
+                            <TextValidator
                                 fullWidth={true}
                                 required
                                 id="outlined-required"
@@ -449,6 +470,8 @@ class Profile extends React.Component {
                                 value={this.state.user.rollNo}
                                 label="Roll No."
                                 variant="outlined"
+                                validators={['required','minNumber:0','isRoll']}    
+                                errorMessages={['Please enter Roll no.','Please enter valid Roll no.','Please enter valid Roll no.']}
                                 onChange={this.handleChange}
                             />
                         </Grid>
