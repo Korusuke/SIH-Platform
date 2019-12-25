@@ -13,7 +13,7 @@ import Cookies from 'universal-cookie';
 import AppsIcon from '@material-ui/icons/Apps';
 export default function Header(props){
     const [anchorEl, setAnchorEl] = React.useState(null);
-    const [profilePic, setProfilePic] = React.useState(null);
+    // const [profilePic, setProfilePic] = React.useState(null);
 
     const handleProfile = () =>
     {
@@ -48,6 +48,7 @@ export default function Header(props){
         }
 
     }
+    console.log(props)
     return (
         <div>
             <Favicon url="/assets/favicon/favicon.ico" />
@@ -92,7 +93,7 @@ export default function Header(props){
                                 open={Boolean(anchorEl)}
                                 onClose={handleClose}
                             >
-                                <MenuItem ><Link href="/profile"><a style={{textDecoration: 'none', color:props.themeState == 'dark'? 'white':'black'}}>Profile</a></Link></MenuItem>
+                                <MenuItem ><Link href="/profile"><a style={{textDecoration: 'none',  color:props.themeState == 'dark'? 'white':'black'}}>Profile</a></Link></MenuItem>
                                 <MenuItem ><Link href="/problems"><a style={{textDecoration: 'none', color:props.themeState == 'dark'? 'white':'black'}}>Problems</a></Link></MenuItem>
                                 <MenuItem onClick={handleLogout}>Logout</MenuItem>
                             </Menu>
