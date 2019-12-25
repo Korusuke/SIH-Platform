@@ -28,3 +28,5 @@ services:
     - "27017:27017"
     environment: 
       MONGO_INITDB_DATABASE: "sih_platform"
+      MONGODB_USER: "${db_user}"
+      MONGODB_PASS: "${db_pass}"
