@@ -8,19 +8,19 @@ import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import  {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faTrash} from '@fortawesome/free-solid-svg-icons'
 
-
+import envvar from'../env'
 
 export default function Comment(props)
 {
-    
+
     let profileImg = props.profilePic
             ? props.profilePic[0] == "/"
-                ? `http://localhost:8080${props.profilePic}`
+                ? `${envvar.REACT_APP_SERVER_URL}${props.profilePic}`
                 : props.profilePic
             : "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png";
-    
+
     return (
-        
+
             <div style={{border: '1px solid #cdcdcd'}}>
                 <div style={{ minHeight:'20px', padding: '5px'}}>
                    <Grid container direction="row">
@@ -39,13 +39,13 @@ export default function Comment(props)
                         </Grid>
                     </Grid>
                 </div>
-                <div style={{background: 'white', minHeight:'20px', padding: '15px'}}>
+                <div style={{minHeight:'20px', padding: '15px'}}>
                 <div style={{whiteSpace: 'pre-wrap'}}>
                     {props.message}
                 </div>
                 </div>
 
             </div>
-        
+
     )
 }

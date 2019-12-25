@@ -19,12 +19,12 @@ app.use(cookieParser());
 app.use(cors(
   //required for using withcredentials on front end
     {
-    
-      origin: 'http://localhost:3000',
+
+      origin: process.env.CORS_ORIGIN,
       credentials: true,
-    
+
     }
-  
+
 ));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
@@ -32,14 +32,11 @@ app.use(bodyParser.urlencoded({
 }));
 
 const uri = process.env.MONGODB_URI;
+console.log(uri);
 mongoose.connect(uri, {
-    useNewUrlParser: true,
-    useCreateIndex: true
-});
-const connection = mongoose.connection;
-connection.once('open', () => {
-    console.log("MongoDB database connection established successfully");
-})
+    useNewUrlParser: true
+}).then(() => console.log('MongoDB connected'))
+.catch(err => console.log(err));
 
 app.use('/delete', require('./routes/delete'));
 app.use('/ps', require('./routes/problemStatement'));
@@ -49,6 +46,7 @@ app.use('/user', require('./routes/user'));
 app.use('/', require('./routes/login'));
 
 app.use('/images', express.static(__dirname + '/storage/userphotos'));
+app.use('/storage', express.static(__dirname + '/storage'));
 
 const port = 8080;
 app.listen(port, () => {

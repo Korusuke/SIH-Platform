@@ -16,8 +16,13 @@ services:
 
   redis-server:
     image: redis
+    ports:
+    - "6379:6379"
 
   database:
+    container_name: mongo
     image: mongo
     ports:
     - "27017:27017"
+    environment: 
+      MONGO_INITDB_DATABASE: "sih_platform"

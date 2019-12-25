@@ -9,7 +9,7 @@ const jwt = require('jsonwebtoken');
 const {verifyToken} = require('./token');
 
 const client = redis.createClient({
-  host: 'redis-server',
+  host: process.env.REDIS_KA_THING,
   port: 6379
 });
 client.on('error', (err) => {
@@ -17,6 +17,37 @@ client.on('error', (err) => {
 });
 
 router.use('/invite', require('./invitation'));
+
+router.get('/', (req, res) => {
+  var data = []
+  Team.find({})
+    .then(teams => {
+      for(let i in teams){
+        let team_data = {
+          id: teams[i].teamId,
+          name: teams[i].teamName,
+          members: []
+        }
+        let members = []
+        User.find({email: {'$in': teams[i].members}})
+          .then(users => {
+              members = users;
+              for(var i in users)
+                team_data.members.push(users[i]);
+              return team_data
+            }
+          ).then((team_data) => {
+            data.push(team_data);
+            if (i==teams.length-1){
+              console.log(data);
+              return res.json(data);
+            }
+          }).catch(err => console.log(err));
+      }
+    })
+    .catch(err => console.log(err))
+  // return res.json(data);
+})
 
 router.post('/create', (req, res)=>{
   const { teamName } = req.body;
@@ -54,12 +85,27 @@ router.post('/create', (req, res)=>{
       if(err){
         return console.log(err);
       }
-      console.log("Saved", result);
-      res.json({
-        'status': 'success',
-        'msg': 'Team Created Successfully',
-        'inviteCode':inviteCode,
-        team: team1
+      User.findOne({email: leader})
+        .then(user => {
+          console.log("Saved", result);
+          user.teamId = result.teamId;
+          user.save()
+            .then(() => {
+              res.json({
+                'status': 'success',
+                'msg': 'Team Created Successfully',
+                'inviteCode':inviteCode,
+                team: {
+                  teamName: result.teamName,
+                  inviteCode: inviteCode,
+                  members: [{
+                  email: user.email,
+                  role: 'leader',
+                  name: user.firstName + " " + user.lastName
+                }]
+              }
+            })  
+        })
       });
     });
   });
@@ -85,21 +131,42 @@ router.post('/join', (req, res)=>{
       );
       return;
     }
+    if(result.members.length==6) {
+      return res.json(
+        {
+          status: 'error',
+          msg: 'Team already full'
+        }
+      );
+    }
+    if(result.members)
     result.members.push(user);
     result.save();
-    res.json({
-      status: 'success',
-      msg:'Joined Successfully',
-      team: result
-    });
-    User.findOne({'email': user}, (err, user)=>{
-      if(err){
-        res.send(500);
-        return;
-      }
-      user.teamId = result.teamId;
-      user.save();
-    });
+    let members = []
+    User.find({email: {'$in': result.members}})
+      .then(users => {
+          for(var i in users){
+            members.push({
+              email: users[i].email,
+              name: users[i].firstName + ' ' + users[i].lastName,
+              role: users[i].email==result.leader ? 'leader' : 'member'
+            });
+            if(users[i].email==user) {
+              users[i].teamId = result.teamId;
+              users[i].save();
+            }
+          }
+          return res.json({
+            status: 'success',
+            msg:'Joined Successfully',
+            inviteCode: result.inviteCode,
+            team: {
+              teamName: result.teamName,
+              members
+            }
+          });
+        }
+      ).catch(err => console.log(err));
   });
 });
 
@@ -120,14 +187,23 @@ router.post('/currentTeam', (req, res)=>{
       );
       return;
     }
-    console.log(result);
-
-    res.json({
-      status: 'success',
-      state: 3,
-      team:result
-    });
-
+    var team_data = {
+      teamName: result.teamName,
+      inviteCode: result.inviteCode,
+      members: []
+    }
+    User.find({email: {'$in': result.members}})
+      .then(users => {
+          members = users;
+          for(var i in users)
+            team_data.members.push({
+              email: users[i].email,
+              name: users[i].firstName + ' ' + users[i].lastName,
+              role: users[i].email==result.leader ? 'leader' : 'member'
+            });
+          return res.json({'status': 'success', 'state': 3, 'team': team_data});
+        }
+      ).catch(err => console.log(err));
   });
 });
 
@@ -140,16 +216,23 @@ router.post('/exit', verifyToken, (req,res)=>{
       res.send(500)
       return;
     }
-
       let index = data.members.indexOf(user);
 
       if (index > -1)
         data.members.splice(index, 1);
 
-      if(data.members)
+      if(data.members.length!=0){
         data.leader=data.members[0]
-      data.save();
-      res.json({status: 'success', msg: 'Exited team'});
+        data.save();
+      }
+      else
+        data.remove();
+      User.findOne({email: user})
+        .then(user => {
+          user.teamId = "";
+          user.save();
+          res.json({status: 'success', msg: 'Exited team'});
+        })
 
   });
 });
