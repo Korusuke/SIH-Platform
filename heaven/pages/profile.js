@@ -20,7 +20,6 @@ import { useTheme, createMuiTheme, ThemeProvider } from '@material-ui/core/style
 import envvar from '../env'
 
 export default class ProfileMember extends React.Component{
-
     theme = {
         dark: {
             background: '#121212',
@@ -39,7 +38,7 @@ export default class ProfileMember extends React.Component{
             allowTeam: false,
             theme: 'light'
         }
-
+        this.handler = this.handler.bind(this)
         this.changeState = this.changeState.bind(this)
 
         this.handler = this.handler.bind(this)
@@ -121,4 +120,35 @@ export default class ProfileMember extends React.Component{
             </div>
         );
     }
+    render(){
+        const customtheme = createMuiTheme({
+            palette: {
+                type: this.state.theme == 'light' ? 'light' : 'dark',
+            },
+        });
+        let curtheme = this.state.theme == 'light' ? this.theme.light : this.theme.dark;
+
+
+        return(
+            <ThemeProvider theme={customtheme}>
+        <div>
+        <Chaand handler={this.handler} chaand={this.state.theme == 'light' ? 1 : 0} />
+        <div id="content-wrap" style={{ backgroundColor: `${curtheme.background}`, color: `${curtheme.text}` }}>
+        <Header/>
+        <Container maxWidth="lg">
+        <Paper style={{
+            padding: '40px',
+            marginTop: '50px',
+        }}>
+            < Profile changeParentState={this.changeState}/>
+
+        </Paper >
+        <br/>
+            <BottomCardMerge url="http://localhost:8080"/>
+        </Container>
+        </div>
+        </div>
+        </ThemeProvider>
+    )
+    };
 }
