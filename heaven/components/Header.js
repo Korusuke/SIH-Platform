@@ -8,9 +8,11 @@ import Router from "next/router";
 import Link from "next/link";
 import {MuiThemeProvider, createMuiTheme} from '@material-ui/core'
 import Favicon from 'react-favicon';
-
 import Cookies from 'universal-cookie';
 import AppsIcon from '@material-ui/icons/Apps';
+
+import Tracker from '../components/tracker';
+
 export default function Header(props){
     const [anchorEl, setAnchorEl] = React.useState(null);
     // const [profilePic, setProfilePic] = React.useState(null);
@@ -51,6 +53,7 @@ export default function Header(props){
     console.log(props)
     return (
         <div>
+            <Tracker />
             <Favicon url="/assets/favicon/favicon.ico" />
             <AppBar position="static" style={
                 {
