@@ -117,7 +117,7 @@ router.post('/join', (req, res)=>{
   const decodedData = jwt.decode(req.cookies.token, {complete: true});
   console.log('Decode:',decodedData)
   const user = decodedData.payload.email || decodedData.payload.Email;
-  Team.findOne({'inviteCode': inviteCode}, (err, result)=>{
+  Team.findOne({'inviteCode': inviteCode}, async (err, result)=>{
     if(err){
       res.send(500);
       return;
@@ -131,7 +131,8 @@ router.post('/join', (req, res)=>{
       );
       return;
     }
-    if(result.members.length==6) {
+    console.log(result.members.length);
+    if(result.members.length===6) {
       return res.json(
         {
           status: 'error',
@@ -139,34 +140,86 @@ router.post('/join', (req, res)=>{
         }
       );
     }
-    if(result.members)
-    result.members.push(user);
-    result.save();
-    let members = []
-    User.find({email: {'$in': result.members}})
-      .then(users => {
-          for(var i in users){
-            members.push({
-              email: users[i].email,
-              name: users[i].firstName + ' ' + users[i].lastName,
-              role: users[i].email==result.leader ? 'leader' : 'member'
+    if(result.members.length===5){
+      let qry = []
+      result.members.forEach(el => {
+        qry.push({"email": el});
+      });
+      qry.push({"email": decodedData.payload.email});
+      console.log(qry);
+      r = await User.find({$or: qry}, {'gender':1, 'email':1});
+      console.log("HELLOOOO", r);
+      let genders = new Set();
+      r.forEach(el=>{
+        console.log("Gender", el.gender);
+        genders.add(el.gender);
+      });
+      console.log(genders);
+      if(!genders.has('Female')){
+        res.json({
+          msg: 'No girl present in team, unable to join'
+        });
+        return;
+      }
+      if(result.members)
+      result.members.push(user);
+      result.save();
+      let members = []
+      User.find({email: {'$in': result.members}})
+        .then(users => {
+            for(var i in users){
+              members.push({
+                email: users[i].email,
+                name: users[i].firstName + ' ' + users[i].lastName,
+                role: users[i].email==result.leader ? 'leader' : 'member'
+              });
+              if(users[i].email==user) {
+                users[i].teamId = result.teamId;
+                users[i].save();
+              }
+            }
+            return res.json({
+              status: 'success',
+              msg:'Joined Successfully',
+              inviteCode: result.inviteCode,
+              team: {
+                teamName: result.teamName,
+                members
+              }
             });
-            if(users[i].email==user) {
-              users[i].teamId = result.teamId;
-              users[i].save();
-            }
           }
-          return res.json({
-            status: 'success',
-            msg:'Joined Successfully',
-            inviteCode: result.inviteCode,
-            team: {
-              teamName: result.teamName,
-              members
+        ).catch(err => console.log(err));
+    }
+    else{
+      if(result.members)
+      result.members.push(user);
+      result.save();
+      let members = []
+      User.find({email: {'$in': result.members}})
+        .then(users => {
+            for(var i in users){
+              members.push({
+                email: users[i].email,
+                name: users[i].firstName + ' ' + users[i].lastName,
+                role: users[i].email==result.leader ? 'leader' : 'member'
+              });
+              if(users[i].email==user) {
+                users[i].teamId = result.teamId;
+                users[i].save();
+              }
             }
-          });
-        }
-      ).catch(err => console.log(err));
+            return res.json({
+              status: 'success',
+              msg:'Joined Successfully',
+              inviteCode: result.inviteCode,
+              team: {
+                teamName: result.teamName,
+                members
+              }
+            });
+          }
+        ).catch(err => console.log(err));
+    }
   });
 });
 
