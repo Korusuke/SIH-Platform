@@ -47,6 +47,7 @@ app.use('/export', require('./routes/export.js'));
 app.use('/team', require('./routes/team'));
 app.use('/user', require('./routes/user'));
 app.use('/', require('./routes/login'));
+app.use('/forgotPassword', require('./routes/forgotPassword'));
 
 app.use('/images', express.static(__dirname + '/storage/userphotos'));
 app.use('/storage', express.static(__dirname + '/storage'));

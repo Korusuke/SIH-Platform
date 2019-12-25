@@ -6,8 +6,12 @@ const password = process.env.PASSWORD;
 const redis = require('redis');
 const EXPIRE_IN = 60*60; // 1 hr
 
+const crypto = require('crypto');
+
+const User = require('../models/user.model');
+
 const client = redis.createClient({
-  host: 'redis-server',
+  host: process.env.REDIS_KA_THING,
   port: 6379
 });
 client.on('error', (err) => {
@@ -59,11 +63,12 @@ router.post('/',(req,res)=>{
       html: `<html>
       <body>
           <p>Hey,
-          <br>A password reset request has been initiated from the IP address ${ip}.<br>
-          <br>Here is the OTP to reset your password: http://localhost:3000/reset/${token}</br>
-          <br>The OTP will expire in an hour</br>
+          <br>A password reset request has been initiated for your account.<br>
+          <br>Here is the link to reset your password: ${process.env.REACT_CLIENT_APP_URL}/reset/${token}</br>
+          <br>The link will expire in an hour</br>
           <br>
           <br>If you don't wish to reset your password, disregard this email and no action will be taken.</br>
+          <br>Contact sih-kjsce@somaiya.edu if you face any issues.</br>
           </p>
       </body>
       </html>`
@@ -77,7 +82,7 @@ router.post('/',(req,res)=>{
       }
       console.log('Mail sent succesfully');
       res.json({
-          msg: 'Check your mail for otp'
+          msg: 'Check your mail for reset link'
       });
     });
     transporter.close();

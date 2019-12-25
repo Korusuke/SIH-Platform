@@ -18,9 +18,13 @@ client.on('error', (err) => {
 
 
 // Redirect from reset link to password reset page if success. From there call update password
+// Kuch bhi
+
 router.post('/reset/*', (req, res)=>{
     let url = req.originalUrl.split("/");
     let token = url[url.length-1];
+    let {password} = req.body
+    console.log(token)
     client.get(token, (err, user)=>{
         if(err){
             console.log(err);
@@ -29,7 +33,51 @@ router.post('/reset/*', (req, res)=>{
         }
         if(user===null){
             res.json({
-                msg:'You do not have a generated otp'
+                msg:'Link invalid'
+            });
+            return;
+        }
+        console.log(user);
+        if(!password)
+        {
+            res.sendStatus(500);
+        }
+        /*await*/ client.del(token);
+        res.send(200).json({
+            msg:'Reset link okay',
+            user: user,
+        });
+    });
+
+    User.findOne({email: user}, (err, doc)=>{
+        if(err){
+            console.log(err);
+            res.sendStatus(500);
+            return;
+        }
+        doc.password = password;
+        doc.save();
+        res.send(200).json({
+            status: 'success',
+            msg:'Reset successfull',
+            //user: user,
+        });
+    });
+});
+
+router.get('/reset/*', (req, res)=>{
+    let url = req.originalUrl.split("/");
+    let token = url[url.length-1];
+    console.log(token)
+    client.get(token, (err, user)=>{
+        if(err){
+            console.log(err);
+            res.sendStatus(500);
+            return;
+        }
+        if(user===null){
+            res.json({
+                msg:'Link invalid'
             });
             return;
         }
@@ -37,10 +85,11 @@ router.post('/reset/*', (req, res)=>{
         /*await*/ client.del(token);
         res.send(200).json({
             msg:'Reset link okay',
-            user: user,
+            //user: user,
         });
     });
 });
+
 
 router.post('/update', (req, res)=>{
     const { user, password } = req.body;

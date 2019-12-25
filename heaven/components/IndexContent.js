@@ -51,7 +51,7 @@ export default function IndexContent(props)
               </Grid>
               <Grid item xs={12} style={{ padding: '10px' }}>
               <Paper style={{ padding: '10px' }} >
-                  In Case of any issues please contact <a href="mailto:sih-kjsce@somaiya.edu">sih-kjsce@somaiya.edu</a>
+                  In Case of any issues please contact <br/><a href="mailto:sih-kjsce@somaiya.edu">sih-kjsce@somaiya.edu</a>
                 </Paper>
               </Grid>
             </Grid>
