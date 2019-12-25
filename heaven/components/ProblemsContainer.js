@@ -32,9 +32,10 @@ export default class ProblemsContainer extends React.Component
 
  
     render(){
+        console.log(this.props.allLabels)
         let arr = this.props.cards.map((card)=>(
         <Grid  item xs={12}  md={6} style={{padding:'10px'}}>
-            <ProblemCard card={card} url={this.props.url}/>
+            <ProblemCard card={card} url={this.props.url} labels={this.props.allLabels[card.Number] || []} labelLoading={this.props.labelLoading}/>
         </Grid>
         ))
 
