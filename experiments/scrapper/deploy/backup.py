@@ -31,14 +31,14 @@ credentials = ServiceAccountCredentials.from_json_keyfile_name(
     dir+'secrets/auth.json', scope)
 
 gc = gspread.authorize(credentials)
-sheet_id = os.environ['SHEET_ID']
+sheet_id = 'SHEET_ID'
 
 sheet = gc.open_by_key(sheet_id)
 for col in collection_list:
 	sheet.values_update(
 		col,
 		params={'valueInputOption': 'USER_ENTERED'},
-		body={'values': list(csv.reader(open(col+'.csv')))}
+		body={'values': list(csv.reader(open(dir+'backup/'+col+'.csv')))}
 	)
 
 
