@@ -19,7 +19,8 @@ export default class CommentsContainer extends React.Component {
         this.state = {
             comments:[],
             newcomment: "",
-            posting: false
+            posting: false,
+            initLoading: true
         }
 
         this.handleChange = this.handleChange.bind(this)
@@ -42,7 +43,7 @@ export default class CommentsContainer extends React.Component {
             .then(data => {
                 this.setState({
                     comments: data.comments,
-
+                    initLoading: false
                 })
             })
         }catch(e)
@@ -151,9 +152,9 @@ export default class CommentsContainer extends React.Component {
             <div>
                 <Paper>
                 <Center><h2>Comments</h2></Center>
-
-
-                { arr ? arr : 'No comments yet'}
+                <Center>Your comments are only visible to you and your teammates ;)</Center>
+                
+                { this.state.initLoading? <Center>Loading Comments...</Center> : (arr ? arr : 'No comments yet')}
 
 
                 <div style={{padding: '20px'}}>

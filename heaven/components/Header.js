@@ -5,6 +5,7 @@ import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import Router from "next/router";
+import Link from "next/link";
 import {MuiThemeProvider, createMuiTheme} from '@material-ui/core'
 import Favicon from 'react-favicon';
 
@@ -29,7 +30,8 @@ export default function Header(props){
     const handleLogout = () =>{
         const cookies = new Cookies()
         cookies.remove('token')
-        Router.push("/");
+        // Router.push("/");
+        location.href = '/'
     }
     const handleClose = () => {
         console.log('close')
@@ -90,8 +92,8 @@ export default function Header(props){
                                 open={Boolean(anchorEl)}
                                 onClose={handleClose}
                             >
-                                <MenuItem onClick={handleProfile}>Profile</MenuItem>
-                                <MenuItem onClick={handleProblems}>Problems</MenuItem>
+                                <MenuItem ><Link href="/profile"><a style={{textDecoration: 'none', color:props.themeState == 'dark'? 'white':'black'}}>Profile</a></Link></MenuItem>
+                                <MenuItem ><Link href="/problems"><a style={{textDecoration: 'none', color:props.themeState == 'dark'? 'white':'black'}}>Problems</a></Link></MenuItem>
                                 <MenuItem onClick={handleLogout}>Logout</MenuItem>
                             </Menu>
                             </Center>
