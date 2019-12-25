@@ -235,6 +235,7 @@ router.get('/comments', (req, res) => {
                                 comments = comments.sort((a, b) => {
                                     return new Date(a.time) - new Date(b.time);
                                 })
+                                console.log(comments)
                                 return res.json({comments});
                             }).catch(err => res.json({comments}));
                     }).catch(err => res.json({comments}));
@@ -323,7 +324,7 @@ router.delete('/comments', (req, res) => {
     const email = decodedData.payload.email || decodedData.payload.Email;
 
     const { comment_id, psid } = req.body;
-    if (!email || !comment_id) {
+    if (!email || (!comment_id && comment_id!== 0)) {
         return res.json({
             'status': 'success',
             'msg': 'Invalid Fields'

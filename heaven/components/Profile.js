@@ -237,6 +237,15 @@ class Profile extends React.Component {
             });
 
         let myfile = event1.target.files[0];
+        if(myfile){
+            let filesize = ((myfile.size/1024)/1024).toFixed(4); // MB
+            if(filesize > 1.1)
+            {
+                console.log('File size exceeds 1 MB')
+                alert('File size exceeds 1MB')
+                return
+            }
+        }
 
         toBase64(event1.target.files[0])
             .then(bs64 => {
