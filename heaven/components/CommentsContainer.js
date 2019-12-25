@@ -8,6 +8,8 @@ import Center from 'react-center'
 import '../styles/index.css'
 import {Paper, Button, Grid} from '@material-ui/core'
 
+import envvar from '../env'
+
 export default class CommentsContainer extends React.Component {
 
     constructor(props)
@@ -23,24 +25,24 @@ export default class CommentsContainer extends React.Component {
         this.handleChange = this.handleChange.bind(this)
         this.handleClick = this.handleClick.bind(this)
         this.handleDelete = this.handleDelete.bind(this)
-        
+
     }
 
     componentDidMount()
     {
         try{
-            fetch(`http://localhost:8080/ps/comments/?psid=${this.props.psid}`
+            fetch(`${envvar.REACT_APP_SERVER_URL}/ps/comments/?psid=${this.props.psid}`
             ,
             {
-                
+
                 credentials: "include",
-                
+
             }
             ).then(res => res.json())
             .then(data => {
                 this.setState({
                     comments: data.comments,
-                    
+
                 })
             })
         }catch(e)
@@ -48,7 +50,7 @@ export default class CommentsContainer extends React.Component {
             console.log(e)
         }
 
-        
+
     }
 
     handleClick()
@@ -59,7 +61,7 @@ export default class CommentsContainer extends React.Component {
                     posting: true
                 }
             )
-            fetch('http://localhost:8080/ps/comments/'
+            fetch(`${envvar.REACT_APP_SERVER_URL}/ps/comments/`
             ,
             {
                 method: "POST",
@@ -79,7 +81,7 @@ export default class CommentsContainer extends React.Component {
             .then(data => {
                 console.log(data)
                 this.setState({
-                    
+
                     comments: data.comments,
                     newcomment: "",
                     posting: false
@@ -104,7 +106,7 @@ export default class CommentsContainer extends React.Component {
     handleDelete(cid)
     {
         console.log('deleting', cid)
-        fetch('http://localhost:8080/ps/comments/'
+        fetch(`${envvar.REACT_APP_SERVER_URL}/ps/comments/`
         ,
         {
             method: "DELETE",
@@ -130,17 +132,17 @@ export default class CommentsContainer extends React.Component {
     render()
     {
         let arr = []
-        //console.log(this.state.comments)
+        console.log(this.state.comments)
         if(this.state.comments){
             this.state.comments.forEach(
                 e=>{
                     arr.push(
                         <div style={{padding: '10px'}}>
-                        <Comment name={e.comment.author} cid={e['id']}  deletable = {e.deletable} onDelete={this.handleDelete} message={
+                        <Comment name={e.comment.author} cid={e['id']}  profilePic={e.profilePic} deletable = {e.deletable} onDelete={this.handleDelete} message={
                             e.comment.message
                         }/>
                         </div>
-                        
+
                     )
                 }
             )
@@ -150,14 +152,14 @@ export default class CommentsContainer extends React.Component {
                 <Paper>
                 <Center><h2>Comments</h2></Center>
 
-                
+
                 { arr ? arr : 'No comments yet'}
-                
+
 
                 <div style={{padding: '20px'}}>
                 <textarea rows={4} name="newcomment" value={this.state.newcomment} onChange={this.handleChange} style={{width: '100%'}}/>
                 <br/>
-                    <Center><Button color="primary" disabled={this.state.posting} variant="contained" onClick={this.handleClick}>{this.state.posting? `Posting`: 'Post'}</Button></Center>
+                        <Center><Button style={{width:'30%',minWidth:100, marginTop:10}} color="primary" disabled={this.state.posting} variant="contained" onClick={this.handleClick}>{this.state.posting? `Posting`: 'Post'}</Button></Center>
                 </div>
                 </Paper>
             </div>
