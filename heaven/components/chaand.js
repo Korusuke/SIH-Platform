@@ -23,7 +23,7 @@ export default class chaand extends React.Component{
         if (props.chaand !== state.chaand) {
             return { chaand: props.chaand };
         }
-        console.log('possible error');
+        // console.log('possible error');
         return null;
     }
 
@@ -32,17 +32,17 @@ export default class chaand extends React.Component{
         if(this.state.chaand)
         {
             chaand = <Fab size="small" style={{ backgroundColor: "#FFFFFF" }} onClick={this.props.handler}>
-            <FontAwesomeIcon icon={faMoon} style={{color:'#212020' }} />
+                <FontAwesomeIcon icon={faMoon} width="18" style={{color:'#212020' }} />
         </Fab>
         }
         else{
             chaand = <Fab size="small" style={{ backgroundColor: "#212020" }} onClick={this.props.handler}>
-            <FontAwesomeIcon icon={faSun} style={{color:'#FFFFFF' }} />
+                <FontAwesomeIcon icon={faSun} width="18" style={{color:'#FFFFFF' }} />
         </Fab>
         }
         return (
             <div style={{
-                position: 'fixed', right:'50px', bottom:'50px'
+                position: 'fixed', right:'50px', bottom:'50px', zIndex:9999
             }}>
 
              {chaand}

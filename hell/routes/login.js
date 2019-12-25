@@ -7,9 +7,9 @@ const User = require('../models/user.model');
 const LoginData = require('../models/logindata.model');
 const { verifyToken } = require('./token');
 const redis = require('redis');
-
+const _ = require('lodash')
 const client = redis.createClient({
-    host: 'redis-server',
+    host: process.env.REDIS_KA_THING,
     port: 6379
 });
 client.on('error', (err) => {
@@ -67,14 +67,15 @@ router.post('/login', (req, res) => {
     if (!email || !password) {
         res.json({
             'status': 'failure',
-            'msg':"Missing Fields"
+            'msg': "Missing Fields"
         });
         return
     }
-    User.find({email, password})
+    User.findOne({email, password})
         .then(user => {
+            console.log(email, password);
             if(!user){
-                res.status(200).json({status: 'success'});
+                res.status(200).json({status: 'failure', msg: 'Access Denied '});
                 return;
             }
             jwt.sign({email}, process.env.KEY, { expiresIn: "30d" }, (er, token) => {
@@ -85,13 +86,12 @@ router.post('/login', (req, res) => {
                 }
                 res.json({
                     status: 'success',
-                    msg: 'Passwords match',
+                    msg: 'Access Granted',
                     token,
                 });
               });
-
         })
-        .catch(err => res.status(500));
+        .catch(err => res.status(500))
 });
 
 router.post('/verify', (req, res) => {
@@ -105,40 +105,45 @@ router.post('/verify', (req, res) => {
         return
     }
 
-    LoginData.find({email, password, otp})
+    LoginData.findOne({email, password, otp})
         .then(user => {
-            if(user){
-                console.log(user);
-                User.find({email, password})
-                    .then((result) => {
-                        if (result.length!=0) {
-                            res.json({
-                                'status': 'failure',
-                            'msg': 'Already verified. Proceed to sign in',});
-                            return
-                        }
-                        const newUser = new User({email, password});
-                        newUser.save()
-                            .then(() => {
-                                jwt.sign({email}, process.env.KEY, { expiresIn: "30d" }, (er, token) => {
-                                    if (er) {
-                                        console.log(er);
-                                        res.send(500);
-                                        return;
-                                    }
-                                    res.json({
-                                        'status': 'success',
-                                        'msg': 'OTP verified',
-                                        token,
-                                    });
+            if(!user)
+                res.status(200).json({'status': 'failure', 'msg': 'Check your OTP'});
+            else {
+                User.findOne({email, password})
+                .then((result) => {
+                    if (result) {
+                        res.json({
+                            'status': 'failure',
+                        'msg': 'Already verified. Proceed to sign in',});
+                        return
+                    }
+                    let shape = ["squares", "isogrids", "spaceinvaders"];
+                    let numberColours = [2,3,4];
+                    let theme = ["frogideas","heatwave","sugarsweets","daisygarden","seascape","berrypie","bythepool"];
+                    const newUser = new User({
+                        email, password,
+                        profilePic: `https://www.tinygraphs.com/${_.sample(shape)}/${email}?theme=${_.sample(theme)}&numcolors=${_.sample(numberColours)}&size=220&fmt=svg`
+                    });
+                    newUser.save()
+                        .then(() => {
+                            jwt.sign({email}, process.env.KEY, { expiresIn: "30d" }, (er, token) => {
+                                if (er) {
+                                    console.log(er);
+                                    res.send(500);
+                                    return;
+                                }
+                                res.json({
+                                    'status': 'success',
+                                    'msg': 'OTP verified',
+                                    token,
                                 });
-                            })
-                            .catch(err => {console.log(err);res.status(500)});
-                    })
-                    .catch(err => {console.log(err);res.status(500)})
+                            });
+                        })
+                        .catch(err => {console.log(err);res.status(500)});
+                })
+                .catch(err => {console.log(err);res.status(500)})
             }
-            else
-                res.status(200).json({'status': 'failure', 'msg': 'OTP already verified'});
         })
         .catch(err => {console.log(err);res.status(500)});
 })
@@ -146,19 +151,21 @@ router.post('/verify', (req, res) => {
 router.post('/signup', (req, res) => {
     const { email, password } = req.body;
     const otp = otpGenerator.generate(6, { specialChars: false });
-
+    console.log(otp);
     console.log(email, password, email.slice(-11));
 
     if(!email || email.slice(-11)!='somaiya.edu' || password.length < 8) {
+        console.log("error");
         res.json({
             'status': 'failure',
             'msg': "Invalid Fields"
         })
         return
     }
-
+    console.log(User);
     User.find({email})
         .then(user => {
+            console.log("creating user");
             if(user.length>0){
                 res.json({
                     'status': 'failure',
@@ -167,6 +174,7 @@ router.post('/signup', (req, res) => {
                 return;
             }
             else {
+                console.log("creating user");
                 const newlogindata = new LoginData({email, password, otp});
                 newlogindata.save()
                 .then(() => {
@@ -210,12 +218,18 @@ router.post('/signup', (req, res) => {
                         'msg': "Check your mail for OTP"
                     })
                 })
-                .catch(err => {res.status(500); console.log(err);})
+                .catch(err => {console.log(err); res.json({
+                    'status': 'failure',
+                    'msg': "Invalid Fields"
+                });})
             }
         })
-        .catch(err => res.status(500));
-
+        .catch(err =>  {console.log(err); res.json({
+            'status': 'failure',
+            'msg': "Invalid Fields"
+        });})
 })
+
 
 router.post('/logout', verifyToken,(req,res)=>{
     client.rpush(blacklistedTokens, verifyToken, redis.print, (err, resp)=>{
