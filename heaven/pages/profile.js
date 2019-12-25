@@ -101,7 +101,7 @@ export default class ProfileMember extends React.Component{
             <div style={{minHeight:'100vh', background: curtheme.background, color: curtheme.text}}>
                 <Chaand handler={this.handler} chaand={this.state.theme == 'light' ? 1 : 0} />
                 <div id="content-wrap" style={{ backgroundColor: `${curtheme.background}`, color: `${curtheme.text}` }}>
-            <Header loggedin={true}/>
+            <Header loggedin={true} theme={customtheme} themeState={this.state.theme}/>
             <Container maxWidth="lg">
             <Paper style={{
                 padding: '40px',
@@ -120,35 +120,5 @@ export default class ProfileMember extends React.Component{
             </div>
         );
     }
-    render(){
-        const customtheme = createMuiTheme({
-            palette: {
-                type: this.state.theme == 'light' ? 'light' : 'dark',
-            },
-        });
-        let curtheme = this.state.theme == 'light' ? this.theme.light : this.theme.dark;
-
-
-        return(
-            <ThemeProvider theme={customtheme}>
-        <div>
-        <Chaand handler={this.handler} chaand={this.state.theme == 'light' ? 1 : 0} />
-        <div id="content-wrap" style={{ backgroundColor: `${curtheme.background}`, color: `${curtheme.text}` }}>
-        <Header/>
-        <Container maxWidth="lg">
-        <Paper style={{
-            padding: '40px',
-            marginTop: '50px',
-        }}>
-            < Profile changeParentState={this.changeState}/>
-
-        </Paper >
-        <br/>
-            <BottomCardMerge url="http://localhost:8080"/>
-        </Container>
-        </div>
-        </div>
-        </ThemeProvider>
-    )
-    };
+    
 }
