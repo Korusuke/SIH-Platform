@@ -178,6 +178,9 @@ class LoginBox extends React.Component{
     handleLoginSubmit = () => {
         const { loginData } = this.state.login;
         const { email } = loginData
+        this.setState({
+            loginSubmitted: true
+        })
         axios.post(`${this.props.url}/login/`, loginData).then(
             res => {
                 console.log(res.data)
@@ -191,6 +194,11 @@ class LoginBox extends React.Component{
                         const { router } = this.props;
                         router.push('/problems');
 
+                    }
+                    else{
+                        this.setState({
+                            loginSubmitted: false
+                        })
                     }
                     this.snackcontent = <Snackbar type={res.data.status} msg={res.data.msg} />;
                     this.setState({ snack: true });
