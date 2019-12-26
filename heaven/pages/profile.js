@@ -20,7 +20,6 @@ import { useTheme, createMuiTheme, ThemeProvider } from '@material-ui/core/style
 import envvar from '../env'
 
 export default class ProfileMember extends React.Component{
-
     theme = {
         dark: {
             background: '#121212',
@@ -39,7 +38,7 @@ export default class ProfileMember extends React.Component{
             allowTeam: false,
             theme: 'light'
         }
-
+        this.handler = this.handler.bind(this)
         this.changeState = this.changeState.bind(this)
 
         this.handler = this.handler.bind(this)
@@ -102,7 +101,7 @@ export default class ProfileMember extends React.Component{
             <div style={{minHeight:'100vh', background: curtheme.background, color: curtheme.text}}>
                 <Chaand handler={this.handler} chaand={this.state.theme == 'light' ? 1 : 0} />
                 <div id="content-wrap" style={{ backgroundColor: `${curtheme.background}`, color: `${curtheme.text}` }}>
-            <Header loggedin={true}/>
+            <Header loggedin={true} theme={customtheme} themeState={this.state.theme}/>
             <Container maxWidth="lg">
             <Paper style={{
                 padding: '40px',
@@ -121,4 +120,5 @@ export default class ProfileMember extends React.Component{
             </div>
         );
     }
+    
 }

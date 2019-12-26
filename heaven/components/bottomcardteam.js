@@ -4,6 +4,7 @@ import Button from "@material-ui/core/Button";
 import "../styles/bottomcard.css";
 import Grid from "@material-ui/core/Grid";
 import Center from "react-center";
+import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 class App extends Component {
     constructor(props) {
         super();
@@ -16,6 +17,19 @@ class App extends Component {
         this.handleSubmit = this.handleSubmit.bind(this);
     }
     
+
+    componentDidMount() {
+
+        ValidatorForm.addValidationRule('isOkay', (value) => {
+            // console.log('validating team name');
+            var v = value.toLowerCase()
+            if (v.indexOf('somaiya')!==-1 || v.indexOf('kjsce')!==-1) {
+                return false;
+            }
+
+            return true;
+        });
+    }
 
     handleChange(event) {
         let { name, type, value, checked } = event.target;
@@ -73,6 +87,12 @@ class App extends Component {
           <Button variant="contained" className="inputConf" color="primary">Confirm</Button>
           </div>
       </div> */}
+                    <ValidatorForm
+                        ref="form"
+                        onError={errors => console.log(errors)}
+                        onSubmit={this.handleSubmit}
+                        style={{ width: '100%' }}
+                    >
                     <Grid
                         container
                         direction="column"
@@ -81,11 +101,14 @@ class App extends Component {
                         spacing={8}
                     >
                         <Grid item xs={6}>
-                            <TextField
+                            <TextValidator
                                 name="teamname"
                                 id="teamname"
                                 label="Team name"
                                 variant="outlined"
+                                value={this.state.teamname}
+                                validators={['required','isOkay']}
+                                errorMessages={['Please enter team name','Team name cannot contain Somaiya or KJSCE']}
                                 onChange={this.handleChange}
                             />
                         </Grid>
@@ -100,6 +123,7 @@ class App extends Component {
                             </Button>
                         </Grid>
                     </Grid>
+                    </ValidatorForm>
                 </Center>
             </div>
         );

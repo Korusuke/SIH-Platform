@@ -82,7 +82,7 @@ export default class extends React.Component  {
             <div style={{minHeight:'100vh', background: curtheme.background, color: curtheme.text}} >
                 <Chaand handler={this.handler} chaand={this.state.theme == 'light' ? 1 : 0} />
                 <div id="content-wrap" style={{ backgroundColor: `${curtheme.background}`, color: `${curtheme.text}` }}>
-                    <Header />
+                    <Header theme={customtheme} themeState={this.state.theme}/>
                     <IndexContent url={envvar.REACT_APP_SERVER_URL} theme={customtheme} themeState={this.state.theme}/>
                 </div>
                 <Footer />
