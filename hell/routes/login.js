@@ -18,9 +18,12 @@ client.on('error', (err) => {
 
 
 // Redirect from reset link to password reset page if success. From there call update password
-router.post('/reset/*', (req, res)=>{
-    let url = req.originalUrl.split("/");
-    let token = url[url.length-1];
+// Kuch bhi
+
+router.post('/reset/:token', (req, res)=>{
+    let token = req.params.token;
+    let {password} = req.body;
+    console.log(token);
     client.get(token, (err, user)=>{
         if(err){
             console.log(err);
@@ -29,18 +32,65 @@ router.post('/reset/*', (req, res)=>{
         }
         if(user===null){
             res.json({
-                msg:'You do not have a generated otp'
+                msg:'Link invalid'
             });
             return;
         }
         console.log(user);
-        /*await*/ client.del(token);
-        res.send(200).json({
+        if(!password)
+        {
+            res.json({
+                msg: 'Missing parameters',
+            });
+            return;
+        }
+        updatePass(user, password)
+        .then(()=>{
+            client.del(token);
+            res.json({
+                status: 'success',
+                msg:'Reset successfull',
+            });
+        })
+        .catch(er=>{console.log(er);res.sendStatus(500);return;})
+    });
+});
+
+function updatePass(user, password){
+    return new Promise((resolve,reject)=>{
+        User.findOne({email: user}, (err, doc)=>{
+            if(err){
+                reject(err);
+            }
+            doc.password = password;
+            doc.save();
+            resolve();
+        });
+    });    
+}
+
+router.get('/reset/:token', (req, res)=>{
+    let token = req.params.token;
+    console.log(token);
+    client.get(token, (err, user)=>{
+        if(err){
+            console.log(err);
+            res.sendStatus(500);
+            return;
+        }
+        if(user===null){
+            res.json({
+                msg:'Link invalid'
+            });
+            return;
+        }
+        console.log(user);
+        res.json({
             msg:'Reset link okay',
-            user: user,
         });
     });
 });
+
 
 router.post('/update', (req, res)=>{
     const { user, password } = req.body;
@@ -190,13 +240,14 @@ router.post('/signup', (req, res) => {
                         secureConnection: true,
                         });
                     var mailOptions = {
-                        from: emailId,
+                        from: `SIH KJSCE <${emailId}>`,
                         to: email,
                         subject: "Invitation code for SIH internal hackathon",
                         html: `<html>
                         <body>
                             <p>Hey,
                             <br>Here is the OTP: ${otp}</br>
+                            Enter the above OTP to verify your email address.
                             </p>
                         </body>
                         </html>`
@@ -209,6 +260,7 @@ router.post('/signup', (req, res) => {
                                 'msg':'Failed to send mail'
                             });
                             throw(err);
+                            return
                         }
                     });
                     transporter.close();

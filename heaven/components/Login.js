@@ -70,11 +70,24 @@ const divStyle = {
 };
 
 const customInputTheme = createMuiTheme({
-    palette: {
-        primary: { main: '#000000' },
+    light: createMuiTheme({
+        palette: {
+            type: 'light',
+            primary: { main: '#000000' },
         secondary: { main: '#00ff00' },
         error: { main: '#ff0000' }
-    }
+        }
+    }),
+        dark:createMuiTheme({
+    
+            palette: {
+                type: 'dark',
+                primary: { main: '#000000' },
+        secondary: { main: '#00ff00' },
+        error: { main: '#ff0000' }
+            }
+        })
+    
 });
 
 const customOTPTheme = createMuiTheme({
@@ -263,7 +276,7 @@ class LoginBox extends React.Component{
         let signupPanel;
         if (signupSubmitted) {
             signupPanel =
-                <MuiThemeProvider theme={customInputTheme}>
+                <MuiThemeProvider theme={customInputTheme[this.props.themeState]}>
                     <ValidatorForm
                         ref="form"
                         onSubmit={this.handleOTPVerify}
@@ -297,7 +310,7 @@ class LoginBox extends React.Component{
                     </ValidatorForm>
                 </MuiThemeProvider>
         } else {
-            signupPanel = <MuiThemeProvider theme={customInputTheme}>
+            signupPanel = <MuiThemeProvider theme={customInputTheme[this.props.themeState]}>
                 <ValidatorForm
                     ref="form"
                     onSubmit={this.handleSignUpSubmit}
@@ -379,7 +392,7 @@ class LoginBox extends React.Component{
                         </Tabs>
                     </AppBar>
                     <TabPanel value={this.state.value} index={0}>
-                            <MuiThemeProvider theme={customInputTheme}>
+                            <MuiThemeProvider theme={customInputTheme[this.props.themeState]}>
                                 <ValidatorForm
                                     ref="form"
                                     onSubmit={this.handleLoginSubmit}

@@ -12,6 +12,8 @@ const userSchema = new Schema({
         type: String,
         required: true
     },
+    bio: {type: String},
+    resume: {type: String},
     firstName: {type: String},
     middleName: {type: String},
     lastName: {type: String},
