@@ -20,11 +20,10 @@ client.on('error', (err) => {
 // Redirect from reset link to password reset page if success. From there call update password
 // Kuch bhi
 
-router.post('/reset/*', (req, res)=>{
-    let url = req.originalUrl.split("/");
-    let token = url[url.length-1];
-    let {password} = req.body
-    console.log(token)
+router.post('/reset/:token', (req, res)=>{
+    let token = req.params.token;
+    let {password} = req.body;
+    console.log(token);
     client.get(token, (err, user)=>{
         if(err){
             console.log(err);
@@ -40,35 +39,39 @@ router.post('/reset/*', (req, res)=>{
         console.log(user);
         if(!password)
         {
-            res.sendStatus(500);
-        }
-        /*await*/ client.del(token);
-        res.send(200).json({
-            msg:'Reset link okay',
-            user: user,
-        });
-    });
-
-    User.findOne({email: user}, (err, doc)=>{
-        if(err){
-            console.log(err);
-            res.sendStatus(500);
+            res.json({
+                msg: 'Missing parameters',
+            });
             return;
         }
-        doc.password = password;
-        doc.save();
-        res.send(200).json({
-            status: 'success',
-            msg:'Reset successfull',
-            //user: user,
-        });
+        updatePass(user, password)
+        .then(()=>{
+            client.del(token);
+            res.json({
+                status: 'success',
+                msg:'Reset successfull',
+            });
+        })
+        .catch(er=>{console.log(er);res.sendStatus(500);return;})
     });
 });
 
-router.get('/reset/*', (req, res)=>{
-    let url = req.originalUrl.split("/");
-    let token = url[url.length-1];
-    console.log(token)
+function updatePass(user, password){
+    return new Promise((resolve,reject)=>{
+        User.findOne({email: user}, (err, doc)=>{
+            if(err){
+                reject(err);
+            }
+            doc.password = password;
+            doc.save();
+            resolve();
+        });
+    });    
+}
+
+router.get('/reset/:token', (req, res)=>{
+    let token = req.params.token;
+    console.log(token);
     client.get(token, (err, user)=>{
         if(err){
             console.log(err);
@@ -82,10 +85,8 @@ router.get('/reset/*', (req, res)=>{
             return;
         }
         console.log(user);
-        /*await*/ client.del(token);
-        res.send(200).json({
+        res.json({
             msg:'Reset link okay',
-            //user: user,
         });
     });
 });
