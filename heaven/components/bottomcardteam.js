@@ -10,7 +10,8 @@ class App extends Component {
         super();
         this.props = props;
         this.state = {
-            teamname: ""
+            teamname: "",
+            createClicked: false
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -46,6 +47,11 @@ class App extends Component {
     }
 
     handleSubmit() {
+        this.setState(
+            {
+                createClicked: true
+            }
+        )
         try{
             fetch(`${this.props.url}/team/create/`, {
                 method: "POST",
@@ -59,13 +65,29 @@ class App extends Component {
                 })
             }).then(res => res.json())
             .then(data => {
+                this.setState({
+                        createClicked: false
+                })
                 if (data.status == "success")
                     this.props.changeParentState(3, data);
                 else this.props.changeParentState(-1, data);
-            });
+            }).catch(e =>{
+                this.setState({
+                    createClicked: false
+            })
+                console.log(e)
+                data = {
+                    status: 'error',
+                    msg: 'Something went wrong :('
+                }
+                this.props.changeParentState(-1, data);
+                });
         }
         catch(e)
         {
+            this.setState({
+                createClicked: false
+        })
             console.log(e)
             data = {
                 status: 'error',
@@ -117,6 +139,7 @@ class App extends Component {
                                 style={{ width: "100%" }}
                                 variant="contained"
                                 color="primary"
+                                disabled={this.state.createClicked}
                                 onClick={this.handleSubmit}
                             >
                                 Confirm

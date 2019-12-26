@@ -15,7 +15,8 @@ class App extends Component {
         this.props = props;
         this.state = {
             teamcode: "",
-            snack: false
+            snack: false,
+            joinClicked: false,
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -40,6 +41,9 @@ class App extends Component {
 
     handleSubmit() {
         console.log(this.state.teamcode)
+        this.setState({
+            joinClicked: true
+        })
         try{
             fetch(`${this.props.url}/team/join/`, {
                 method: "POST",
@@ -54,8 +58,16 @@ class App extends Component {
             }).then(res => res.json())
             .then(data => {
                 if (data.status == "success")
+                {
                     this.props.changeParentState(3, data);
-                else this.props.changeParentState(-1, data);
+                }
+                else{
+                    this.setState({
+                        joinClicked: false
+                    }, ()=>{
+                        this.props.changeParentState(-1, data);
+                    })
+                }
             });
         }catch(e)
         {
@@ -64,7 +76,12 @@ class App extends Component {
                 status: 'error',
                 msg: 'Something went wrong :('
             }
-            this.props.changeParentState(-1, data);
+            this.setState({
+                joinClicked: false
+            }, ()=>{
+                this.props.changeParentState(-1, data);
+            })
+            
         }
     }
 
@@ -103,6 +120,7 @@ class App extends Component {
                                 variant="contained"
                                 color="primary"
                                 onClick={this.handleSubmit}
+                                disabled={this.state.joinClicked}
                             >
                                 Confirm
                             </Button>
