@@ -20,6 +20,7 @@ client.on('error', (err) => {
 
 router.post('/',(req,res)=>{
   const { email } = req.body;
+  console.log(email);
   if(email===''){
     res.json({
       msg: 'Email ID not present'
@@ -40,7 +41,9 @@ router.post('/',(req,res)=>{
       return;
     }
     let token = crypto.randomBytes(32).toString('hex');
-    client.set(token, user, 'EX', EXPIRE_IN, (err, result)=>{
+    console.log(user.email, token);
+    
+    client.set(token, user.email, 'EX', EXPIRE_IN, (err, result)=>{
       if(err){
         console.log(err);
         res.sendStatus(500);
@@ -58,12 +61,12 @@ router.post('/',(req,res)=>{
     });
     var mailOptions = {
       from: emailId,
-      to: user,
+      to: user.email,
       subject: "OTP for password reset",
       html: `<html>
       <body>
           <p>Hey,
-          <br>A password reset request has been initiated for your account.<br>
+          <br>A password reset request has been initiated for your account from the address ${ip}.<br>
           <br>Here is the link to reset your password: ${process.env.REACT_CLIENT_APP_URL}/reset/${token}</br>
           <br>The link will expire in an hour</br>
           <br>
