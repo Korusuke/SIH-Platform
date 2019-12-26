@@ -242,13 +242,14 @@ router.post('/signup', (req, res) => {
                         secureConnection: true,
                         });
                     var mailOptions = {
-                        from: emailId,
+                        from: `SIH KJSCE <${emailId}>`,
                         to: email,
                         subject: "Invitation code for SIH internal hackathon",
                         html: `<html>
                         <body>
                             <p>Hey,
                             <br>Here is the OTP: ${otp}</br>
+                            Enter the above OTP to verify your email address.
                             </p>
                         </body>
                         </html>`
@@ -261,6 +262,7 @@ router.post('/signup', (req, res) => {
                                 'msg':'Failed to send mail'
                             });
                             throw(err);
+                            return
                         }
                     });
                     transporter.close();

@@ -63,7 +63,7 @@ router.post('/',(req,res)=>{
       secureConnection: true,
     });
     var mailOptions = {
-      from: emailId,
+      from: `SIH KJSCE <${emailId}>`,
       to: user.email,
       subject: "Link for password reset",
       html: `<html>
