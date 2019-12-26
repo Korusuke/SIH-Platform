@@ -104,7 +104,7 @@ router.post('/create', (req, res)=>{
                   name: user.firstName + " " + user.lastName
                 }]
               }
-            })  
+            })
         })
       });
     });
@@ -132,6 +132,7 @@ router.post('/join', (req, res)=>{
       return;
     }
     console.log(result.members.length);
+    result.members = [...new Set(result.members)];
     if(result.members.length===6) {
       return res.json(
         {
@@ -183,7 +184,7 @@ router.post('/join', (req, res)=>{
               inviteCode: result.inviteCode,
               team: {
                 teamName: result.teamName,
-                inviteCode:inviteCode,
+                inviteCode: result.inviteCode,
                 members
               }
             });
@@ -214,6 +215,7 @@ router.post('/join', (req, res)=>{
               inviteCode: result.inviteCode,
               team: {
                 teamName: result.teamName,
+		inviteCode: result.inviteCode,
                 members
               }
             });
@@ -270,10 +272,11 @@ router.post('/exit', verifyToken, (req,res)=>{
       return;
     }
       let index = data.members.indexOf(user);
-
+	console.log(index);
+	console.log(data.members)
       if (index > -1)
         data.members.splice(index, 1);
-
+	console.log(data.members)
       if(data.members.length!=0){
         data.leader=data.members[0]
         data.save();
