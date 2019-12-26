@@ -104,7 +104,43 @@ class Profile extends React.Component {
         // console.log(name + ": " + value);
     }
 
+
     componentDidMount() {
+
+        ValidatorForm.addValidationRule('isRoll', (value) => {
+            // console.log('validating roll');
+            if(typeof value != "string")
+                value = value.toString()
+            
+            if (value.length != 7) {
+                return false;
+            }
+
+            if (value.slice(0,2)>20 || value.slice(0,2)<14) {
+                return false;
+            }
+
+            return true;
+        });
+
+        ValidatorForm.addValidationRule('isLink', (value) => {
+            // console.log('validating roll');
+            let regexp = "^((https|http|ftp|rtsp|mms)?://)"
+            + "?(([0-9a-z_!~*'().&=+$%-]+: )?[0-9a-z_!~*'().&=+$%-]+@)?" //ftp的user@
+            + "(([0-9]{1,3}\.){3}[0-9]{1,3}" // IP形式的URL- 199.194.52.184
+            + "|" // 允许IP和DOMAIN（域名）
+            + "([0-9a-z_!~*'()-]+\.)*" // 域名- www.
+            + "([0-9a-z][0-9a-z-]{0,61})?[0-9a-z]\." // 二级域名
+            + "[a-z]{2,6})" // first level domain- .com or .museum
+            + "(:[0-9]{1,4})?" // 端口- :80
+            + "((/?)|" // a slash isn't required if there is no file name
+            + "(/[0-9a-z_!~*'().;?:@&=+$,%#-]+)+/?)$";
+
+            return new RegExp(regexp).test(value)
+     
+        });
+
+
         fetch(`${envvar.REACT_APP_SERVER_URL}/user/`, {
             credentials: "include"
         })
@@ -124,7 +160,7 @@ class Profile extends React.Component {
                     }
                 }
                 console.log(user);
-
+         
                 this.setState({
                     user: user
                 }, ()=>{
@@ -201,6 +237,15 @@ class Profile extends React.Component {
             });
 
         let myfile = event1.target.files[0];
+        if(myfile){
+            let filesize = ((myfile.size/1024)/1024).toFixed(4); // MB
+            if(filesize > 1.1)
+            {
+                console.log('File size exceeds 1 MB')
+                alert('File size exceeds 1MB')
+                return
+            }
+        }
 
         toBase64(event1.target.files[0])
             .then(bs64 => {
@@ -441,7 +486,7 @@ class Profile extends React.Component {
                             sm={6}
                             md={4}
                         >
-                            <TextField
+                            <TextValidator
                                 fullWidth={true}
                                 required
                                 id="outlined-required"
@@ -449,6 +494,8 @@ class Profile extends React.Component {
                                 value={this.state.user.rollNo}
                                 label="Roll No."
                                 variant="outlined"
+                                validators={['required','minNumber:0','isRoll']}    
+                                errorMessages={['Please enter Roll no.','Please enter valid Roll no.','Please enter valid Roll no.']}
                                 onChange={this.handleChange}
                             />
                         </Grid>
@@ -548,7 +595,7 @@ class Profile extends React.Component {
                         <Grid
                         // justify={this.getJustify()}
                         item xs={12} md={12}>
-                            <TextField
+                            <TextValidator
                                 fullWidth={true}
                                 required
                                 name="resume"
@@ -556,6 +603,8 @@ class Profile extends React.Component {
                                 label="Resume Link"
                                 fullWidth={true}
                                 variant="outlined"
+                                validators={['required','isLink']}    
+                                errorMessages={['Please enter Resume Link','Please enter valid Resume Link','Please enter valid Resume Link']}
                                 value={this.state.user.resume}
                                 onChange={this.handleChange}
                             />

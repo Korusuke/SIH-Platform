@@ -226,7 +226,7 @@ export default class LabelsBox extends React.Component{
 
                     <div style={{
                         padding: '10px',
-                    }}>Labels can be used to quickly filter projects based on custom tags and to compare projects for final shortlisting.</div>
+                    }}>Labels can be used to quickly filter projects based on custom tags and to compare projects for final shortlisting.<br/><br/> For e.g you can add labels like "doable", "easy", "boring", etc to help you and your team narrow down your search and pick a problem statement <br/><br/>Your Labels are only visible to you and your team ;)</div>
                 </Paper>
             </div>
         )
