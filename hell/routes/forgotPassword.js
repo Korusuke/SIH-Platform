@@ -23,10 +23,12 @@ router.post('/',(req,res)=>{
   console.log(email);
   if(email===''){
     res.json({
+      status: 'failure',
       msg: 'Email ID not present'
     });
     return;
   }
+  console.log(email)
   User.findOne({email}, (err, user)=>{
     if(err){
       console.log(err);
@@ -36,7 +38,8 @@ router.post('/',(req,res)=>{
     if(user===null){
       console.log("User not present");
       res.json({
-        msg: 'Check Email-ID and retry'
+        status: 'success',
+        msg: 'If the email entered is correct, you would receive a mail with the link'
       });
       return;
     }
@@ -62,7 +65,7 @@ router.post('/',(req,res)=>{
     var mailOptions = {
       from: emailId,
       to: user.email,
-      subject: "OTP for password reset",
+      subject: "Link for password reset",
       html: `<html>
       <body>
           <p>Hey,
@@ -79,13 +82,15 @@ router.post('/',(req,res)=>{
     transporter.sendMail(mailOptions, function(err){
       if(err){
         res.json({
-            'msg':'Failed to send mail'
+            status: 'failure',
+            msg:'Failed to send mail'
         });
         throw(err);
       }
       console.log('Mail sent succesfully');
       res.json({
-          msg: 'Check your mail for reset link'
+          status: 'success',
+          msg: 'If the email entered is correct, you would receive a mail with the link'
       });
     });
     transporter.close();
