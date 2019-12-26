@@ -74,7 +74,7 @@ export default class BottomCardMerge extends React.Component{
                 this.setState({snack: true})
             }
             else{
-                console.log(obj.team)
+                console.log(obj.team, obj)
                 this.setState(
                     {
                         show: newShow,
