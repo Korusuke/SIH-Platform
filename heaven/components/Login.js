@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-import { Paper, Card, TextField, Button} from '@material-ui/core';
+import { Paper, Card, TextField, Button, Grid} from '@material-ui/core';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -13,6 +13,7 @@ import axios from 'axios';
 import Snackbar from './snackbar';
 import Cookies from 'universal-cookie';
 import { withRouter } from 'next/router';
+import Link  from 'next/link';
 import envvar from '../env'
 
 function TabPanel(props) {
@@ -430,19 +431,27 @@ class LoginBox extends React.Component{
                                     />
                                 </Center>
                                 <br />
-                                <Center>
-                                    <Button
-                                        color="secondary"
-                                        variant="contained"
-                                        type="submit"
-                                        disabled={loginSubmitted}
-                                    >
-                                        {
-                                            (loginSubmitted && 'Logging you in...')
-                                            || (!loginSubmitted && 'Submit')
-                                        }
-                                    </Button>
-                                </Center>
+                                    <Grid container direction="row">
+                                        <Grid item xs={7}>
+                                            <Center>
+                                                <Button
+                                                    color="secondary"
+                                                    variant="contained"
+                                                    type="submit"
+                                                    disabled={loginSubmitted}
+                                                >
+                                                    {
+                                                        (loginSubmitted && 'Logging you in...')
+                                                        || (!loginSubmitted && 'Submit')
+                                                    }
+                                                </Button>
+                                            </Center>
+                                        </Grid>
+                                        <Grid item xs={5}>
+                                                <Link href='/forgot' as='/forgot'><a style={{color:this.props.themeState == 'dark'? 'white': 'black'}}>Forgot Password?</a></Link>
+                                        </Grid>
+                                    </Grid>
+                                
                                 </ValidatorForm>
                             </MuiThemeProvider>
                     </TabPanel>
