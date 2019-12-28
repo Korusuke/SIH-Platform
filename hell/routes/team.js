@@ -18,46 +18,6 @@ client.on('error', (err) => {
 
 router.use('/invite', require('./invitation'));
 
-router.get('/', (req, res) => {
-  try{
-  const decodedData = jwt.decode(req.cookies.token, {complete: true});
-  console.log('Decode: %s',decodedData)
-  // Remove req.body.email for production env
-  const admin = decodedData.payload.email || decodedData.payload.Email
-  const admins = []
-  if (!admins.includes(admin))
-    return res.status(404);
-  } catch(err) {return res.status(404)}
-  var data = []
-  Team.find({})
-    .then(teams => {
-      for(let i in teams){
-        let team_data = {
-          id: teams[i].teamId,
-          name: teams[i].teamName,
-          members: []
-        }
-        let members = []
-        User.find({email: {'$in': teams[i].members}})
-          .then(users => {
-              members = users;
-              for(var i in users)
-                team_data.members.push(users[i]);
-              return team_data
-            }
-          ).then((team_data) => {
-            data.push(team_data);
-            if (i==teams.length-1){
-              console.log(data);
-              return res.json(data);
-            }
-          }).catch(err => console.log(err));
-      }
-    })
-    .catch(err => console.log(err))
-  // return res.json(data);
-})
-
 router.post('/create', (req, res)=>{
   const { teamName } = req.body;
   Team.findOne({'teamName': teamName}, (err, result)=>{
