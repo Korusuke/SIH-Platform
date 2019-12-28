@@ -19,6 +19,15 @@ client.on('error', (err) => {
 router.use('/invite', require('./invitation'));
 
 router.get('/', (req, res) => {
+  try{
+  const decodedData = jwt.decode(req.cookies.token, {complete: true});
+  console.log('Decode: %s',decodedData)
+  // Remove req.body.email for production env
+  const admin = decodedData.payload.email || decodedData.payload.Email
+  const admins = []
+  if (!admins.includes(admin))
+    return res.status(404);
+  } catch(err) {return res.status(404)}
   var data = []
   Team.find({})
     .then(teams => {
@@ -104,7 +113,7 @@ router.post('/create', (req, res)=>{
                   name: user.firstName + " " + user.lastName
                 }]
               }
-            })  
+            })
         })
       });
     });
@@ -132,6 +141,7 @@ router.post('/join', (req, res)=>{
       return;
     }
     console.log(result.members.length);
+    result.members = [...new Set(result.members)];
     if(result.members.length===6) {
       return res.json(
         {
@@ -183,7 +193,7 @@ router.post('/join', (req, res)=>{
               inviteCode: result.inviteCode,
               team: {
                 teamName: result.teamName,
-                inviteCode:inviteCode,
+                inviteCode: result.inviteCode,
                 members
               }
             });
@@ -214,6 +224,7 @@ router.post('/join', (req, res)=>{
               inviteCode: result.inviteCode,
               team: {
                 teamName: result.teamName,
+		inviteCode: result.inviteCode,
                 members
               }
             });
@@ -270,10 +281,11 @@ router.post('/exit', verifyToken, (req,res)=>{
       return;
     }
       let index = data.members.indexOf(user);
-
+	console.log(index);
+	console.log(data.members)
       if (index > -1)
         data.members.splice(index, 1);
-
+	console.log(data.members)
       if(data.members.length!=0){
         data.leader=data.members[0]
         data.save();

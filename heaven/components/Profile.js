@@ -111,7 +111,7 @@ class Profile extends React.Component {
             // console.log('validating roll');
             if(typeof value != "string")
                 value = value.toString()
-            
+
             if (value.length != 7) {
                 return false;
             }
@@ -126,18 +126,18 @@ class Profile extends React.Component {
         ValidatorForm.addValidationRule('isLink', (value) => {
             // console.log('validating roll');
             let regexp = "^((https|http|ftp|rtsp|mms)?://)"
-            + "?(([0-9a-z_!~*'().&=+$%-]+: )?[0-9a-z_!~*'().&=+$%-]+@)?" //ftp的user@
+            + "?(([0-9a-zA-Z_!~*'().&=+$%-]+: )?[0-9a-zA-Z_!~*'().&=+$%-]+@)?" //ftp的user@
             + "(([0-9]{1,3}\.){3}[0-9]{1,3}" // IP形式的URL- 199.194.52.184
             + "|" // 允许IP和DOMAIN（域名）
-            + "([0-9a-z_!~*'()-]+\.)*" // 域名- www.
-            + "([0-9a-z][0-9a-z-]{0,61})?[0-9a-z]\." // 二级域名
-            + "[a-z]{2,6})" // first level domain- .com or .museum
+            + "([0-9a-zA-Z_!~*'()-]+\.)*" // 域名- www.
+            + "([0-9a-zA-Z][0-9a-zA-Z-]{0,61})?[0-9a-zA-Z]\." // 二级域名
+            + "[a-zA-Z]{2,6})" // first level domain- .com or .museum
             + "(:[0-9]{1,4})?" // 端口- :80
             + "((/?)|" // a slash isn't required if there is no file name
-            + "(/[0-9a-z_!~*'().;?:@&=+$,%#-]+)+/?)$";
+            + "(/[0-9a-zA-Z_!~*'().;?:@&=+$,%#-]+)+/?)$";
 
             return new RegExp(regexp).test(value)
-     
+
         });
 
 
@@ -613,21 +613,20 @@ class Profile extends React.Component {
                         // justify={this.getJustify()}
                         item xs={12} md={12}>
                             <TextField
-                            
                             fullWidth={true}
                             required
                             name="bio"
                             id="outlined-multiline-static"
-                            label="Bio"
+                            label="Purpose for participating/Bio"
                             multiline
-                            rows="2"
+                            rows="3"
                             variant="outlined"
                             value={this.state.user.bio}
                             onChange={this.handleChange}
                             />
                         </Grid>
                     </Grid>
-                    
+
                     <Grid
                     // justify={this.getJustify()}
                     item xs={6} sm={2}>
