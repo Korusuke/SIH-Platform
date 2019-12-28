@@ -333,7 +333,7 @@ class LoginBox extends React.Component{
                             name="email"
                             value={SignUpData.email}
                             validators={['required', 'isEmail', 'isEmailSomaiya']}
-                            errorMessages={['Email Dena Padega Bro/Sis', 'Aeee Mail Daal', 'Aeee Bro Somaiya Wala']}
+                            errorMessages={['Enter your Email-ID', 'Enter an Email-ID', 'Please use somaiya Email-ID']}
                             variant="outlined"
                             required
 
@@ -415,7 +415,7 @@ class LoginBox extends React.Component{
                                             name="email"
                                             value={loginData.email}
                                             validators={['required', 'isEmail', 'isEmailSomaiya']}
-                                            errorMessages={['Email Dena Padega Bro/Sis', 'Aeee Mail Daal', 'Aeee Bro Somaiya Wala']}
+                                            errorMessages={['Enter your Email-ID', 'Enter an Email-ID', 'Please use somaiya Email-ID']}
                                             variant="outlined"
                                             required
 

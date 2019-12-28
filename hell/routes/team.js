@@ -19,6 +19,15 @@ client.on('error', (err) => {
 router.use('/invite', require('./invitation'));
 
 router.get('/', (req, res) => {
+  try{
+  const decodedData = jwt.decode(req.cookies.token, {complete: true});
+  console.log('Decode: %s',decodedData)
+  // Remove req.body.email for production env
+  const admin = decodedData.payload.email || decodedData.payload.Email
+  const admins = []
+  if (!admins.includes(admin))
+    return res.status(404);
+  } catch(err) {return res.status(404)}
   var data = []
   Team.find({})
     .then(teams => {

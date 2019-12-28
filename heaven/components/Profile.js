@@ -613,21 +613,20 @@ class Profile extends React.Component {
                         // justify={this.getJustify()}
                         item xs={12} md={12}>
                             <TextField
-                            
                             fullWidth={true}
                             required
                             name="bio"
                             id="outlined-multiline-static"
-                            label="Bio"
+                            label="Purpose for participating/Bio"
                             multiline
-                            rows="2"
+                            rows="3"
                             variant="outlined"
                             value={this.state.user.bio}
                             onChange={this.handleChange}
                             />
                         </Grid>
                     </Grid>
-                    
+
                     <Grid
                     // justify={this.getJustify()}
                     item xs={6} sm={2}>
