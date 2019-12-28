@@ -109,6 +109,7 @@ export default class Problems extends React.Component {
                 ( this.state.allLabels[obj.Number].labels.filter(e=>labels.includes(e.label)).length > 0));
         }
 
+
         // console.log("ORG", orgs, found[0].Company);
         // console.log(orgs.includes(found[0].Company));
         //console.log(found)
@@ -124,6 +125,17 @@ export default class Problems extends React.Component {
         this.setState({
             found: found
         });
+
+        let filter = {
+            software,
+            hardware,
+            ideas,
+            searchfilter,
+            orgs,
+            labels
+        }
+
+        localStorage.setItem('problemFilter', JSON.stringify(filter))
     }
 
     componentDidMount()
