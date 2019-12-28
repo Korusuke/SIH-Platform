@@ -1,12 +1,15 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
+import IconButton from '@material-ui/core/IconButton';
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import FilterListIcon from "@material-ui/icons/FilterList";
 import Center from "react-center";
 import Popover from "@material-ui/core/Popover";
 import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
+import BackspaceIcon from '@material-ui/icons/Backspace';
+import Tooltip from '@material-ui/core/Tooltip';
 import {
     Radio,
     FormControl,
@@ -58,11 +61,13 @@ export default class Filter extends React.Component {
             orgs: [],
             ideas: [],
             anchorEl: null,
-            labels:[]
+            labels:[],
+            prevFilterApplied: false
         };
         this.handleClick = this.handleClick.bind(this);
         this.handleClose = this.handleClose.bind(this);
         this.handleChange = this.handleChange.bind(this);
+        this.handleClear = this.handleClear.bind(this);
 
         let orgset = new Set();
         let ideaset = new Set();
@@ -93,7 +98,8 @@ export default class Filter extends React.Component {
         type != "checkbox"
             ? this.setState(
                   {
-                      [name]: value
+                      [name]: value,
+                      prevFilterApplied: false
                   },
                   () => {
                       this.props.filter(Object.assign({}, this.state));
@@ -101,12 +107,47 @@ export default class Filter extends React.Component {
               )
             : this.setState(
                   {
-                      [name]: checked
+                      [name]: checked,
+                      prevFilterApplied: false
                   },
                   () => {
                       this.props.filter(Object.assign({}, this.state));
                   }
               );
+    }
+
+    componentDidMount()
+    {
+        console.log('hi')
+        let filter = localStorage.getItem('problemFilter')
+        try{
+            console.log(filter)
+            if(filter)
+            {
+                let {software, hardware, searchfilter, orgs, ideas, labels} = JSON.parse(filter)
+                let prevFilterApplied = (!software || !hardware || searchfilter || orgs.length || ideas.length || labels.length ) ? true : false
+
+                this.setState(
+                    {
+                        software,
+                        hardware,
+                        searchfilter,
+                        orgs,
+                        ideas,
+                        labels,
+                        prevFilterApplied
+                    }, ()=>
+                    {
+                        console.log(this.state)
+                        this.props.filter(Object.assign({}, this.state));
+                    }
+                )
+            }
+        }
+        catch(e)
+        {
+            console.log(e)
+        }
     }
 
     // sideList = side => (
@@ -135,6 +176,22 @@ export default class Filter extends React.Component {
     //         </List>
     //     </div>
     // );
+
+    handleClear()
+    {
+        this.setState({
+            software: true,
+            hardware: true,
+            orgs: [],
+            ideas: [],
+            labels:[],
+            prevFilterApplied: false,
+            searchfilter:"",
+        }, ()=>{
+            localStorage.setItem('problemFilter', "")
+            this.props.filter(Object.assign({}, this.state))
+        })
+    }
 
     render() {
         if (Object.keys(this.props.allLabels) && this.labelset.length == 0) {
@@ -165,6 +222,7 @@ export default class Filter extends React.Component {
                             name="searchfilter"
                             style={{ width: "30vw", maxWidth: "400px" }}
                             onChange={this.handleChange}
+                            value={this.state.searchfilter}
                         />
                     </Grid>
 
@@ -175,9 +233,9 @@ export default class Filter extends React.Component {
                         md={4}
                         justify="center"
                         align="center"
-                        style={{ marginLeft: 10 }}
+                        style={{ marginLeft: 10}}
                     >
-                        <Grid item>
+                        <Grid item xs={12}>
                             <Center style={{ height: "100%" }}>
                                 <Button
                                     aria-describedby={id}
@@ -190,7 +248,28 @@ export default class Filter extends React.Component {
                                     <FilterListIcon />
                                 </Button>
                             </Center>
+                                
                         </Grid>
+                        { 
+                                this.state.prevFilterApplied ?
+                                <Grid item xs={12} style={{marginTop:'15px'}}>
+                                    
+                                       <Center>
+                                            Previous Filter Applied
+                                            
+                                            <IconButton
+                                                onClick={this.handleClear}
+                                                
+                                                style={{ verticalAlign: "baseline", marginLeft: '15px'}}
+                                            >
+                                                <BackspaceIcon fontSize="small"/>
+                                            </IconButton>
+                                            
+                                   </Center>
+                                </Grid>
+                                :
+                                    null
+                            }
                     </Grid>
 
                     <Popover

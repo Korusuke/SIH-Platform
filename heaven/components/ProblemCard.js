@@ -68,7 +68,7 @@ class ProblemCard extends Component {
                 <Link
                     href="/problem/[Number]"
                     as={`/problem/${this.props.card.Number}`}
-                >
+                ><a style={{textDecoration: 'none', color: 'inherit', width: "100%"}}>
                     <Card
                         onMouseOver={this.toggleRaised}
                         onMouseOut={this.toggleRaised}
@@ -169,6 +169,7 @@ class ProblemCard extends Component {
                             </Grid>
                         </Grid>
                     </Card>
+                </a>
                 </Link>
             </ButtonBase>
         );
