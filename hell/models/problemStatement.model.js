@@ -6,6 +6,7 @@ const psSchema = new Schema({
     title: {type: String},
     description: {type: String},
     id: {type: String},
+    company: {type: String},
     domain: {type: String},
     category: {type: String},
     youtube: {type: String},
