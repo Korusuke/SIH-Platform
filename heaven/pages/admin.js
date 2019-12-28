@@ -1,18 +1,23 @@
-import React from 'react'
+import React from "react";
 
-import Header from '../components/Header'
-import Footer from '../components/Footer'
-import Profile from '../components/Profile';
-import Team from '../components/Team';
-import { Grid } from '@material-ui/core';
+import Header from "../components/Header";
+import Footer from "../components/Footer";
+import Profile from "../components/Profile";
+import Team from "../components/Team";
+import { Grid, Container } from "@material-ui/core";
 import Head from "next/head";
-
+import {
+    useTheme,
+    createMuiTheme,
+    ThemeProvider
+} from "@material-ui/core/styles";
 import "../styles/index.css";
 
-import envvar from '../env'
+import Chaand from "../components/chaand";
+
+import envvar from "../env";
 
 export default class Admin extends React.Component {
-
     theme = {
         dark: {
             background: "#121212",
@@ -23,7 +28,7 @@ export default class Admin extends React.Component {
             text: "#000000"
         }
     };
-    
+
     constructor(props) {
         super(props);
         this.props = props;
@@ -31,20 +36,56 @@ export default class Admin extends React.Component {
             teams: [],
             found: []
         };
+
+        this.handler = this.handler.bind(this);
     }
 
-    componentWillMount() {
+    componentDidMount() {
         fetch(`${envvar.REACT_APP_SERVER_URL}/admin`, {
-            credentials:'include',
-        }).then(res => res.json()).then(data => {
-            this.setState({
-                teams: data,
-                found: data
+            credentials: "include"
+        })
+            .then(res => res.json())
+            .then(data => {
+                console.log(data);
+                this.setState({
+                    teams: data,
+                    found: data
+                });
             })
-        }).catch(e => console.log(e, 'asd'))
+            .catch(e => console.log(e, "asd"));
+    }
+
+    handler() {
+        if (this.state.theme == "light") {
+            this.setState(
+                {
+                    theme: "dark"
+                },
+                () => {
+                    localStorage.setItem("siteTheme", "dark");
+                }
+            );
+        } else {
+            this.setState(
+                {
+                    theme: "light"
+                },
+                () => {
+                    localStorage.setItem("siteTheme", "light");
+                }
+            );
+        }
     }
 
     render() {
+        let customtheme = createMuiTheme({
+            palette: {
+                type: this.state.theme == "light" ? "light" : "dark"
+            }
+        });
+        let curtheme =
+            this.state.theme == "light" ? this.theme.light : this.theme.dark;
+
         return (
             <div>
                 <Head>
@@ -58,13 +99,46 @@ export default class Admin extends React.Component {
                         content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no"
                     />
                 </Head>
-                {/* <Header loggedin={true} theme={customtheme} themeState={this.state.theme}/> */}
-                <Grid container direction="row" justify="center" alignItems="center" spacing={1}
-                    style={{width: '100%'}}>
-                    <Team teams={this.state.teams}/>
-                </Grid>
-                {/* <Footer /> */}
+                <ThemeProvider theme={customtheme}>
+                    <div
+                        style={{
+                            minHeight: "100vh",
+                            background: curtheme.background,
+                            color: curtheme.text
+                        }}
+                    >
+                        <Chaand
+                            handler={this.handler}
+                            chaand={this.state.theme == "light" ? 1 : 0}
+                        />
+                        <div
+                            id="content-wrap"
+                            style={{
+                                backgroundColor: `${curtheme.background}`,
+                                color: `${curtheme.text}`
+                            }}
+                        >
+                            <Header
+                                theme={customtheme}
+                                themeState={this.state.theme}
+                            />
+                            <Container>
+                                <Grid
+                                    container
+                                    direction="column"
+                                    justify="center"
+                                    alignItems="center"
+                                    spacing={1}
+                                    style={{ width: "100%" }}
+                                >
+                                    <Team teams={this.state.teams} />
+                                </Grid>
+                            </Container>
+                        </div>
+                        <Footer />
+                    </div>
+                </ThemeProvider>
             </div>
-        )
+        );
     }
 }
