@@ -41,17 +41,17 @@ export default class Team extends React.Component {
                 )
             })
             arr.push(
-                <Card style={{width: '60%', margin: '50px'}}>
+                <Card style={{ margin: '50px 0', width:'100%', padding: '10px'}}>
                 <Grid container direction="row" justify="center" alignItems="center" spacing={1}>
-                    <Grid item xs={3} style={{fontSize: '20px', textAlign: 'center'}}>
+                    <Grid item xs={12} md={3} style={{fontSize: '20px', textAlign: 'center'}}>
                         <span>Team Name:</span><br/>
                         <span>{team.name}</span><br/>
-                        <Button variant="contained" style={{backgroundColor: '#64ff64', color: '#ffffff', margin: '5px'}} startIcon={<TurnedInIcon />}>View Submission</Button>
-                        <Button variant="contained" style={{backgroundColor: '#ff0000', color: '#ffffff', margin: '5px'}} startIcon={<ImportExportIcon />}
+                        <Button variant="contained" style={{backgroundColor: '#64ff64', color: '#ffffff', margin: '5px', width:'100%'}} startIcon={<TurnedInIcon />}>View Submission</Button>
+                        <Button variant="contained" style={{backgroundColor: '#ff0000', color: '#ffffff', margin: '5px', width:'100%'}} startIcon={<ImportExportIcon />}
                             onClick={this.exportcsv(team.name)}>Export Team</Button>
                         <br/>
                     </Grid>
-                    <Grid item xs={9}>
+                    <Grid item xs={12} md={9}>
                         {members}
                     </Grid>
                 </Grid>
