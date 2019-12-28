@@ -80,30 +80,32 @@ router.get('/reset/:token', (req, res)=>{
         }
         if(user===null){
             res.json({
+                status: 'failure',
                 msg:'Link invalid'
             });
             return;
         }
         console.log(user);
         res.json({
+            status: 'success',
             msg:'Reset link okay',
         });
     });
 });
 
 
-router.post('/update', (req, res)=>{
-    const { user, password } = req.body;
-    User.findOne({email: user}, (err, doc)=>{
-        if(err){
-            console.log(err);
-            res.sendStatus(500);
-            return;
-        }
-        doc.password = password;
-        doc.save();
-    });
-});
+// router.post('/update', (req, res)=>{
+//     const { user, password } = req.body;
+//     User.findOne({email: user}, (err, doc)=>{
+//         if(err){
+//             console.log(err);
+//             res.sendStatus(500);
+//             return;
+//         }
+//         doc.password = password;
+//         doc.save();
+//     });
+// });
 
 router.post('/test', verifyToken, (req, res)=>{
   console.log("test");
