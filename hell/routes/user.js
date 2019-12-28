@@ -79,10 +79,12 @@ router.get('/', (req, res) => {
 
     User.findOne(filter)
         .then((user) => {
+            var data = user;
+            delete data['password'];
             res.json({
                 'status': 'success',
                 'msg': 'User found',
-                'data': user,
+                'data': data,
             })
         })
         .catch(() => res.status(500));
