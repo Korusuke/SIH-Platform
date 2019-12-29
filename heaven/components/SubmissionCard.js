@@ -15,6 +15,7 @@ import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 import Center from 'react-center';
 
 import envvar from '../env';
+import { faBreadSlice } from '@fortawesome/free-solid-svg-icons';
 
 export default class SubmissionCard extends React.Component {
 
@@ -117,15 +118,28 @@ export default class SubmissionCard extends React.Component {
     }
 
     componentDidMount() {
-
+        let url = window.location.href.split('/')
+        let psid = "";
+        if(url.length==5)
+            psid = url[4]
         fetch(`${envvar.REACT_APP_SERVER_URL}/ps`, {
             credentials: "include"
         })
             .then(res => res.json())
             .then(data => {
+                let filtered;
+                if(psid!="")
+                    for(var i in data){
+                        if(data[i].Number == psid){
+                            filtered = [data[i]]
+                            break;
+                        }
+                    }
+                else
+                    filtered = data;
                 this.setState({
                     ps: data,
-                    filtered: data
+                    filtered: filtered
                 })
                 this.setFilters();
                 console.log(this.state);
@@ -335,9 +349,9 @@ export default class SubmissionCard extends React.Component {
                         </Grid>
                     </Grid>
                     <Center>
-                        <Button variant="conatined" style={{backgroundColor: '#3c00ff', color: '#ffffff', width:'70%', margin: '1%'}}
+                        <Button variant="contained" style={{backgroundColor: '#3c00ff', color: '#ffffff', width:'70%', margin: '1%'}}
                             onClick={this.handleSelect}>Select</Button>
-                        <Button variant="conatined" style={{backgroundColor: '#ff0000', color: '#ffffff', width:'20%', margin: '1%'}}
+                        <Button variant="contained" style={{backgroundColor: '#ff0000', color: '#ffffff', width:'20%', margin: '1%'}}
                             onClick={this.clearFilters}>Clear Filters</Button>
                     </Center>
                 </Paper>
@@ -383,7 +397,7 @@ export default class SubmissionCard extends React.Component {
                         </Grid>
                     </Grid>
                     <Center>
-                        <Button variant="conatined" style={{backgroundColor: '#3c00ff', color: '#ffffff', width:'50%', margin: '1%'}}
+                        <Button variant="contained" style={{backgroundColor: '#3c00ff', color: '#ffffff', width:'50%', margin: '1%'}}
                             onClick={this.onSubmit}>Submit</Button>
                     </Center>
                 </Paper>
