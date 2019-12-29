@@ -2,6 +2,7 @@ const express = require('express');
 const redis = require('redis');
 const router = express.Router();
 const Team = require('../models/team.model');
+const User = require('../models/user.model');
 const jwt = require('jsonwebtoken');
 
 const client = redis.createClient({
@@ -34,15 +35,19 @@ router.post('/', (req, res) => {
     const email = decodedData.payload.email || decodedData.payload.Email;
     if(typeof email=='undefined')
         return res.json({'status': 'failure', 'msg': 'No submission found!'})
-    const { teamName, submission } = req.body
-    Team.findOne({teamName})
-        .then(team => {
-            team.submission = submission;
-            team.save()
-                .then(() => res.json({'status': 'success', 'msg': 'Submission Done!'}))
+    const { submission } = req.body;
+    console.log(submission, req.body);
+    User.findOne({email})
+        .then(user => {
+            Team.findOne({teamId: user.teamId})
+                .then(team => {
+                    team.submission = submission;
+                    team.save()
+                        .then(() => res.json({'status': 'success', 'msg': 'Submission Done!'}))
+                        .catch(err => {return res.json({'status': 'failure', 'msg': 'Submission failed!'})})
+                })
                 .catch(err => {return res.json({'status': 'failure', 'msg': 'Submission failed!'})})
         })
-        .catch(err => {return res.json({'status': 'failure', 'msg': 'Submission failed!'})})
 })
 
 router.delete('/', (req, res) => {
