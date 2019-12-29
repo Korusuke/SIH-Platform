@@ -42,6 +42,7 @@ export default class SubmissionCard extends React.Component {
         }
         this.handleSelect = this.handleSelect.bind(this);
         this.handleChange = this.handleChange.bind(this);
+        this.handleChange2 = this.handleChange2.bind(this);
         this.setFilters = this.setFilters.bind(this);
         this.clearFilters = this.clearFilters.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
@@ -73,6 +74,25 @@ export default class SubmissionCard extends React.Component {
             domain,
             title,
             number
+        })
+        let submission = this.state.submission;
+        if(category.length==1){
+            submission.category = category[0];
+        }
+        if(domain.length==1){
+            submission.domain = domain[0];
+        }
+        if(company.length==1){
+            submission.company = company[0];
+        }
+        if(title.length==1){
+            submission.title = title[0];
+        }
+        if(number.length==1){
+            submission.number = number[0];
+        }
+        this.setState({
+            submission
         })
     }
 
@@ -160,8 +180,18 @@ export default class SubmissionCard extends React.Component {
         }, () => {this.setFilters();});
     }
 
+    handleChange2(event) {
+        let { name, type, value } = event.target;
+        let submission = this.state.submission;
+        submission[name] = value;
+        this.setState({
+            submission: submission
+        })
+    }
+
     onSubmit() {
         let submission = this.state.submission;
+        console.log(submission);
         fetch(`${envvar.REACT_APP_SERVER_URL}/submission/`, {
             method: "POST",
             credentials: "include",
@@ -326,13 +356,13 @@ export default class SubmissionCard extends React.Component {
                                 variant="outlined"
                                 inputProps={{ maxLength: 500 }}
                                 value={this.state.submission.description}
-                                onChange={this.handleChange}
+                                onChange={this.handleChange2}
                                 />
                         </Grid>
                         <Grid item md={11}>
                             <ValidatorForm
                                 ref="form"
-                                onSubmit={this.update}
+                                onSubmit={this.onSubmit}
                                 onError={errors => console.log(errors)}
                                 style={{ width: '100%' }}
                             >
@@ -347,7 +377,7 @@ export default class SubmissionCard extends React.Component {
                                     validators={['required','isLink']}    
                                     errorMessages={['Please enter Submission Link','Please enter valid Submission Link']}
                                     value={this.state.submission.link}
-                                    onChange={this.handleChange}
+                                    onChange={this.handleChange2}
                                 />
                             </ValidatorForm>
                         </Grid>
