@@ -12,15 +12,15 @@ require('dotenv').config();
 
 var app = express();
 
-// const privateKey = fs.readFileSync('./certificates/privkey.pem', 'utf8');
-// const certificate = fs.readFileSync('./certificates/cert.pem', 'utf8');
-// const ca = fs.readFileSync('./certificates/chain.pem', 'utf8');
+const privateKey = fs.readFileSync('./certificates/privkey.pem', 'utf8');
+const certificate = fs.readFileSync('./certificates/cert.pem', 'utf8');
+const ca = fs.readFileSync('./certificates/chain.pem', 'utf8');
 
-// const credentials = {
-// 	key: privateKey,
-// 	cert: certificate,
-// 	ca: ca
-// };
+const credentials = {
+	key: privateKey,
+	cert: certificate,
+	ca: ca
+};
 
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
@@ -66,7 +66,7 @@ app.use('/forgotPassword', require('./routes/forgotPassword'));
 app.use('/images', express.static(__dirname + '/storage/userphotos'));
 app.use('/storage', express.static(__dirname + '/storage'));
 
-// app = https.createServer(credentials, app);
+app = https.createServer(credentials, app);
 const port = 8080;
 app.listen(port, () => {
 	console.log('Hey, listening on port %s', port);
