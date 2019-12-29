@@ -1,15 +1,12 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
-import IconButton from '@material-ui/core/IconButton';
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import FilterListIcon from "@material-ui/icons/FilterList";
 import Center from "react-center";
 import Popover from "@material-ui/core/Popover";
 import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
-import BackspaceIcon from '@material-ui/icons/Backspace';
-import Tooltip from '@material-ui/core/Tooltip';
+
 import {
     Radio,
     FormControl,
@@ -55,31 +52,23 @@ export default class Filter extends React.Component {
         // console.log(props);
         this.props = props;
         this.state = {
-            software: true,
-            hardware: true,
+            submitted: true,
+            unsubmitted: true,
             searchfilter: "",
-            orgs: [],
-            ideas: [],
+            years: [],
+            branches: [],
             anchorEl: null,
-            labels:[],
-            prevFilterApplied: false
         };
         this.handleClick = this.handleClick.bind(this);
         this.handleClose = this.handleClose.bind(this);
         this.handleChange = this.handleChange.bind(this);
-        this.handleClear = this.handleClear.bind(this);
+        
 
-        let orgset = new Set();
-        let ideaset = new Set();
+        
 
-        this.props.cards.forEach(obj => {
-            orgset.add(obj.Company);
-            ideaset.add(obj.Domain);
-        });
-
-        this.orgset = Array.from(orgset);
-        this.ideaset = Array.from(ideaset);
-        this.labelset = [];
+        this.yearset = ["First", "Second", "Third", "Fourth"]
+        this.branchset = ["Comps", "IT", "ETRX", "EXTC", "MECH"]
+        
     }
 
     handleClick(event) {
@@ -115,99 +104,14 @@ export default class Filter extends React.Component {
                   }
               );
     }
-
-    componentDidMount()
-    {
-        console.log('hi')
-        let filter = localStorage.getItem('problemFilter')
-        try{
-            console.log(filter)
-            if(filter)
-            {
-                let {software, hardware, searchfilter, orgs, ideas, labels} = JSON.parse(filter)
-                let prevFilterApplied = (!software || !hardware || searchfilter || orgs.length || ideas.length || labels.length ) ? true : false
-
-                this.setState(
-                    {
-                        software,
-                        hardware,
-                        searchfilter,
-                        orgs,
-                        ideas,
-                        labels,
-                        prevFilterApplied
-                    }, ()=>
-                    {
-                        console.log(this.state)
-                        this.props.filter(Object.assign({}, this.state));
-                    }
-                )
-            }
-        }
-        catch(e)
-        {
-            console.log(e)
-        }
-    }
-
-    // sideList = side => (
-    //     <div
-    //         className={this.classes.list}
-    //         role="presentation"
-    //         onClick={this.toggleDrawer(side, false)}
-    //         onKeyDown={this.toggleDrawer(side, false)}
-    //     >
-    //         <List>
-    //             {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-    //                 <ListItem button key={text}>
-    //                     <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-    //                     <ListItemText primary={text} />
-    //                 </ListItem>
-    //             ))}
-    //         </List>
-    //         <Divider />
-    //         <List>
-    //             {['All mail', 'Trash', 'Spam'].map((text, index) => (
-    //                 <ListItem button key={text}>
-    //                     <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-    //                     <ListItemText primary={text} />
-    //                 </ListItem>
-    //             ))}
-    //         </List>
-    //     </div>
-    // );
-
-    handleClear()
-    {
-        this.setState({
-            software: true,
-            hardware: true,
-            orgs: [],
-            ideas: [],
-            labels:[],
-            prevFilterApplied: false,
-            searchfilter:"",
-        }, ()=>{
-            localStorage.setItem('problemFilter', "")
-            this.props.filter(Object.assign({}, this.state))
-        })
-    }
+    
 
     render() {
-        if (Object.keys(this.props.allLabels) && this.labelset.length == 0) {
-            let labelSet = new Set();
-            for (let i in this.props.allLabels) {
-                console.log(i);
-                this.props.allLabels[i].labels.forEach(e => {
-                    labelSet.add(e.label);
-                });
-            }
-            this.labelset = Array.from(labelSet);
-        }
+        
 
         let open = Boolean(this.state.anchorEl);
         let id = open ? "simple-popover" : undefined;
-        return (
+        let contentHuge = 
             <Paper style={{ padding: 8 }}>
                 <Grid
                     container
@@ -218,7 +122,7 @@ export default class Filter extends React.Component {
                     <Grid container item xs={12} md={4} justify="center">
                         <TextField
                             id="ps-search"
-                            label="Search"
+                            label="Search by Team Name / Members"
                             name="searchfilter"
                             style={{ width: "30vw", maxWidth: "400px" }}
                             onChange={this.handleChange}
@@ -250,26 +154,7 @@ export default class Filter extends React.Component {
                             </Center>
                                 
                         </Grid>
-                        { 
-                                this.state.prevFilterApplied ?
-                                <Grid item xs={12} style={{marginTop:'15px'}}>
-                                    
-                                       <Center>
-                                            Previous Filter Applied
-                                            
-                                            <IconButton
-                                                onClick={this.handleClear}
-                                                
-                                                style={{ verticalAlign: "baseline", marginLeft: '15px'}}
-                                            >
-                                                <BackspaceIcon fontSize="small"/>
-                                            </IconButton>
-                                            
-                                   </Center>
-                                </Grid>
-                                :
-                                    null
-                            }
+                        
                     </Grid>
 
                     <Popover
@@ -301,37 +186,37 @@ export default class Filter extends React.Component {
                                 >
                                     <Grid item>
                                         <FormControlLabel
-                                            value="software"
+                                            value="submitted"
                                             control={
                                                 <Checkbox
                                                     color="primary"
                                                     style={radiostyle}
                                                     checked={
-                                                        this.state.software
+                                                        this.state.submitted
                                                     }
                                                     onChange={this.handleChange}
                                                 />
                                             }
-                                            label="Software"
-                                            name="software"
+                                            label="Submitted"
+                                            name="submitted"
                                             
                                         />
                                     </Grid>
                                     <Grid item>
                                         <FormControlLabel
-                                            value="hardware"
+                                            value="unsubmitted"
                                             control={
                                                 <Checkbox
                                                     color="primary"
                                                     style={radiostyle}
                                                     checked={
-                                                        this.state.hardware
+                                                        this.state.unsubmitted
                                                     }
                                                     onChange={this.handleChange}
                                                 />
                                             }
-                                            label="Hardware"
-                                            name="hardware"
+                                            label="Unsubmitted"
+                                            name="unsubmitted"
                                             
                                         />
                                     </Grid>
@@ -354,16 +239,16 @@ export default class Filter extends React.Component {
                                             <MuiThemeProvider
                                                 theme={customInputTheme}
                                             >
-                                                <InputLabel id="organization">
-                                                    Organization
+                                                <InputLabel id="year">
+                                                    Year
                                                 </InputLabel>
                                                 <Select
-                                                    labelId="organization"
-                                                    id="organization-mutiple-checkbox"
+                                                    labelId="year"
+                                                    id="year-mutiple-checkbox"
                                                     multiple
                                                     style={{ width: "100%" }}
-                                                    value={this.state.orgs}
-                                                    name="orgs"
+                                                    value={this.state.years}
+                                                    name="years"
                                                     onChange={this.handleChange}
                                                     input={<Input />}
                                                     renderValue={selected =>
@@ -372,14 +257,14 @@ export default class Filter extends React.Component {
                                                     MenuProps={MenuProps}
                                                     variant="outlined"
                                                 >
-                                                    {this.orgset.map(e => (
+                                                    {this.yearset.map(e => (
                                                         <MenuItem
                                                             key={e}
                                                             value={e}
                                                         >
                                                             <Checkbox
                                                                 checked={
-                                                                    this.state.orgs.indexOf(
+                                                                    this.state.years.indexOf(
                                                                         e
                                                                     ) > -1
                                                                 }
@@ -412,15 +297,15 @@ export default class Filter extends React.Component {
                                             <MuiThemeProvider
                                                 theme={customInputTheme}
                                             >
-                                                <InputLabel id="ideas">
-                                                    ideas
+                                                <InputLabel id="branch">
+                                                    Branch
                                                 </InputLabel>
                                                 <Select
-                                                    labelId="ideas"
-                                                    id="ideas-mutiple-checkbox"
+                                                    labelId="branch"
+                                                    id="branch-mutiple-checkbox"
                                                     multiple
-                                                    value={this.state.ideas}
-                                                    name="ideas"
+                                                    value={this.state.branches}
+                                                    name="branches"
                                                     onChange={this.handleChange}
                                                     input={<Input />}
                                                     renderValue={selected =>
@@ -429,14 +314,14 @@ export default class Filter extends React.Component {
                                                     MenuProps={MenuProps}
                                                     variant="outlined"
                                                 >
-                                                    {this.ideaset.map(e => (
+                                                    {this.branchset.map(e => (
                                                         <MenuItem
                                                             key={e}
                                                             value={e}
                                                         >
                                                             <Checkbox
                                                                 checked={
-                                                                    this.state.ideas.indexOf(
+                                                                    this.state.branches.indexOf(
                                                                         e
                                                                     ) > -1
                                                                 }
@@ -451,77 +336,12 @@ export default class Filter extends React.Component {
                                         </FormControl>
                                     </Grid>
                                 </Grid>
-                                {this.labelset.length > 0 ? (
-                                    <Grid
-                                        item
-                                        container
-                                        direction="row"
-                                        justify="center"
-                                    >
-                                        <Grid item>
-                                            <FormControl
-                                                style={{
-                                                    minWidth: 150,
-                                                    maxWidth: 200,
-                                                    // backgroundColor: "white",
-                                                    borderRadius: "5px"
-                                                }}
-                                            >
-                                                <MuiThemeProvider
-                                                    theme={customInputTheme}
-                                                >
-                                                    <InputLabel id="labels">
-                                                        Labels
-                                                    </InputLabel>
-                                                    <Select
-                                                        labelId="labels"
-                                                        id="labels-mutiple-checkbox"
-                                                        multiple
-                                                        value={this.state.labels}
-                                                        name="labels"
-                                                        onChange={
-                                                            this.handleChange
-                                                        }
-                                                        input={<Input />}
-                                                        renderValue={selected =>
-                                                            selected.join(", ")
-                                                        }
-                                                        MenuProps={MenuProps}
-                                                        variant="outlined"
-                                                    >
-                                                        {this.labelset.map(
-                                                            e => (
-                                                                <MenuItem
-                                                                    key={e}
-                                                                    value={e}
-                                                                >
-                                                                    <Checkbox
-                                                                        checked={
-                                                                            this.state.labels.indexOf(
-                                                                                e
-                                                                            ) >
-                                                                            -1
-                                                                        }
-                                                                    />
-                                                                    <ListItemText
-                                                                        primary={
-                                                                            e
-                                                                        }
-                                                                    />
-                                                                </MenuItem>
-                                                            )
-                                                        )}
-                                                    </Select>
-                                                </MuiThemeProvider>
-                                            </FormControl>
-                                        </Grid>
-                                    </Grid>
-                                ) : null}
                             </Grid>
                         </Paper>
                     </Popover>
                 </Grid>
             </Paper>
-        );
+        
+        return this.props.loading? <Center><div>Loading...</div></Center> : contentHuge
     }
 }
