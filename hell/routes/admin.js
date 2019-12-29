@@ -44,13 +44,16 @@ router.get("/", (req, res) => {
                 User.find({ email: { $in: teams[i].members } })
                     .then(users => {
                         members = users;
-                        var user_data;
-                        console.log('DATA', data)
+                        let user_data;
+                        //console.log('DATA', data)
                         for (var i in users) {
-                            user_data = users[i];
-                            delete user_data.password;
+                            let {email, firstName, lastName, middleName, gender, year, department, division, comments, labels, profilePic, phone} = users[i]
+                            user_data = {email, firstName, lastName, middleName, gender, year, department, division, comments, labels, profilePic, phone}
+                            
+                            console.log(email, teams[i].leader)
                             if (user_data.email == teams[i].leader)
                                 user_data.role = "leader";
+                            //console.log(user_data)
                             team_data.members.push(user_data);
                         }
                         // return team_data
