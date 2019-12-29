@@ -2,7 +2,7 @@ import React from "react";
 
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-import Profile from "../components/Profile";
+import NoiceBanner from "../components/NoiceBanner";
 import Team from "../components/Team";
 import { Grid, Container } from "@material-ui/core";
 import Head from "next/head";
@@ -14,6 +14,7 @@ import {
 import "../styles/index.css";
 
 import Chaand from "../components/chaand";
+import AdminFilter from "../components/AdminFilter";
 
 import envvar from "../env";
 
@@ -34,10 +35,12 @@ export default class Admin extends React.Component {
         this.props = props;
         this.state = {
             teams: [],
-            found: []
+            found: [],
+            loading: true
         };
 
         this.handler = this.handler.bind(this);
+        this.applyFilter = this.applyFilter.bind(this);
     }
 
     componentDidMount() {
@@ -49,7 +52,8 @@ export default class Admin extends React.Component {
                 console.log(data);
                 this.setState({
                     teams: data,
-                    found: data
+                    found: data,
+                    loading: false
                 });
             })
             .catch(e => console.log(e, "asd"));
@@ -75,6 +79,74 @@ export default class Admin extends React.Component {
                 }
             );
         }
+    }
+
+    filterIt(ar, searchKey) {
+        searchKey = searchKey.toLowerCase();
+        return ar.filter(obj => {
+            if (obj.name.toLowerCase().includes(searchKey)) return true;
+            for (let i = 0; i < obj.members.length; i++) {
+                if (
+                    obj.members[i].firstName
+                        .toLowerCase()
+                        .includes(searchKey) ||
+                    obj.members[i].middleName
+                        .toLowerCase()
+                        .includes(searchKey) ||
+                    obj.members[i].lastName.toLowerCase().includes(searchKey)
+                )
+                    return true;
+            }
+        });
+    }
+
+    applyFilter(stateInput) {
+        let found = [...this.state.teams];
+        let {
+            submitted,
+            unsubmitted,
+            searchfilter,
+            years,
+            branches
+        } = stateInput;
+
+        console.log(stateInput)
+
+        if (submitted && !unsubmitted)
+            found = found.filter(obj => obj.submitted);
+        else if (!unsubmitted && submitted)
+            found = found.filter(obj => !obj.submitted);
+        else if (!submitted && !unsubmitted) found = [];
+
+        if (found.length > 0) {
+            if (years.length > 0) {
+                found = found.filter(obj => {
+                    for (let i = 0; i < obj.members.length; i++) {
+                        if (years.includes(obj.members[i].year)) return true;
+                    }
+
+                    return false;
+                });
+            }
+            if (branches.length > 0) {
+                found = found.filter(obj => {
+                    for (let i = 0; i < obj.members.length; i++) {
+                        if (branches.includes(obj.members[i].department))
+                            return true;
+                    }
+
+                    return false;
+                });
+            }
+
+            if (searchfilter) found = this.filterIt(found, searchfilter);
+
+            
+        }
+
+        this.setState({
+            found: found
+        });
     }
 
     render() {
@@ -122,6 +194,11 @@ export default class Admin extends React.Component {
                                 theme={customtheme}
                                 themeState={this.state.theme}
                             />
+                            <NoiceBanner
+                                text="$ sudo cat * >"
+                                backgroundImage={"/assets/images/banner.jpg"}
+                            />
+                            <AdminFilter filter={this.applyFilter} loading={this.state.loading}/>
                             <Container>
                                 <Grid
                                     container
@@ -131,7 +208,7 @@ export default class Admin extends React.Component {
                                     spacing={1}
                                     style={{ width: "100%" }}
                                 >
-                                    <Team teams={this.state.teams} />
+                                    <Team teams={this.state.found} loading={this.state.loading} />
                                 </Grid>
                             </Container>
                         </div>
