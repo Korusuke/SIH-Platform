@@ -2,7 +2,7 @@ import React from 'react'
 import Center from 'react-center'
 import CommentsContainer from './CommentsContainer'
 import LabelsBox from './LabelsBox'
-import {Grid, Container, Box, Paper} from '@material-ui/core'
+import {Grid, Container, Box, Paper, Button, Link} from '@material-ui/core'
 import ReactHtmlParser, { processNodes, convertNodeToElement, htmlparser2 } from 'react-html-parser';
 export default class ProblemDefinition extends React.Component{
     constructor(props)
@@ -28,11 +28,19 @@ export default class ProblemDefinition extends React.Component{
                                     {this.props.dataPresent? ReactHtmlParser(this.props.problem.Description): null}
                                 </div>
                             </div>
+                            <Link
+                                href={`/submission/${this.props.num}`}
+                                as={`/submission/${this.props.num}`}>
+                                <Button variant="contained" style={{backgroundColor: '#3c00ff', color: '#ffffff', width:'100%', margin: '1%'}}>
+                                    Submit
+                                </Button>
+                            </Link>
                             <Box boxShadow={2} style={{
                                 minHeight: '200px',
                                 margin: 'auto',
                                 marginTop: '50px',
                             }}><div style={{width:'100%'}}>
+                                
                                 <CommentsContainer psid={this.props.num}/>
                                 </div>
                                 </Box>
@@ -95,7 +103,6 @@ export default class ProblemDefinition extends React.Component{
                             </div>
 
                         </Paper>
-
                         <LabelsBox psid={this.props.num} />
                     </Grid>
                 </Grid>
