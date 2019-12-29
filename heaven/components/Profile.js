@@ -521,7 +521,6 @@ class Profile extends React.Component {
                                     value={this.state.user.year}
                                     onChange={this.handleChange}
                                     autoWidth
-
                                 >
 
                                     <MenuItem key='First' value='First'>
@@ -567,9 +566,7 @@ class Profile extends React.Component {
 
                                 >
 
-                                    {['Comps','IT','ETRX','EXTC','MECH'].map(e => (<MenuItem key={e} value={e}>
-                                        {e}
-                                    </MenuItem>))}
+                                    
 
                                 </Select>
                             </FormControl>
