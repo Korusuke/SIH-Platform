@@ -161,7 +161,12 @@ export default class SubmissionCard extends React.Component {
     }
 
     onSubmit() {
-        console.log("Submit");
+        let submission = this.state.submission;
+        fetch(`${envvar.REACT_APP_SERVER_URL}/submission/`, {
+            method: "POST",
+            credentials: "include",
+            body: submission
+        }).then(res => console.log(res));
     }
 
     render() {
