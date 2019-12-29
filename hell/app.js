@@ -59,7 +59,7 @@ app.use('/submission', require('./routes/submission'));
 app.use('/export', require('./routes/export.js'));
 app.use('/team', require('./routes/team'));
 app.use('/user', require('./routes/user'));
-app.use('/admin', require('./routes/admin'));
+// app.use('/admin', require('./routes/admin'));
 app.use('/', require('./routes/login'));
 app.use('/forgotPassword', require('./routes/forgotPassword'));
 

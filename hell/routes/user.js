@@ -12,7 +12,7 @@ const client = redis.createClient({
 });
 
 client.on('error', (err) => {
-  console.log('Something went wrong ', err);
+    console.log('Something went wrong ', err);
 });
 
 
@@ -22,7 +22,7 @@ var storage = multer.diskStorage({
         cb(null, 'storage/userphotos')
     },
     filename: function (req, file, cb) {
-        cb(null, (req.body.email || "null")+ '-' + file.originalname)
+        cb(null, (req.body.email || "null") + '-' + file.originalname)
     }
 })
 
@@ -33,7 +33,7 @@ router.post('/', upload, (req, res) => {
     console.log(req.body, req.file, req.cookies)
 
     // if using verifyToken middleware replace req.body.email with req.decoded.email
-    const decodedData = jwt.decode(req.cookies.token, {complete: true});
+    const decodedData = jwt.decode(req.cookies.token, { complete: true });
     // console.log('Decode: ',decodedData)
     const email = decodedData.payload.email || decodedData.payload.Email;
 
@@ -42,26 +42,25 @@ router.post('/', upload, (req, res) => {
     }
 
     let shape = ["squares", "isogrids", "space invaders"];
-    let numberColours = [2,3,4];
-    let theme = ["frogideas","heatwave","sugarsweets","daisygarden","seascape","berrypie","bythepool"];
+    let numberColours = [2, 3, 4];
+    let theme = ["frogideas", "heatwave", "sugarsweets", "daisygarden", "seascape", "berrypie", "bythepool"];
     User.findOne(filter)
         .then((user) => {
-        for(var key in req.body){
-            if(key != 'email' && key !='profilePic')
-                user[key] = req.body[key];
-        }
+            for (var key in req.body) {
+                if (key != 'email' && key != 'profilePic')
+                    user[key] = req.body[key];
+            }
 
-        if(req.file)
-        {
-            user['profilePic'] = `/images/${email}-${req.file.originalname}`
-        }
+            if (req.file) {
+                user['profilePic'] = `/images/${email}-${req.file.originalname}`
+            }
 
-        user.save()
-            .then(() => {
-                console.log('saved')
-                res.json({'status': 'success', 'msg': 'user updated'});
-            })
-            .catch(() => res.status(500));
+            user.save()
+                .then(() => {
+                    console.log('saved')
+                    res.json({ 'status': 'success', 'msg': 'user updated' });
+                })
+                .catch(() => res.status(500));
         })
         .catch(() => res.status(500));
 })
@@ -69,7 +68,7 @@ router.post('/', upload, (req, res) => {
 router.get('/', (req, res) => {
     // if using verifyToken middleware replace req.body.email with req.decoded.email
 
-    const decodedData = jwt.decode(req.cookies.token, {complete: true});
+    const decodedData = jwt.decode(req.cookies.token, { complete: true });
     // console.log('Decode:',decodedData)
     const email = decodedData.payload.email || decodedData.payload.Email;
 
@@ -79,12 +78,13 @@ router.get('/', (req, res) => {
 
     User.findOne(filter)
         .then((user) => {
-            var data = user;
-            delete data['password'];
+            let { email, firstName, lastName, middleName, gender, year, department, division, comments, labels, profilePic, phone, rollNo, resume, bio } = user
+            let user_data = { email, firstName, lastName, middleName, gender, year, department, division, comments, labels, profilePic, phone, rollNo, resume, bio }
+            console.log(user_data);
             res.json({
                 'status': 'success',
                 'msg': 'User found',
-                'data': data,
+                'data': user_data,
             })
         })
         .catch(() => res.status(500));

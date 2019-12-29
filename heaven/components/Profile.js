@@ -78,7 +78,7 @@ class Profile extends React.Component {
             profilePicFile: null
         };
     }
-    
+
     handleChange(event) {
         let { name, type, value } = event.target;
         //console.log('STATE', this.state)
@@ -160,7 +160,7 @@ class Profile extends React.Component {
                     }
                 }
                 console.log(user);
-         
+
                 this.setState({
                     user: user
                 }, ()=>{
@@ -494,7 +494,7 @@ class Profile extends React.Component {
                                 value={this.state.user.rollNo}
                                 label="Roll No."
                                 variant="outlined"
-                                validators={['required','minNumber:0','isRoll']}    
+                                validators={['required','minNumber:0','isRoll']}
                                 errorMessages={['Please enter Roll no.','Please enter valid Roll no.','Please enter valid Roll no.']}
                                 onChange={this.handleChange}
                             />
@@ -566,7 +566,9 @@ class Profile extends React.Component {
 
                                 >
 
-                                    
+                                {['Comps', 'IT', 'ETRX', 'EXTC', 'MECH'].map(e => (<MenuItem key={e} value={e}>
+                                    {e}
+                                </MenuItem>))}
 
                                 </Select>
                             </FormControl>
@@ -600,7 +602,7 @@ class Profile extends React.Component {
                                 label="Resume Link"
                                 fullWidth={true}
                                 variant="outlined"
-                                validators={['required','isLink']}    
+                                validators={['required','isLink']}
                                 errorMessages={['Please enter Resume Link','Please enter valid Resume Link','Please enter valid Resume Link']}
                                 value={this.state.user.resume}
                                 onChange={this.handleChange}

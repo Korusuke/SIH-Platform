@@ -28,19 +28,19 @@ export default class ProblemDefinition extends React.Component{
                                     {this.props.dataPresent? ReactHtmlParser(this.props.problem.Description): null}
                                 </div>
                             </div>
-                            <Link
+                            {/* <Link
                                 href={`/submission/${this.props.num}`}
                                 as={`/submission/${this.props.num}`}>
                                 <Button variant="contained" style={{backgroundColor: '#3c00ff', color: '#ffffff', width:'100%', margin: '1%'}}>
                                     Submit
                                 </Button>
-                            </Link>
+                            </Link> */}
                             <Box boxShadow={2} style={{
                                 minHeight: '200px',
                                 margin: 'auto',
                                 marginTop: '50px',
                             }}><div style={{width:'100%'}}>
-                                
+
                                 <CommentsContainer psid={this.props.num}/>
                                 </div>
                                 </Box>
