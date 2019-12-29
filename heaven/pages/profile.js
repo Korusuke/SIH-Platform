@@ -8,7 +8,8 @@ import Bottomcardteam from '../components/bottomcardteam';
 import Bottomcardjoin from '../components/bottomcardjoin';
 import Bottomcardfirst from '../components/bottomcardfirst';
 import Bottomcardconf from '../components/bottomcardconf';
-import BottomCardMerge from '../components/BottomCardMerge'
+import BottomCardMerge from '../components/BottomCardMerge';
+
 import {Container, Paper} from '@material-ui/core'
 import Chaand from '../components/chaand'
 
@@ -111,7 +112,8 @@ export default class ProfileMember extends React.Component{
 
             </Paper >
             <br/>
-                <BottomCardMerge url={envvar.REACT_APP_SERVER_URL} allowTeam={this.state.allowTeam}/>
+            <BottomCardMerge url={envvar.REACT_APP_SERVER_URL} allowTeam={this.state.allowTeam}/>
+            <br/>
             </Container>
             </div>
                 <Footer />
