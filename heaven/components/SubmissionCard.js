@@ -9,10 +9,13 @@ import {
     Select, 
     MenuItem, 
     Button,
-    TextField
+    TextField,
+    InputAdornment
 } from '@material-ui/core';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 import Center from 'react-center';
+import renderHTML from 'react-render-html';
+import axios from 'axios';
 
 import envvar from '../env';
 import { faBreadSlice } from '@fortawesome/free-solid-svg-icons';
@@ -84,9 +87,9 @@ export default class SubmissionCard extends React.Component {
             submission.domain = domain[0];
         }
         if(company.length==1){
-            submission.company = company[0];
         }
         if(title.length==1){
+            submission.company = company[0];
             submission.title = title[0];
         }
         if(number.length==1){
@@ -145,7 +148,20 @@ export default class SubmissionCard extends React.Component {
                 console.log(this.state);
             })
             .catch(e => console.log(e, "asd"));
-            
+        
+        fetch(`${envvar.REACT_APP_SERVER_URL}/submission`, {
+            credentials: "include"
+        })
+            .then(res => res.json())
+            .then(data => {
+                let { submission } = data;
+                console.log(data);
+                for(var i in this.state.submission)
+                    submission[i] = submission[i] || "";
+                this.setState({
+                    submission
+                });
+            })
         ValidatorForm.addValidationRule('isLink', (value) => {
             // console.log('validating roll');
             let regexp = "^((https|http|ftp|rtsp|mms)?://)"
@@ -178,8 +194,8 @@ export default class SubmissionCard extends React.Component {
         let select;
         let ps = this.state.ps;
         let filtered = [];
-        for(var i in ps) {
-            select = true;
+        select = true;
+            for(var i in ps) {
             for(var key in this.state.submission) {
                 // console.log(this.state.submission[key]!='', this.state.submission[key]!=ps[i][key[0].toUpperCase() + key.substr(1,)])
                 if(this.state.submission[key]!='' && this.state.submission[key]!=ps[i][key[0].toUpperCase() + key.substr(1,)])
@@ -206,17 +222,29 @@ export default class SubmissionCard extends React.Component {
     onSubmit() {
         let submission = this.state.submission;
         console.log(submission);
-        fetch(`${envvar.REACT_APP_SERVER_URL}/submission/`, {
-            method: "POST",
-            credentials: "include",
-            body: submission
+        axios.defaults.withCredentials = true;
+        axios.post(`${envvar.REACT_APP_SERVER_URL}/submission/`, {
+            submission
         }).then(res => console.log(res));
+    }
+
+    handleFocus(event) {
+        console.log(event.target.value);
+    }
+
+    handleBlur(event) {
+        let submission = this.state.submission;
+        submission.description = renderHTML(event.target.value);
+        console.log(submission.description);
+        this.setState({
+            submission
+        })
     }
 
     render() {
         return(
             <Container>
-                <Paper style={{marginTop: '50px'}}>
+                <Paper style={{marginTop: '50px', padding: '20px'}}>
                     <Grid container direction="row" justify="center"
                         alignItems="center" spacing={4}>
                         <Grid item md={3}>
@@ -355,7 +383,7 @@ export default class SubmissionCard extends React.Component {
                             onClick={this.clearFilters}>Clear Filters</Button>
                     </Center>
                 </Paper>
-                <Paper style={{marginTop: '20px', display: `${this.state.selected}`}}>
+                <Paper style={{marginTop: '40px', padding: '20px', display: `${this.state.selected}`}}>
                     <Grid container direction="row" justify="center"
                         alignItems="center" spacing={2}>
                         <Grid item md={11}>
@@ -368,7 +396,9 @@ export default class SubmissionCard extends React.Component {
                                 multiline
                                 rows="8"
                                 variant="outlined"
-                                inputProps={{ maxLength: 500 }}
+                                InputProps={{ 
+                                    maxLength: 500,
+                                }}
                                 value={this.state.submission.description}
                                 onChange={this.handleChange2}
                                 />

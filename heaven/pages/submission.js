@@ -104,8 +104,7 @@ export default class Submission extends React.Component {
                             }}
                         >
                             <Header
-                                theme={customtheme}
-                                themeState={this.state.theme}
+                                 loggedin={true} theme={customtheme} themeState={this.state.theme}
                             />
                             <NoiceBanner
                                 text="Submission"
