@@ -51,6 +51,7 @@
     "react-html-parser": "^2.0.2",
     "react-material-ui-form-validator": "^2.0.9",
     "react-md": "^1.13.0",
+    "react-render-html": "^0.6.0",
     "react-vertical-timeline-component": "^2.5.0",
     "simple-react-comments": "^1.1.0",
     "styled-components": "^4.4.1",
