@@ -98,6 +98,7 @@ export default function Header(props){
                             >
                                 <MenuItem ><Link href="/profile" as={"/profile"}><a style={{textDecoration: 'none',  color:props.themeState == 'dark'? 'white':'black'}}>Profile</a></Link></MenuItem>
                                 <MenuItem ><Link href="/problems" as={"/problems"}><a style={{textDecoration: 'none', color:props.themeState == 'dark'? 'white':'black'}}>Problems</a></Link></MenuItem>
+                                <MenuItem ><Link href="/submission" as={"/submission"}><a style={{textDecoration: 'none', color:props.themeState == 'dark'? 'white':'black'}}>Submission</a></Link></MenuItem>
                                 <MenuItem onClick={handleLogout}>Logout</MenuItem>
                             </Menu>
                             </Center>

@@ -19,15 +19,17 @@ router.get('/', (req, res) => {
     const email = decodedData.payload.email || decodedData.payload.Email;
     if(typeof email=='undefined')
         return res.json({'status': 'failure', 'msg': 'No submission found!'})
-    const { teamName } = req.query;
-
-    Team.findOne({teamName})
-        .then(team => {
-            if(typeof team.submission=='undefined')
-                return res.json({'status': 'failure', 'msg': 'No submission found!'})
-            return res.json({'status': 'success', 'msg': 'Submission found!', 'data': team.submission})
+    User.findOne({email})
+        .then(user => {
+            Team.findOne({teamId: user.teamId})
+                .then(team => {
+                    if(typeof team.submission=='undefined')
+                        return res.json({'status': 'failure', 'msg': 'No submission found!'})
+                    return res.json({'status': 'success', 'msg': 'Submission found!', 'submission': team.submission})
+                })
+                .catch(err => {return res.json({'status': 'failure', 'msg': 'No submission found!'})})
         })
-        .catch(err => {return res.json({'status': 'failure', 'msg': 'No submission found!'})})
+        .catch(err => {return res.json({'status': 'failure', 'msg': 'No submission found!'})});
 })
 
 router.post('/', (req, res) => {
@@ -36,11 +38,16 @@ router.post('/', (req, res) => {
     if(typeof email=='undefined')
         return res.json({'status': 'failure', 'msg': 'No submission found!'})
     const { submission } = req.body;
-    console.log(submission, req.body);
+    console.log(submission);
     User.findOne({email})
         .then(user => {
             Team.findOne({teamId: user.teamId})
                 .then(team => {
+                    if(user.email!=team.leader)
+                        return res.json({'status': 'failure', 'msg': 'Only team leader can submit'});
+                    if(typeof submission.description=='undefined' || 
+                        typeof submission.link=='undefined')
+                        return res.json({'status': 'failure', 'msg': 'Submission failed!'});
                     team.submission = submission;
                     team.save()
                         .then(() => res.json({'status': 'success', 'msg': 'Submission Done!'}))
