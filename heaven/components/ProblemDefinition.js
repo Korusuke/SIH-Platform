@@ -4,14 +4,30 @@ import CommentsContainer from './CommentsContainer'
 import LabelsBox from './LabelsBox'
 import {Grid, Container, Box, Paper, Button, Link} from '@material-ui/core'
 import ReactHtmlParser, { processNodes, convertNodeToElement, htmlparser2 } from 'react-html-parser';
+import envvar from '../env';
 export default class ProblemDefinition extends React.Component{
     constructor(props)
     {
         super()
         this.props = props
         this.state = {
-
+            role: ""
         }
+    }
+
+    componentDidMount() {
+        fetch(`${envvar.REACT_APP_SERVER_URL}/user/leader`, {
+            credentials: "include"
+        })
+            .then(res => res.json())
+            .then(data => {
+                if (data.status=='success') {
+                    this.setState({
+                        role: data.role
+                    })
+                    console.log(this.state);
+                }
+            })
     }
 
     render()
@@ -28,6 +44,7 @@ export default class ProblemDefinition extends React.Component{
                                     {this.props.dataPresent? ReactHtmlParser(this.props.problem.Description): null}
                                 </div>
                             </div>
+                            { this.state.role=='leader'?
                             <Link
                                 href={`/submission/${this.props.num}`}
                                 as={`/submission/${this.props.num}`}>
@@ -35,6 +52,8 @@ export default class ProblemDefinition extends React.Component{
                                     Submit
                                 </Button>
                             </Link>
+                            : null
+                            }
                             <Box boxShadow={2} style={{
                                 minHeight: '200px',
                                 margin: 'auto',
