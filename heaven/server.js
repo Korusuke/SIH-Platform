@@ -37,7 +37,9 @@ app.prepare().then(() => {
     })
 
     server.get('/submission/:id', (req, res) => {
-        return app.render(req, res, '/submission', req.query)  
+        if(req.cookies && req.cookies.token)
+            return app.render(req, res, '/submission', req.query) 
+        return app.render(req, res, '/profile', req.query)
     })
 
     server.get('/admin', (req, res) => {
