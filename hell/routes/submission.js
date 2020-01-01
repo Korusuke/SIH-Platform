@@ -23,9 +23,14 @@ router.get('/', (req, res) => {
         .then(user => {
             Team.findOne({teamId: user.teamId})
                 .then(team => {
-                    if(typeof team.submission=='undefined')
+                    if(email==team.leader)
+                        role = 'leader'
+                    else
+                        role = 'member'
+                    console.log(team.submission);
+                    if(team.submission.link.length==0 || team.submission.description.length==0)
                         return res.json({'status': 'failure', 'msg': 'No submission found!'})
-                    return res.json({'status': 'success', 'msg': 'Submission found!', 'submission': team.submission})
+                    return res.json({'status': 'success', 'msg': 'Submission found!', 'submission': team.submission, 'role': role})
                 })
                 .catch(err => {return res.json({'status': 'failure', 'msg': 'No submission found!'})})
         })
@@ -38,17 +43,17 @@ router.post('/', (req, res) => {
     if(typeof email=='undefined')
         return res.json({'status': 'failure', 'msg': 'No submission found!'})
     const { submission } = req.body;
-    console.log(submission);
     User.findOne({email})
         .then(user => {
             Team.findOne({teamId: user.teamId})
                 .then(team => {
                     if(user.email!=team.leader)
                         return res.json({'status': 'failure', 'msg': 'Only team leader can submit'});
-                    if(typeof submission.description=='undefined' || 
-                        typeof submission.link=='undefined')
+                    if(submission.description.length==0 || 
+                        submission.link.length==0)
                         return res.json({'status': 'failure', 'msg': 'Submission failed!'});
-                    team.submission = submission;
+                    for (var key in submission)
+                        team.submission[key] = submission[key];
                     team.save()
                         .then(() => res.json({'status': 'success', 'msg': 'Submission Done!'}))
                         .catch(err => {return res.json({'status': 'failure', 'msg': 'Submission failed!'})})

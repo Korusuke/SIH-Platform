@@ -16,6 +16,7 @@ import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 import Center from 'react-center';
 import ReactMde from 'react-mde';
 import axios from 'axios';
+import Snackbar from './snackbar';
 import Editor from '../components/editor';
 
 import envvar from '../env';
@@ -41,10 +42,13 @@ export default class SubmissionCard extends React.Component {
                 'description': '',
                 'link': ''
             },
-            'selected': 'block',
+            'role': '',
+            'selected': 'none',
             'ps': [],
-            'filtered': []
+            'filtered': [],
+            'snack': false,
         }
+        this.snackcontent = '';
         this.handleSelect = this.handleSelect.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleChange2 = this.handleChange2.bind(this);
@@ -69,7 +73,7 @@ export default class SubmissionCard extends React.Component {
             title.push(ps[i].Title);
             number.push(ps[i].Number);
         }
-        console.log(option)
+        // console.log(option)
         switch (option) {
             case "category":
                 category = this.state[option]
@@ -89,7 +93,7 @@ export default class SubmissionCard extends React.Component {
             default:
                 break;
         }
-        console.log(number);
+        // console.log(number);
         category = [...new Set(category)];
         company = [...new Set(company)];
         domain = [...new Set(domain)];
@@ -168,23 +172,35 @@ export default class SubmissionCard extends React.Component {
                     filtered: filtered
                 })
                 this.setFilters();
-                console.log(this.state);
+                // console.log(this.state);
             })
             .catch(e => console.log(e, "asd"));
-
-        fetch(`${envvar.REACT_APP_SERVER_URL}/submission`, {
-            credentials: "include"
-        })
-            .then(res => res.json())
-            .then(data => {
-                let { submission } = data;
-                console.log(data);
-                for (var i in this.state.submission)
-                    submission[i] = submission[i] || "";
-                this.setState({
-                    submission
-                });
+        
+        if (psid=="") {
+            fetch(`${envvar.REACT_APP_SERVER_URL}/submission`, {
+                credentials: "include"
             })
+                .then(res => res.json())
+                .then(data => {
+                    // console.log(data);
+                    let { status, submission, role } = data;
+                    if (status=='success') {
+                        for (var i in this.state.submission)
+                            submission[i] = submission[i] || "";
+                        this.setState({
+                            submission,
+                            selected: 'block',
+                            role
+                        });
+                    }
+                })
+        } else {
+            this.snackcontent = <Snackbar type="error" msg="Your previous submission would be overwritten!" />;
+            this.setState({ snack: true });
+            setTimeout(() => {
+                this.setState({ snack: false });
+            }, 3000);
+        }
         ValidatorForm.addValidationRule('isLink', (value) => {
             // console.log('validating roll');
             var expression = /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/gi;
@@ -195,10 +211,17 @@ export default class SubmissionCard extends React.Component {
     }
 
     handleSelect(event) {
-        this.setState({
-            selected: 'block'
+        let filters = [];
+        ['company', 'category', 'domain', 'number', 'title'].forEach(j => {
+            if (this.state[j].length == 1) {
+                filters.push(j)
+            }
         })
-        console.log(this.state);
+        if (filters.length >= 4)
+            this.setState({
+                selected: 'block'
+            })
+        // console.log(this.state);
     }
 
     handleChange(event) {
@@ -215,12 +238,12 @@ export default class SubmissionCard extends React.Component {
                 filters.push(j)
             }
         })
-        console.log(filters)
+        // console.log(filters)
         if (filters.length == 1)
             ps = this.state.ps;
         else
             ps = this.state.filtered;
-        console.log(ps)
+        // console.log(ps)
 
         for (var i in ps) {
             select = true;
@@ -247,7 +270,7 @@ export default class SubmissionCard extends React.Component {
         this.setState({
             submission: submission
         })
-        console.log(this.state.submission.description);
+        // console.log(this.state.submission.description);
     }
 
     handleChange3(event) {
@@ -257,7 +280,7 @@ export default class SubmissionCard extends React.Component {
         this.setState({
             submission: submission
         })
-        console.log(this.state.submission.description);
+        // console.log(this.state.submission.description);
     }
 
     onSubmit() {
@@ -266,7 +289,22 @@ export default class SubmissionCard extends React.Component {
         axios.defaults.withCredentials = true;
         axios.post(`${envvar.REACT_APP_SERVER_URL}/submission/`, {
             submission
-        }).then(res => console.log(res));
+        }).then(res => {
+            if (res.status == 200) {
+                console.log(res);
+                this.snackcontent = <Snackbar type={res.data.status} msg={res.data.msg} />;
+                this.setState({ snack: true });
+                setTimeout(() => {
+                    this.setState({ snack: false });
+                }, 3000);
+            } else {
+                this.snackcontent = <Snackbar type='error' msg='Uh ho! Error Occured' />;
+                this.setState({ snack: true });
+                setTimeout(() => {
+                    this.setState({ snack: false });
+                }, 3000);
+            }
+        });
     }
 
     handleFocus(event) {
@@ -285,6 +323,7 @@ export default class SubmissionCard extends React.Component {
     render() {
         return (
             <Container>
+                {this.state.snack ? this.snackcontent : null}
                 <Paper style={{ marginTop: '50px', padding: '32px' }}>
                     <Grid container direction="row" justify="center"
                         alignItems="center" spacing={4}>
@@ -443,7 +482,7 @@ export default class SubmissionCard extends React.Component {
                             <Editor onChange={this.handleChange2} value={this.state.submission.description}/>
                         </Grid>
 
-                        <Grid item md={11}>
+                        <Grid item md={11} xs={12}>
                             <ValidatorForm
                                 ref="form"
                                 onSubmit={this.onSubmit}
@@ -467,8 +506,8 @@ export default class SubmissionCard extends React.Component {
                         </Grid>
                     </Grid>
                     <Center>
-                        <Button variant="contained" style={{ backgroundColor: '#3c00ff', color: '#ffffff', width: '50%', margin: '1%' }}
-                            onClick={this.onSubmit}>Submit</Button>
+                        {this.state.role != 'leader'? <Button variant="contained" style={{ backgroundColor: '#3c00ff', color: '#ffffff', width: '50%', margin: '1%' }}
+                            onClick={this.onSubmit}>Submit</Button> : null}
                     </Center>
                 </Paper>
             </Container>
