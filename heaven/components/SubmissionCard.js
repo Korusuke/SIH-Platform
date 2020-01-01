@@ -1,5 +1,4 @@
 import React from 'react';
-
 import {
     Paper,
     Grid,
@@ -175,7 +174,7 @@ export default class SubmissionCard extends React.Component {
                 // console.log(this.state);
             })
             .catch(e => console.log(e, "asd"));
-        
+
         if (psid=="") {
             fetch(`${envvar.REACT_APP_SERVER_URL}/submission`, {
                 credentials: "include"
@@ -266,10 +265,12 @@ export default class SubmissionCard extends React.Component {
     handleChange2(value) {
         // let { name, type, value } = event.target;
         let submission = this.state.submission;
-        submission['description'] = value;
-        this.setState({
-            submission: submission
-        })
+        if (value.length <= 5000) {
+            submission['description'] = value;
+            this.setState({
+                submission: submission
+            })
+        }
         // console.log(this.state.submission.description);
     }
 
@@ -478,7 +479,10 @@ export default class SubmissionCard extends React.Component {
                 <Paper style={{ marginTop: '40px', padding: '20px', display: `${this.state.selected}` }}>
                     <Grid container direction="row" justify="center"
                         alignItems="center" spacing={2}>
-                        <Grid item md={11} xs={12} onClick={() => this.setState({ editing: true })} >
+                        <Grid item md={11} xs={12}>
+                            {this.state.submission.description.length}/5000 characters | Markdown supported
+                        </Grid>
+                        <Grid item md={11} xs={12}>
                             <Editor onChange={this.handleChange2} value={this.state.submission.description}/>
                         </Grid>
 
@@ -506,7 +510,7 @@ export default class SubmissionCard extends React.Component {
                         </Grid>
                     </Grid>
                     <Center>
-                        {this.state.role != 'leader'? <Button variant="contained" style={{ backgroundColor: '#3c00ff', color: '#ffffff', width: '50%', margin: '1%' }}
+                        {this.state.role == 'leader'? <Button variant="contained" style={{ backgroundColor: '#3c00ff', color: '#ffffff', width: '50%', margin: '1%' }}
                             onClick={this.onSubmit}>Submit</Button> : null}
                     </Center>
                 </Paper>
