@@ -11,17 +11,17 @@ const converter = new Showdown.Converter({
 });
 
 export default function Editor(props) {
-    const [value, setValue] = React.useState(props.value);
+    let description = props.value;
+    const [value, setValue] = React.useState(description);
     const [selectedTab, setSelectedTab] = React.useState("write");
 
     return (
         <div className="container">
             <ReactMde
-                value={value}
+                value={description}
                 onChange={value => {
                     setValue(value);
                     props.onChange(value);
-                    console.log('hii')
                 }}
                 selectedTab={selectedTab}
                 onTabChange={setSelectedTab}
