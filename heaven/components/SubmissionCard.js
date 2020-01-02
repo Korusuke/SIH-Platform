@@ -164,10 +164,28 @@ export default class SubmissionCard extends React.Component {
         );
     }
 
+
     componentDidMount() {
         let url = window.location.href.split("/");
         let psid = "";
         if (url.length == 5) psid = url[4];
+        fetch(`${envvar.REACT_APP_SERVER_URL}/user/leader`, {
+            credentials: "include"
+        })
+            .then(res => res.json())
+            .then(data => {
+                if (data.status == 'success') {
+                    this.setState({
+                        role: data.role
+                    }, () => {
+                        if (this.state.role != 'leader' && psid != "") {
+                            location.href = '/submission';
+                            return
+                        }
+                    })
+                    console.log(this.state);
+                }
+            })
         fetch(`${envvar.REACT_APP_SERVER_URL}/ps`, {
             credentials: "include"
         })
@@ -190,6 +208,8 @@ export default class SubmissionCard extends React.Component {
                 // console.log(this.state);
             })
             .catch(e => console.log(e, "asd"));
+
+
 
         if (psid == "") {
             fetch(`${envvar.REACT_APP_SERVER_URL}/submission`, {
@@ -220,6 +240,7 @@ export default class SubmissionCard extends React.Component {
             setTimeout(() => {
                 this.setState({ snack: false });
             }, 3000);
+
         }
         ValidatorForm.addValidationRule("isLink", value => {
             // console.log('validating roll');
@@ -227,6 +248,8 @@ export default class SubmissionCard extends React.Component {
             var regex = new RegExp(expression);
             return value.match(regex);
         });
+
+
     }
 
     handleSelect(event) {
@@ -269,7 +292,7 @@ export default class SubmissionCard extends React.Component {
                     if (
                         this.state.submission[key] != "" &&
                         this.state.submission[key] !=
-                            ps[i][key[0].toUpperCase() + key.substr(1)]
+                        ps[i][key[0].toUpperCase() + key.substr(1)]
                     ) {
                         select = false;
                         break;
@@ -291,10 +314,12 @@ export default class SubmissionCard extends React.Component {
     handleChange2(value) {
         // let { name, type, value } = event.target;
         let submission = this.state.submission;
-        submission["description"] = value;
-        this.setState({
-            submission: submission
-        });
+        if (value.length <= 5000) {
+            submission['description'] = value;
+            this.setState({
+                submission: submission
+            })
+        }
         // console.log(this.state.submission.description);
     }
 
@@ -558,6 +583,9 @@ export default class SubmissionCard extends React.Component {
                         alignItems="center"
                         spacing={2}
                     >
+                        <Grid item md={11} xs={12}>
+                            {this.state.submission.description.length}/5000 characters | Markdown supported
+                        </Grid>
                         <Grid
                             item
                             md={11}
@@ -569,21 +597,20 @@ export default class SubmissionCard extends React.Component {
                                 value={this.state.submission.description}
                             />
                         </Grid>
-
-                        <Grid item md={11} xs={12}>
-                            <ValidatorForm
+                        <Grid item container md={11} xs={12}>
+                        <ValidatorForm
                                 ref="form"
                                 onSubmit={this.onSubmit}
                                 onError={errors => console.log(errors)}
                                 style={{ width: "100%" }}
                             >
+                        <Grid item md={12} xs={12}>
+
                                 <TextValidator
-                                    fullWidth={true}
                                     required
                                     name="link"
                                     id="outlined-full-width"
                                     label="Submission Link"
-                                    fullWidth={true}
                                     variant="outlined"
                                     validators={["required", "isLink"]}
                                     errorMessages={[
@@ -592,24 +619,29 @@ export default class SubmissionCard extends React.Component {
                                     ]}
                                     value={this.state.submission.link}
                                     onChange={this.handleChange3}
+                                    style={{ width: '100%' }}
                                 />
+
+
+                        </Grid>
+                            <Center>
+                                <Button
+                                    variant="contained"
+                                    style={{
+                                        backgroundColor: "#3c00ff",
+                                        color: "#ffffff",
+                                        width: "50%",
+                                        margin: "1%"
+                                    }}
+                                        type='submit'
+                                >
+                                    Submit
+                            </Button>
+                            </Center>
                             </ValidatorForm>
                         </Grid>
                     </Grid>
-                    <Center>
-                        <Button
-                            variant="contained"
-                            style={{
-                                backgroundColor: "#3c00ff",
-                                color: "#ffffff",
-                                width: "50%",
-                                margin: "1%"
-                            }}
-                            onClick={this.onSubmit}
-                        >
-                            Submit
-                        </Button>
-                    </Center>
+
                 </Paper>
             </Container>
         );
