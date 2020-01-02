@@ -73,17 +73,30 @@ router.get("/", (req, res) => {
 router.post('/add_score', (req, res) => {
     const decodedData = jwt.decode(req.cookies.token, {complete: true});
     const email = decodedData.payload.email || decodedData.payload.Email;
-    const { scores } = req.body;
-    Team.findOne({teamId: user.teamId})
+    const { scores, teamId } = req.body;
+    Team.findOne({teamId: teamId})
         .then(team => {
+            
+            team.submission.scores = {}
             for(var key in scores) {
+                console.log(key)
                 team.submission.scores[key] = scores[key];
             }
+            team.submission.reviewed = true
             team.save()
-                .then(() => {return res.json({'status': 'success', 'msg': 'Scores added!'})})
-                .catch(err => {return res.json({'status': 'failure', 'msg': 'Some error occurred!'})})
+                .then(() => {
+                    console.log(team)
+                    return res.json({'status': 'success', 'msg': 'Scores added!'})
+                })
+                .catch(err => {
+                    console.log(err)
+                    return res.json({'status': 'failure', 'msg': 'Some error occurred!'})
+                })
         })
-        .catch(err => {return res.json({'status': 'failure', 'msg': 'Some error occurred!'})})
+        .catch(err => {
+            console.log(err)
+            return res.json({'status': 'failure', 'msg': 'Some error occurred!'})
+        })
 })
 
 router.post('/add_reviewer', (req, res) => {
@@ -104,10 +117,12 @@ router.post('/add_reviewer', (req, res) => {
 })
 
 router.get('/submissions', (req, res) => {
-    const { email } = req.query;
+    const decodedData = jwt.decode(req.cookies.token, {complete: true});
+    const email = decodedData.payload.email || decodedData.payload.Email;
+    // const { email } = req.query;
     // if (!admins.includes(email))
     //     return res.json({'status': 'failure', 'msg': 'User has no admin privileges'});
-    Team.find({"submission.reviewer": email})
+    Team.find({/*"submission.reviewer": email*/ submitted: true})
         .then(teams => {
             let submissions = [];
             for(var i in teams){
