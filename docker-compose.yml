@@ -1,5 +1,11 @@
 version: '3.0'
 
+volumes:
+  data:
+    external:
+      name: mongo_vol
+  redis-data:
+
 services:
   heaven:
     build: heaven
@@ -15,18 +21,36 @@ services:
     - database
     - redis-server
     restart: always
+    volumes:
+      - ./hell/storage:/usr/src/app/storage
 
   redis-server:
     image: redis
+    command: ["redis-server", "--appendonly", "yes"]
     ports:
     - "6379:6379"
+    volumes:
+      - redis-data:/data
 
   database:
     container_name: mongo
     image: mongo
     ports:
     - "27017:27017"
-    environment: 
+    environment:
       MONGO_INITDB_DATABASE: "sih_platform"
       MONGODB_INITDB_ROOT_USERNAME: ""
       MONGODB_INITDB_ROOT_PASSWORD: ""
+    volumes:
+      - data:/data/db
+
+  mongo-express:
+    container_name: mongo-monitor
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_BASICAUTH_USERNAME: kiteretsu
+      ME_CONFIG_BASICAUTH_PASSWORD: korusuke
+      ME_CONFIG_OPTIONS_EDITORTHEME: ambiance

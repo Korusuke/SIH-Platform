@@ -59,7 +59,7 @@ export default class ProblemDefinition extends React.Component{
                                 margin: 'auto',
                                 marginTop: '50px',
                             }}><div style={{width:'100%'}}>
-                                
+
                                 <CommentsContainer psid={this.props.num}/>
                                 </div>
                                 </Box>

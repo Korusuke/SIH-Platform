@@ -12,15 +12,15 @@ require('dotenv').config();
 
 var app = express();
 
-// const privateKey = fs.readFileSync('./certificates/privkey.pem', 'utf8');
-// const certificate = fs.readFileSync('./certificates/cert.pem', 'utf8');
-// const ca = fs.readFileSync('./certificates/chain.pem', 'utf8');
+const privateKey = fs.readFileSync('./certificates/privkey.pem', 'utf8');
+const certificate = fs.readFileSync('./certificates/cert.pem', 'utf8');
+const ca = fs.readFileSync('./certificates/chain.pem', 'utf8');
 
-// const credentials = {
-// 	key: privateKey,
-// 	cert: certificate,
-// 	ca: ca
-// };
+const credentials = {
+	key: privateKey,
+	cert: certificate,
+	ca: ca
+};
 
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
@@ -49,7 +49,8 @@ app.use(bodyParser.urlencoded({
 const uri = process.env.MONGODB_URI;
 console.log(uri);
 mongoose.connect(uri, {
-    useNewUrlParser: true
+  useNewUrlParser: true,
+  server: { auto_reconnect: true } 
 }).then(() => console.log('MongoDB connected'))
 .catch(err => console.log(err));
 
@@ -59,14 +60,14 @@ app.use('/submission', require('./routes/submission'));
 app.use('/export', require('./routes/export.js'));
 app.use('/team', require('./routes/team'));
 app.use('/user', require('./routes/user'));
-app.use('/admin', require('./routes/admin'));
+// app.use('/admin', require('./routes/admin'));
 app.use('/', require('./routes/login'));
 app.use('/forgotPassword', require('./routes/forgotPassword'));
 
 app.use('/images', express.static(__dirname + '/storage/userphotos'));
 app.use('/storage', express.static(__dirname + '/storage'));
 
-// app = https.createServer(credentials, app);
+app = https.createServer(credentials, app);
 const port = 8080;
 app.listen(port, () => {
 	console.log('Hey, listening on port %s', port);
