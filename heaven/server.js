@@ -37,8 +37,15 @@ app.prepare().then(() => {
     })
 
     server.get('/submission/:id', (req, res) => {
-        return res.redirect('/profile')
-        return app.render(req, res, '/submission', req.query)
+        if(req.cookies && req.cookies.token)
+            return app.render(req, res, '/submission', req.query)
+        return res.redirect('/')
+    })
+
+    server.get('/submission', (req, res) => {
+        if (req.cookies && req.cookies.token)
+            return app.render(req, res, '/submission', req.query)
+        return res.redirect('/')
     })
 
     server.get('/admin', (req, res) => {

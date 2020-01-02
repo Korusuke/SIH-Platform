@@ -2,6 +2,7 @@ const express = require('express');
 const redis = require('redis');
 const router = express.Router();
 const User = require('../models/user.model');
+const Team = require('../models/team.model');
 const jwt = require('jsonwebtoken');
 const _ = require("lodash")
 
@@ -27,6 +28,28 @@ var storage = multer.diskStorage({
 })
 
 var upload = multer({ storage: storage }).single('profilePic')
+
+
+router.get('/leader', (req, res) => {
+    const decodedData = jwt.decode(req.cookies.token, {complete: true});
+    // console.log('Decode: ',decodedData)
+    const email = decodedData.payload.email || decodedData.payload.Email;
+    User.findOne({email})
+        .then(user => {
+            Team.findOne({'teamId': user.teamId})
+                .then(team => {
+                    let role;
+                    if(team.leader==email)
+                        role = 'leader'
+                    else
+                        role = 'member'
+                    return res.json({'status': 'success', 'msg': 'Sending role', role})
+                })
+                .catch(err => {return res.status(500)})
+        })
+        .catch(err => {return res.status(500)})
+    return res.status(500)
+})
 
 router.post('/', upload, (req, res) => {
 
