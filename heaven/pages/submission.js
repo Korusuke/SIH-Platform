@@ -34,7 +34,8 @@ export default class Submission extends React.Component {
         this.props = props;
         this.state = {
             teams: [],
-            found: []
+            found: [],
+            theme: 'light'
         };
 
         this.handler = this.handler.bind(this);
@@ -59,6 +60,14 @@ export default class Submission extends React.Component {
                     localStorage.setItem("siteTheme", "light");
                 }
             );
+        }
+    }
+
+    componentDidMount()
+    {
+        if(localStorage.getItem('siteTheme') && this.state.theme != localStorage.getItem('siteTheme') )
+        {
+            this.setState({theme:localStorage.getItem('siteTheme')})
         }
     }
 
@@ -104,8 +113,7 @@ export default class Submission extends React.Component {
                             }}
                         >
                             <Header
-                                theme={customtheme}
-                                themeState={this.state.theme}
+                                 loggedin={true} theme={customtheme} themeState={this.state.theme}
                             />
                             <NoiceBanner
                                 text="Submission"
