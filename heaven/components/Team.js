@@ -1,27 +1,34 @@
 import React from 'react';
-import { Paper, Grid, Button, Card } from '@material-ui/core';
+import { Paper, Grid, Button, Card, FormControl, InputLabel, MenuItem, Select } from '@material-ui/core';
 import ImportExportIcon from '@material-ui/icons/ImportExport';
 import TurnedInIcon from '@material-ui/icons/TurnedIn';
 
 import FileSaver from 'file-saver';
-
 import Center from 'react-center';
+
+import envvar from '../env';
 
 export default class Team extends React.Component {
 
     constructor(props) {
         super(props);
         this.props = props;
+        this.state = {
+            reviewers: {
+
+            }
+        }
         this.exportcsv = this.exportcsv.bind(this);
+        this.handleChange = this.handleChange.bind(this);
     }
     
     exportcsv(teamId) {
         let team = this.props.teams.filter(obj => obj.id == teamId)[0]
         let result = ""
-        let keys = ["firstName", "middleName", "lastName", "gender", "year", "department", "phone", "comments", "labels", "isLeader", "teamName"]
+        let keys = ["firstName", "middleName", "lastName", "gender", "year", "department", "phone", "isLeader", "teamName"]
         result += keys.join( ",") + "\n"
         team.members.forEach(e=>{
-            console.log(e)
+            // console.log(e)
             for(let i = 0; i<keys.length -4; i++)
             {
                 result += e[keys[i]] + ","
@@ -32,9 +39,35 @@ export default class Team extends React.Component {
             result += team.name + "\n"
             
         })
-        console.log(result)
         let blob = new Blob([result], {type: "text/csv;charset=utf-8"});
         FileSaver.saveAs(blob, `${team.name}_data.csv`);
+    }
+
+    handleChange(event) {
+        let { name, value } = event.target;
+        let reviewers = this.state.reviewers;
+        reviewers[name] = value;
+        // console.log(name , value);
+        this.setState({
+            reviewers
+        })
+        fetch(`${envvar.REACT_APP_SERVER_URL}/admin/add_reviewer`, {
+            method: "POST",
+            credentials: "include",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                'reviewer': value,
+                'teamName': name
+            })
+        })
+            .then(res => res.json())
+            .then(data => {
+                console.log(data);
+            })
+
     }
 
     render() {
@@ -69,6 +102,30 @@ export default class Team extends React.Component {
                         <Button variant="contained" style={{backgroundColor: '#001155', color: '#ffffff', margin: '5px', width:'100%'}} startIcon={<ImportExportIcon />}
                             onClick={() => {this.exportcsv(team.id)}}>Export Team</Button>
                         <br/>
+                        <br/>
+                        <FormControl
+                                variant="outlined"
+                                style={{
+                                    width: '100%'
+                                }}
+                            >
+
+                            <InputLabel id="reviewer-select" >Reviewer</InputLabel>
+                            <Select
+                                labelId="reviewer-select"
+                                label="Reviewer"
+                                name={team.name}
+                                value={team.submission.reviewer}
+                                onChange={this.handleChange}
+                                autoWidth
+                            >
+
+                            {['avani.sakhapara@somaiya.edu', ''].map(e => (<MenuItem key={e} value={e}>
+                                {e}
+                            </MenuItem>))}
+
+                            </Select>
+                        </FormControl>
                     </Grid>
                     <Grid item xs={12} md={9}>
                         {members}
