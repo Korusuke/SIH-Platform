@@ -17,28 +17,31 @@ client.on("error", err => {
     console.log("Something went wrong ", err);
 });
 
+const admins = ['avani.sakhapara@somaiya.edu']
+
 router.get("/", (req, res) => {
-    // try{
-    //     const decodedData = jwt.decode(req.cookies.token, {complete: true});
-    //     console.log('Decode: %s',decodedData)
-    //     // Remove req.body.email for production env
-    //     const admin = decodedData.payload.email || decodedData.payload.Email
-    //     const admins = ['rushang.g@somaiya.edu']
-    //     if (!admins.includes(admin))
-    //         return res.json({'status': 'failure', 'msg': 'User has no admin privileges'});
-    // } catch(err) {return res.json({'status': 'failure', 'msg': 'User has no admin privileges'})};
+    try{
+        const decodedData = jwt.decode(req.cookies.token, {complete: true});
+        console.log('Decode: %s',decodedData)
+        // Remove req.body.email for production env
+        const admin = decodedData.payload.email || decodedData.payload.Email
+        if (!admins.includes(admin))
+            return res.json({'status': 'failure', 'msg': 'User has no admin privileges'});
+    } catch(err) {return res.json({'status': 'failure', 'msg': 'User has no admin privileges'})};
     
     Team.find({})
         .then(teams => {
             const data = [];
-            console.log('TEAM', teams.length)
+            // console.log('TEAM', teams.length)
             
             for (let i in teams) {
-                console.log('I', i)
+                // console.log('I', i)
                 let team_data = {
                     id: teams[i].teamId,
                     name: teams[i].teamName,
-                    members: []
+                    members: [],
+                    submission: teams[i].submission,
+                    submitted: teams[i].submitted
                 };
 
                 User.find({ email: { $in: teams[i].members } })
@@ -46,17 +49,14 @@ router.get("/", (req, res) => {
                         members = users;
                         let user_data;
                         //console.log('DATA', data)
-                        for (var i in users) {
-                            let {email, firstName, lastName, middleName, gender, year, department, division, comments, labels, profilePic, phone} = users[i]
+                        for (var j in users) {
+                            let {email, firstName, lastName, middleName, gender, year, department, division, comments, labels, profilePic, phone} = users[j]
                             user_data = {email, firstName, lastName, middleName, gender, year, department, division, comments, labels, profilePic, phone}
                             
-                            console.log(email, teams[i].leader)
                             if (user_data.email == teams[i].leader)
                                 user_data.role = "leader";
-                            //console.log(user_data)
                             team_data.members.push(user_data);
                         }
-                        // return team_data
 
                         data.push(team_data);
                         if (data.length == teams.length) {
@@ -70,4 +70,55 @@ router.get("/", (req, res) => {
         .catch(err => console.log(err));
 });
 
+router.post('/add_score', (req, res) => {
+    const decodedData = jwt.decode(req.cookies.token, {complete: true});
+    const email = decodedData.payload.email || decodedData.payload.Email;
+    const { scores } = req.body;
+    Team.findOne({teamId: user.teamId})
+        .then(team => {
+            for(var key in scores) {
+                team.submission.scores[key] = scores[key];
+            }
+            team.save()
+                .then(() => {return res.json({'status': 'success', 'msg': 'Scores added!'})})
+                .catch(err => {return res.json({'status': 'failure', 'msg': 'Some error occurred!'})})
+        })
+        .catch(err => {return res.json({'status': 'failure', 'msg': 'Some error occurred!'})})
+})
+
+router.post('/add_reviewer', (req, res) => {
+    const decodedData = jwt.decode(req.cookies.token, {complete: true});
+    const email = decodedData.payload.email || decodedData.payload.Email;
+    // if (!admins.includes(email))
+    //     return res.json({'status': 'failure', 'msg': 'User has no admin privileges'});
+    const { reviewer, teamName } = req.body
+    // console.log(reviewer, teamName);
+    Team.findOne({teamName})
+        .then(team => {
+            team.submission.reviewer = reviewer;
+            team.save()
+                .then(() => res.json({'status': 'success', 'msg': 'Reviewer Added'}))
+                .catch(err => {console.log(err); return res.json({'status': 'failure', 'msg': 'Error occurred'})})
+            })
+        .catch(err => {return res.json({'status': 'failure', 'msg': 'Error occurred'})})
+})
+
+router.get('/submissions', (req, res) => {
+    const { email } = req.query;
+    // if (!admins.includes(email))
+    //     return res.json({'status': 'failure', 'msg': 'User has no admin privileges'});
+    Team.find({"submission.reviewer": email})
+        .then(teams => {
+            let submissions = [];
+            for(var i in teams){
+                submissions.push({
+                    teamId: teams[i].teamId,
+                    teamName: teams[i].teamName,
+                    submission: teams[i].submission
+                })
+            }
+            return res.json({'status': 'success', 'msg': 'Submissions fetched', 'submissions': submissions});
+        })
+        .catch(err => {return res.json({'status': 'failure', 'msg': 'Error occurred'})})
+})
 module.exports = router;
