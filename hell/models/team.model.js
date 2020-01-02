@@ -16,8 +16,8 @@ const teamSchema = new Schema({
         company: String,
         category: String,
         description: String,
-        ps_id: String,
-        video_link: String,
+        number: String,
+        link: String,
         scores: {
             novelty: {type: Number, min: 0, max: 10},
             feasibility: {type: Number, min: 0, max: 10},
