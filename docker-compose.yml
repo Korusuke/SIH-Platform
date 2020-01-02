@@ -52,5 +52,5 @@ services:
       - 8081:8081
     environment:
       ME_CONFIG_BASICAUTH_USERNAME: ""
-      ME_CONFIG_BASICAUTH_PASSWORD: korusuke
+      ME_CONFIG_BASICAUTH_PASSWORD: ""
       ME_CONFIG_OPTIONS_EDITORTHEME: ambiance
