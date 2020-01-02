@@ -16,19 +16,20 @@ import ReactHtmlParser, {
     htmlparser2
 } from "react-html-parser";
 
+import * as Showdown from "showdown";
+
+const converter = new Showdown.Converter({
+    tables: true,
+    simplifiedAutoLink: true,
+    strikethrough: true,
+    tasklists: true
+});
+
 export default class SubmissionCard extends React.Component {
     constructor(props) {
         super(props);
         this.props = props;
-        this.state = {
-            category: '',
-            description: '',
-            company: '',
-            number: '',
-            title: '',
-            domain: '',
-            link: '',
-        }
+        
     }
 
     componentDidMount() {
@@ -37,13 +38,8 @@ export default class SubmissionCard extends React.Component {
 
     render() {
         return (
-        <Container style={{ margin: "30px auto" }}>
-            <Center>
-                Here you can see the selected problem statement and the
-                submission made by your team leader. <br />
-                If you have something else in mind, express it to your team
-                leader before the submission deadline.
-            </Center>
+        <div>
+            
             <Paper style={{ padding: "32px", margin: "30px auto" }}>
                 <Grid container direction="row" spacing={3}>
                     <Grid item md={4} xs={6}>
@@ -52,7 +48,7 @@ export default class SubmissionCard extends React.Component {
                             disabled={true}
                             id="outlined-required"
                             label="Category"
-                            value={this.state.submission.category}
+                            value={this.props.submission.category}
                             variant="outlined"
                         />
                     </Grid>
@@ -62,7 +58,7 @@ export default class SubmissionCard extends React.Component {
                             disabled={true}
                             id="outlined-required"
                             label="Company"
-                            value={this.state.submission.company}
+                            value={this.props.submission.company}
                             variant="outlined"
                         />
                     </Grid>
@@ -72,7 +68,7 @@ export default class SubmissionCard extends React.Component {
                             disabled={true}
                             id="outlined-required"
                             label="Domain"
-                            value={this.state.submission.domain}
+                            value={this.props.submission.domain}
                             variant="outlined"
                         />
                     </Grid>
@@ -82,7 +78,7 @@ export default class SubmissionCard extends React.Component {
                             disabled={true}
                             id="outlined-required"
                             label="Number"
-                            value={this.state.submission.number}
+                            value={this.props.submission.number}
                             variant="outlined"
                         />
                     </Grid>
@@ -92,7 +88,7 @@ export default class SubmissionCard extends React.Component {
                             disabled={true}
                             id="outlined-required"
                             label="Title"
-                            value={this.state.submission.title}
+                            value={this.props.submission.title}
                             variant="outlined"
                         />
                     </Grid>
@@ -110,7 +106,7 @@ export default class SubmissionCard extends React.Component {
                     >
                         {ReactHtmlParser(
                             converter.makeHtml(
-                                this.state.submission.description
+                                this.props.submission.description
                             )
                         )}
                     </div>
@@ -122,13 +118,13 @@ export default class SubmissionCard extends React.Component {
                             disabled={true}
                             id="outlined-required"
                             label="Link"
-                            value={this.state.submission.link}
+                            value={this.props.submission.link}
                             variant="outlined"
                         />
                     </Grid>
                 </Grid>
             </Paper>
-        </Container>
+        </div>
         );    
     }
 }
