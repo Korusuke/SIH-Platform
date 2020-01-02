@@ -50,7 +50,7 @@ const uri = process.env.MONGODB_URI;
 console.log(uri);
 mongoose.connect(uri, {
   useNewUrlParser: true,
-  server: { auto_reconnect: true } 
+  server: { auto_reconnect: true }
 }).then(() => console.log('MongoDB connected'))
 .catch(err => console.log(err));
 
