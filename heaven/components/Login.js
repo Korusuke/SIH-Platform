@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-import { Paper, Card, TextField, Button} from '@material-ui/core';
+import { Paper, Card, TextField, Button, Grid} from '@material-ui/core';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -12,7 +12,9 @@ import Center from 'react-center';
 import axios from 'axios';
 import Snackbar from './snackbar';
 import Cookies from 'universal-cookie';
-import { useRouter, Router } from 'next/router'
+import { withRouter } from 'next/router';
+import Link  from 'next/link';
+import envvar from '../env'
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -45,12 +47,23 @@ function a11yProps(index) {
 }
 
 
-const customTheme = createMuiTheme({
+const customTheme = {
+    light: createMuiTheme({
     palette: {
+        type: 'light',
         primary: { main: '#ffffff' },
         secondary: { main: '#000000' }
     }
-});
+}),
+    dark:createMuiTheme({
+
+        palette: {
+            type: 'dark',
+            primary: { main: '#000000' },
+            secondary: { main: '#ffffff' }
+        }
+    })
+}
 
 const divStyle = {
     width: '100%',
@@ -58,11 +71,24 @@ const divStyle = {
 };
 
 const customInputTheme = createMuiTheme({
-    palette: {
-        primary: { main: '#000000' },
+    light: createMuiTheme({
+        palette: {
+            type: 'light',
+            primary: { main: '#000000' },
         secondary: { main: '#00ff00' },
         error: { main: '#ff0000' }
-    }
+        }
+    }),
+        dark:createMuiTheme({
+    
+            palette: {
+                type: 'dark',
+                primary: { main: '#000000' },
+        secondary: { main: '#00ff00' },
+        error: { main: '#ff0000' }
+            }
+        })
+    
 });
 
 const customOTPTheme = createMuiTheme({
@@ -73,7 +99,7 @@ const customOTPTheme = createMuiTheme({
     }
 });
 
-export default class LoginBox extends React.Component{
+class LoginBox extends React.Component{
     state = {
         value: 0,
         login: {
@@ -152,6 +178,9 @@ export default class LoginBox extends React.Component{
     handleLoginSubmit = () => {
         const { loginData } = this.state.login;
         const { email } = loginData
+        this.setState({
+            loginSubmitted: true
+        })
         axios.post(`${this.props.url}/login/`, loginData).then(
             res => {
                 console.log(res.data)
@@ -161,8 +190,15 @@ export default class LoginBox extends React.Component{
                         const cookies = new Cookies();
                         cookies.set('token', res.data.token, { path: '/' });
                         console.log(cookies.get('token')); // Pacman
-                        location.href = '/problems'
+                        // location.href = '/problems'
+                        const { router } = this.props;
+                        router.push('/problems');
 
+                    }
+                    else{
+                        this.setState({
+                            loginSubmitted: false
+                        })
                     }
                     this.snackcontent = <Snackbar type={res.data.status} msg={res.data.msg} />;
                     this.setState({ snack: true });
@@ -189,8 +225,9 @@ export default class LoginBox extends React.Component{
                         const cookies = new Cookies();
                         cookies.set('token', res.data.token, { path: '/' });
                         console.log(cookies.get('token')); // Pacman
-
-                        location.href='/problems'
+                        const { router } = this.props;
+                        router.push('/profile');
+                        // location.href='/profile'
 
                     }
                     this.snackcontent = <Snackbar type={res.data.status} msg={res.data.msg} />;
@@ -248,7 +285,7 @@ export default class LoginBox extends React.Component{
         let signupPanel;
         if (signupSubmitted) {
             signupPanel =
-                <MuiThemeProvider theme={customInputTheme}>
+                <MuiThemeProvider theme={customInputTheme[this.props.themeState]}>
                     <ValidatorForm
                         ref="form"
                         onSubmit={this.handleOTPVerify}
@@ -282,7 +319,7 @@ export default class LoginBox extends React.Component{
                     </ValidatorForm>
                 </MuiThemeProvider>
         } else {
-            signupPanel = <MuiThemeProvider theme={customInputTheme}>
+            signupPanel = <MuiThemeProvider theme={customInputTheme[this.props.themeState]}>
                 <ValidatorForm
                     ref="form"
                     onSubmit={this.handleSignUpSubmit}
@@ -296,7 +333,7 @@ export default class LoginBox extends React.Component{
                             name="email"
                             value={SignUpData.email}
                             validators={['required', 'isEmail', 'isEmailSomaiya']}
-                            errorMessages={['Email Dena Padega Bro/Sis', 'Aeee Mail Daal', 'Aeee Bro Somaiya Wala']}
+                            errorMessages={['Enter your Email-ID', 'Enter an Email-ID', 'Please use somaiya Email-ID']}
                             variant="outlined"
                             required
 
@@ -354,7 +391,7 @@ export default class LoginBox extends React.Component{
         }
 
         return (
-            <MuiThemeProvider theme={customTheme}>
+            <MuiThemeProvider theme={customTheme[this.props.themeState]}>
                 {this.state.snack ? this.snackcontent : null}
                 <Paper style={divStyle}>
                     <AppBar position="static">
@@ -364,7 +401,7 @@ export default class LoginBox extends React.Component{
                         </Tabs>
                     </AppBar>
                     <TabPanel value={this.state.value} index={0}>
-                            <MuiThemeProvider theme={customInputTheme}>
+                            <MuiThemeProvider theme={customInputTheme[this.props.themeState]}>
                                 <ValidatorForm
                                     ref="form"
                                     onSubmit={this.handleLoginSubmit}
@@ -378,7 +415,7 @@ export default class LoginBox extends React.Component{
                                             name="email"
                                             value={loginData.email}
                                             validators={['required', 'isEmail', 'isEmailSomaiya']}
-                                            errorMessages={['Email Dena Padega Bro/Sis', 'Aeee Mail Daal', 'Aeee Bro Somaiya Wala']}
+                                            errorMessages={['Enter your Email-ID', 'Enter an Email-ID', 'Please use somaiya Email-ID']}
                                             variant="outlined"
                                             required
 
@@ -402,19 +439,27 @@ export default class LoginBox extends React.Component{
                                     />
                                 </Center>
                                 <br />
-                                <Center>
-                                    <Button
-                                        color="secondary"
-                                        variant="contained"
-                                        type="submit"
-                                        disabled={loginSubmitted}
-                                    >
-                                        {
-                                            (loginSubmitted && 'Logging you in...')
-                                            || (!loginSubmitted && 'Submit')
-                                        }
-                                    </Button>
-                                </Center>
+                                    <Grid container direction="row">
+                                        <Grid item xs={7}>
+                                            <Center>
+                                                <Button
+                                                    color="secondary"
+                                                    variant="contained"
+                                                    type="submit"
+                                                    disabled={loginSubmitted}
+                                                >
+                                                    {
+                                                        (loginSubmitted && 'Logging you in...')
+                                                        || (!loginSubmitted && 'Submit')
+                                                    }
+                                                </Button>
+                                            </Center>
+                                        </Grid>
+                                        <Grid item xs={5}>
+                                                <Link href='/forgot' as='/forgot'><a style={{color:this.props.themeState == 'dark'? 'white': 'black'}}>Forgot Password?</a></Link>
+                                        </Grid>
+                                    </Grid>
+                                
                                 </ValidatorForm>
                             </MuiThemeProvider>
                     </TabPanel>
@@ -426,3 +471,5 @@ export default class LoginBox extends React.Component{
         );
     }
 }
+
+export default withRouter(LoginBox);

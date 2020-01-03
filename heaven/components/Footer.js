@@ -13,13 +13,12 @@ export default function Footer(){
                bottom:0,
                width: '100%',
                height:'45px',
-               background:'white',
                boxSizing: 'border-box',
             }}
 
             >
                <Center style={{height:'100%'}}>
-                  <span><b>Made with <FontAwesomeIcon icon={faCoffee} style={{color:'#a05a07'}}/> and <FontAwesomeIcon icon={faHeart} style={{color:'red'}}/>  by Team Probably</b></span>
+             <span><b>Made with <FontAwesomeIcon icon={faCoffee} width="18" style={{ color: '#a05a07' }} /> and <FontAwesomeIcon icon={faHeart} width="18" style={{color:'red'}}/>  by Team Probably</b></span>
                </Center>
             </Box>
 

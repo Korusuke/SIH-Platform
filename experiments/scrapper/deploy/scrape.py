@@ -21,6 +21,7 @@ count = 0
 
 def cleaner(text):
     text = text.strip()
+    re.sub(' +',' ',text)
     text = "".join(re.findall(r"[a-zA-Z0-9,()'\":;{}[\]\\/. ]", text))
     return text
 
@@ -74,11 +75,11 @@ def logo_parser(company, logo_url):
         image_name = "company_logo/{}.{}".format(company, logo_url.split('.')[-1])
         with open(image_name, 'wb') as file:
             file.write(image_data)
-    logo_url = "/storage/company_logo/" + image_name
+    logo_url = "/storage/" + image_name
     return logo_url
 
-
-for i in range(1, pages + 1):
+#print(pages)
+for i in range(1, pages+1):
     rurl = url + str(i)
     r = requests.get(rurl)
     data = r.text
@@ -104,7 +105,7 @@ for i in range(1, pages + 1):
              ps_title, ps_desc, yt_link, ds_link, logo_url]
         count += 1
         all.append(g)
-    # print('xxxxxxx')
+    print(i)
 print(count)
 
 
@@ -130,10 +131,10 @@ with csvfile:
 from pymongo import MongoClient
 
 # Push to MongoDB
-mongodb_uri = "mongodb://probably:pr0b4bly@ds255857.mlab.com:55857/sih_platform"
+mongodb_uri = "mongodb://localhost:27017/sih_platform"
 client = MongoClient(mongodb_uri)
 db = client.sih_platform
-col = db.problem_statements
+col = db.ps
 print(col)
 count = 0
 try:
@@ -142,18 +143,18 @@ try:
         count += 1
         # print(ps[1])
         data = {
-            "company": ps[0],
-            "id": ps[1],
-            "category": ps[2],
-            "domain": ps[3],
-            "title": ps[4],
-            "description": ps[5],
-            "youtube": ps[6],
-            "dataset": ps[7],
-            "logo": ps[8],
+            "Company": ps[0],
+            "Number": ps[1],
+            "Category": ps[2],
+            "Domain": ps[3],
+            "Title": ps[4],
+            "Description": ps[5],
+            "Youtube": ps[6],
+            "Dataset": ps[7],
+            "Logo": ps[8],
         }
         # print(col.find({'Number': data['Number']}))
-        if col.find({'id': data['id']}).count() == 0:
+        if col.find({'Number': data['Number']}).count() == 0:
             print(ps[1])
             col.insert(data)
 except Exception as err:
