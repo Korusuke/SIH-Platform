@@ -12,10 +12,12 @@ const userSchema = new Schema({
         type: String,
         required: true
     },
+    bio: {type: String},
+    resume: {type: String},
     firstName: {type: String},
     middleName: {type: String},
     lastName: {type: String},
-    phone: {type: Number},
+    phone: {type: String},
     gender: {type: String},
     dob: {type: Date},
     rollNo: {type: Number},
@@ -29,11 +31,19 @@ const userSchema = new Schema({
             psid: String,
             id: Number,
             deletable: {type: Boolean, default: false},
+            profilePic: {type: String},
             comment: {
                 author: String,
                 message: String
             },
             time: Date
+        }
+    ],
+    labels: [
+        {
+            psid: String,
+            label: String,
+            color: String
         }
     ],
     comments_count: {type: Number, default: 0}

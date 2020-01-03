@@ -4,14 +4,39 @@ import Center from 'react-center';
 import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
+import Router from "next/router";
+import Link from "next/link";
+import {MuiThemeProvider, createMuiTheme} from '@material-ui/core'
+import Favicon from 'react-favicon';
+import Cookies from 'universal-cookie';
+import AppsIcon from '@material-ui/icons/Apps';
 
-export default function Header(){
+import Tracker from '../components/tracker';
+
+export default function Header(props){
     const [anchorEl, setAnchorEl] = React.useState(null);
+    // const [profilePic, setProfilePic] = React.useState(null);
 
+    const handleProfile = () =>
+    {
+        Router.push("/profile");
+    }
+    const handleProblems = () =>
+    {
+        Router.push("/problems");
+    }
     const handleClick = event => {
+        console.log('open')
       setAnchorEl(event.currentTarget);
     };
+    const handleLogout = () =>{
+        const cookies = new Cookies()
+        cookies.remove('token')
+        // Router.push("/");
+        location.href = '/'
+    }
     const handleClose = () => {
+        console.log('close')
         setAnchorEl(null);
       };
     let styles = {
@@ -25,8 +50,11 @@ export default function Header(){
         }
 
     }
+    // console.log(props)
     return (
         <div>
+            <Tracker />
+            <Favicon url="/assets/favicon/favicon.ico" />
             <AppBar position="static" style={
                 {
                     backgroundColor: 'white',
@@ -55,8 +83,32 @@ export default function Header(){
                                 <h1>Internal Hackathon</h1>
                             </Center>
                         </Grid>
-                        
-                        
+                        { props.loggedin ?
+                        <Grid item sm={2} xs={12}>
+                        <Center style={{height:'100%'}}>
+                            <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
+                            <AppsIcon  style={{color:'black', fontSize:'32px'}} />
+                            </Button>
+                            <Menu
+                                id="simple-menu"
+                                anchorEl={anchorEl}
+                                // keepMounted
+                                open={Boolean(anchorEl)}
+                                onClose={handleClose}
+                            >
+                                <MenuItem ><Link href="/profile" as={"/profile"}><a style={{textDecoration: 'none',  color:props.themeState == 'dark'? 'white':'black'}}>Profile</a></Link></MenuItem>
+                                <MenuItem ><Link href="/problems" as={"/problems"}><a style={{textDecoration: 'none', color:props.themeState == 'dark'? 'white':'black'}}>Problems</a></Link></MenuItem>
+                                <MenuItem ><Link href="/submission" as={"/submission"}><a style={{textDecoration: 'none', color:props.themeState == 'dark'? 'white':'black'}}>Submission</a></Link></MenuItem>
+                                <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                            </Menu>
+                            </Center>
+                        </Grid>
+                        :
+                        null
+                        }
+
+
+
                     </Grid>
 
                 </Toolbar>

@@ -9,7 +9,7 @@ const jwt = require('jsonwebtoken');
 const {verifyToken} = require('./token');
 
 const client = redis.createClient({
-  host: 'redis-server',
+  host: process.env.REDIS_KA_THING,
   port: 6379
 });
 client.on('error', (err) => {
@@ -54,12 +54,27 @@ router.post('/create', (req, res)=>{
       if(err){
         return console.log(err);
       }
-      console.log("Saved", result);
-      res.json({
-        'status': 'success',
-        'msg': 'Team Created Successfully',
-        'inviteCode':inviteCode,
-        team: team1
+      User.findOne({email: leader})
+        .then(user => {
+          console.log("Saved", result);
+          user.teamId = result.teamId;
+          user.save()
+            .then(() => {
+              res.json({
+                'status': 'success',
+                'msg': 'Team Created Successfully',
+                'inviteCode':inviteCode,
+                team: {
+                  teamName: result.teamName,
+                  inviteCode: inviteCode,
+                  members: [{
+                  email: user.email,
+                  role: 'leader',
+                  name: user.firstName + " " + user.lastName
+                }]
+              }
+            })
+        })
       });
     });
   });
@@ -71,7 +86,7 @@ router.post('/join', (req, res)=>{
   const decodedData = jwt.decode(req.cookies.token, {complete: true});
   console.log('Decode:',decodedData)
   const user = decodedData.payload.email || decodedData.payload.Email;
-  Team.findOne({'inviteCode': inviteCode}, (err, result)=>{
+  Team.findOne({'inviteCode': inviteCode}, async (err, result)=>{
     if(err){
       res.send(500);
       return;
@@ -85,21 +100,97 @@ router.post('/join', (req, res)=>{
       );
       return;
     }
-    result.members.push(user);
-    result.save();
-    res.json({
-      status: 'success',
-      msg:'Joined Successfully',
-      team: result
-    });
-    User.findOne({'email': user}, (err, user)=>{
-      if(err){
-        res.send(500);
+    console.log(result.members.length);
+    result.members = [...new Set(result.members)];
+    if(result.members.length===6) {
+      return res.json(
+        {
+          status: 'error',
+          msg: 'Team already full'
+        }
+      );
+    }
+    if(result.members.length===5){
+      let qry = []
+      result.members.forEach(el => {
+        qry.push({"email": el});
+      });
+      qry.push({"email": decodedData.payload.email});
+      console.log(qry);
+      r = await User.find({$or: qry}, {'gender':1, 'email':1});
+      let genders = new Set();
+      r.forEach(el=>{
+        console.log("Gender", el.gender);
+        genders.add(el.gender);
+      });
+      console.log(genders);
+      if(!genders.has('Female')){
+        res.json({
+          msg: 'No girl present in team, unable to join'
+        });
         return;
       }
-      user.teamId = result.teamId;
-      user.save();
-    });
+      if(result.members)
+      result.members.push(user);
+      result.save();
+      let members = []
+      User.find({email: {'$in': result.members}})
+        .then(users => {
+            for(var i in users){
+              members.push({
+                email: users[i].email,
+                name: users[i].firstName + ' ' + users[i].lastName,
+                role: users[i].email==result.leader ? 'leader' : 'member'
+              });
+              if(users[i].email==user) {
+                users[i].teamId = result.teamId;
+                users[i].save();
+              }
+            }
+            return res.json({
+              status: 'success',
+              msg:'Joined Successfully',
+              inviteCode: result.inviteCode,
+              team: {
+                teamName: result.teamName,
+                inviteCode: result.inviteCode,
+                members
+              }
+            });
+          }
+        ).catch(err => console.log(err));
+    }
+    else{
+      if(result.members)
+      result.members.push(user);
+      result.save();
+      let members = []
+      User.find({email: {'$in': result.members}})
+        .then(users => {
+            for(var i in users){
+              members.push({
+                email: users[i].email,
+                name: users[i].firstName + ' ' + users[i].lastName,
+                role: users[i].email==result.leader ? 'leader' : 'member'
+              });
+              if(users[i].email==user) {
+                users[i].teamId = result.teamId;
+                users[i].save();
+              }
+            }
+            return res.json({
+              status: 'success',
+              msg:'Joined Successfully',
+              inviteCode: result.inviteCode,
+              team: {
+                teamName: result.teamName,
+		inviteCode: result.inviteCode,
+                members
+              }
+            });
+          }
+        ).catch(err => console.log(err));
+    }
   });
 });
 
@@ -120,14 +211,23 @@ router.post('/currentTeam', (req, res)=>{
       );
       return;
     }
-    console.log(result);
-
-    res.json({
-      status: 'success',
-      state: 3,
-      team:result
-    });
-
+    var team_data = {
+      teamName: result.teamName,
+      inviteCode: result.inviteCode,
+      members: []
+    }
+    User.find({email: {'$in': result.members}})
+      .then(users => {
+          members = users;
+          for(var i in users)
+            team_data.members.push({
+              email: users[i].email,
+              name: users[i].firstName + ' ' + users[i].lastName,
+              role: users[i].email==result.leader ? 'leader' : 'member'
+            });
+          return res.json({'status': 'success', 'state': 3, 'team': team_data});
+        }
+      ).catch(err => console.log(err));
   });
 });
 
@@ -140,16 +240,24 @@ router.post('/exit', verifyToken, (req,res)=>{
       res.send(500)
       return;
     }
-
       let index = data.members.indexOf(user);
-
+	console.log(index);
+	console.log(data.members)
       if (index > -1)
         data.members.splice(index, 1);
-
-      if(data.members)
+	console.log(data.members)
+      if(data.members.length!=0){
         data.leader=data.members[0]
-      data.save();
-      res.json({status: 'success', msg: 'Exited team'});
+        data.save();
+      }
+      else
+        data.remove();
+      User.findOne({email: user})
+        .then(user => {
+          user.teamId = "";
+          user.save();
+          res.json({status: 'success', msg: 'Exited team'});
+        })
 
   });
 });

@@ -6,8 +6,9 @@ export default function NoiceBanner(props)
 {
     return (
         <div style ={{
-            backgroundImage: props.backgroundImage ? `url(${props.backgroundImage})` : null,
             background: props.backgroundImage ? null : "purple",
+            backgroundImage: props.backgroundImage ? `url(${props.backgroundImage})` : null,
+            
             backgroundSize: 'cover',
             height : '30vh',
             maxHeight: '250px',

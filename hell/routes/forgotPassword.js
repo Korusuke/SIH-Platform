@@ -6,8 +6,12 @@ const password = process.env.PASSWORD;
 const redis = require('redis');
 const EXPIRE_IN = 60*60; // 1 hr
 
+const crypto = require('crypto');
+
+const User = require('../models/user.model');
+
 const client = redis.createClient({
-  host: 'redis-server',
+  host: process.env.REDIS_KA_THING,
   port: 6379
 });
 client.on('error', (err) => {
@@ -16,12 +20,15 @@ client.on('error', (err) => {
 
 router.post('/',(req,res)=>{
   const { email } = req.body;
+  console.log(email);
   if(email===''){
     res.json({
+      status: 'failure',
       msg: 'Email ID not present'
     });
     return;
   }
+  console.log(email)
   User.findOne({email}, (err, user)=>{
     if(err){
       console.log(err);
@@ -31,12 +38,15 @@ router.post('/',(req,res)=>{
     if(user===null){
       console.log("User not present");
       res.json({
-        msg: 'Check Email-ID and retry'
+        status: 'success',
+        msg: 'If the email entered is correct, you would receive a mail with the link'
       });
       return;
     }
     let token = crypto.randomBytes(32).toString('hex');
-    client.set(token, user, 'EX', EXPIRE_IN, (err, result)=>{
+    console.log(user.email, token);
+    
+    client.set(token, user.email, 'EX', EXPIRE_IN, (err, result)=>{
       if(err){
         console.log(err);
         res.sendStatus(500);
@@ -53,17 +63,18 @@ router.post('/',(req,res)=>{
       secureConnection: true,
     });
     var mailOptions = {
-      from: emailId,
-      to: user,
-      subject: "OTP for password reset",
+      from: `SIH KJSCE <${emailId}>`,
+      to: user.email,
+      subject: "Link for password reset",
       html: `<html>
       <body>
           <p>Hey,
-          <br>A password reset request has been initiated from the IP address ${ip}.<br>
-          <br>Here is the OTP to reset your password: http://localhost:3000/reset/${token}</br>
-          <br>The OTP will expire in an hour</br>
+          <br>A password reset request has been initiated for your account from the address ${ip}.<br>
+          <br>Here is the link to reset your password: ${process.env.REACT_CLIENT_APP_URL}/reset/${token}</br>
+          <br>The link will expire in an hour</br>
           <br>
           <br>If you don't wish to reset your password, disregard this email and no action will be taken.</br>
+          <br>Contact sih-kjsce@somaiya.edu if you face any issues.</br>
           </p>
       </body>
       </html>`
@@ -71,13 +82,15 @@ router.post('/',(req,res)=>{
     transporter.sendMail(mailOptions, function(err){
       if(err){
         res.json({
-            'msg':'Failed to send mail'
+            status: 'failure',
+            msg:'Failed to send mail'
         });
         throw(err);
       }
       console.log('Mail sent succesfully');
       res.json({
-          msg: 'Check your mail for otp'
+          status: 'success',
+          msg: 'If the email entered is correct, you would receive a mail with the link'
       });
     });
     transporter.close();

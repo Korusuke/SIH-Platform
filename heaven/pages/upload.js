@@ -2,8 +2,10 @@ import React from 'react';
 import { Button } from '@material-ui/core';
 import axios from 'axios';
 
+import envvar from '../env'
+
 export default class Uploader extends React.Component {
- 
+
     constructor(props) {
         super(props);
         this.state = {
@@ -30,16 +32,16 @@ export default class Uploader extends React.Component {
             formData.append('file', this.state.files[i]);
             axios({
                 method: "post",
-                url: "http://localhost:8080/ps/upload",
+                url: `${process.env.REACT_APP_SERVER_URL}/ps/upload`,
                 headers: {
                     "Content-Type": "multipart/form-data"
                 },
                 data: formData
             }).then(res => console.log(res));
-        }       
+        }
     }
-    
- 
+
+
     render() {
         return (
             <div>
