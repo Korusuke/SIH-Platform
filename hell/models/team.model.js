@@ -10,6 +10,7 @@ const teamSchema = new Schema({
     inviteCode: {type: String},
     mentor: {type: String},
     starredPS: [String],
+    submitted: {type: Boolean, default: false},
     submission: {
         title: String,
         domain: String,
@@ -28,18 +29,13 @@ const teamSchema = new Schema({
             presentation: {type: Number, min: 0, max: 10},
             remarks: {type: String},
         },
-        reviewer: {
-            name: String,
-            email: String,
-            done: {type: Boolean, default: false}
-        }
+        reviewer_email: String,
+        reviewed: {type: Boolean, default: false},
     },
-    mentor: [
-        {
-            name: String,
-            email: String, 
-        }
-    ]
+    mentor: [{
+        name: String,
+        email: String
+    }]
 }, {
     timestamps: true,
 });
