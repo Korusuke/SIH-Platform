@@ -29,7 +29,7 @@ const teamSchema = new Schema({
             presentation: {type: Number, min: 0, max: 10},
             remarks: {type: String},
         },
-        reviewer: String,
+        reviewer_email: String,
         reviewed: {type: Boolean, default: false},
     },
     mentor: [{

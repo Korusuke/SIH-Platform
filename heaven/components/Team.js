@@ -1,5 +1,5 @@
 import React from 'react';
-import { Paper, Grid, Button, Card, FormControl, InputLabel, MenuItem, Select } from '@material-ui/core';
+import { Paper, Grid, Button, Card, FormControl, InputLabel, MenuItem, Select, Link } from '@material-ui/core';
 import ImportExportIcon from '@material-ui/icons/ImportExport';
 import TurnedInIcon from '@material-ui/icons/TurnedIn';
 
@@ -98,11 +98,12 @@ export default class Team extends React.Component {
                     <Grid item xs={12} md={3} style={{fontSize: '20px', textAlign: 'center'}}>
                         <span>Team Name:</span><br/>
                         <span>{team.name}</span><br/>
-                        <Button variant="contained" style={{backgroundColor: team.submitted ?'#00ff00' : '#ffaa00', color: '#ffffff', margin: '5px', width:'100%'}} startIcon={<TurnedInIcon />} disabled={!team.submitted}>{team.submitted ? "View Submission":"Not Submitted"}</Button>
+                        <Link href={`/review/${team.name}`} as={`/review/${team.name}`}><Button variant="contained" style={{backgroundColor: team.submitted ?'#00ff00' : '#ffaa00', color: '#ffffff', margin: '5px', width:'100%'}} startIcon={<TurnedInIcon />} disabled={!team.submitted}>{team.submitted ? "View Submission":"Not Submitted"}</Button></Link>
                         <Button variant="contained" style={{backgroundColor: '#001155', color: '#ffffff', margin: '5px', width:'100%'}} startIcon={<ImportExportIcon />}
                             onClick={() => {this.exportcsv(team.id)}}>Export Team</Button>
                         <br/>
                         <br/>
+                        {team.submitted ?
                         <FormControl
                                 variant="outlined"
                                 style={{
@@ -115,17 +116,18 @@ export default class Team extends React.Component {
                                 labelId="reviewer-select"
                                 label="Reviewer"
                                 name={team.name}
-                                value={team.submission.reviewer}
+                                value={this.state.reviewers[team.name]?this.state.reviewers[team.name]:team.submission.reviewer_email}
                                 onChange={this.handleChange}
                                 autoWidth
                             >
 
-                            {['avani.sakhapara@somaiya.edu', ''].map(e => (<MenuItem key={e} value={e}>
+                            {['avanisakhapara@somaiya.edu'].map(e => (<MenuItem key={e} value={e}>
                                 {e}
                             </MenuItem>))}
 
                             </Select>
                         </FormControl>
+                        :null }
                     </Grid>
                     <Grid item xs={12} md={9}>
                         {members}

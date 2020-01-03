@@ -17,7 +17,7 @@ client.on("error", err => {
     console.log("Something went wrong ", err);
 });
 
-const admins = ['avani.sakhapara@somaiya.edu']
+const admins = ['avanisakhapara@somaiya.edu']
 
 router.get("/", (req, res) => {
     try{
@@ -102,13 +102,13 @@ router.post('/add_score', (req, res) => {
 router.post('/add_reviewer', (req, res) => {
     const decodedData = jwt.decode(req.cookies.token, {complete: true});
     const email = decodedData.payload.email || decodedData.payload.Email;
-    // if (!admins.includes(email))
-    //     return res.json({'status': 'failure', 'msg': 'User has no admin privileges'});
+    if (!admins.includes(email))
+        return res.json({'status': 'failure', 'msg': 'User has no admin privileges'});
     const { reviewer, teamName } = req.body
     // console.log(reviewer, teamName);
     Team.findOne({teamName})
         .then(team => {
-            team.submission.reviewer = reviewer;
+            team.submission.reviewer_email = reviewer;
             team.save()
                 .then(() => res.json({'status': 'success', 'msg': 'Reviewer Added'}))
                 .catch(err => {console.log(err); return res.json({'status': 'failure', 'msg': 'Error occurred'})})
@@ -120,9 +120,10 @@ router.get('/submissions', (req, res) => {
     const decodedData = jwt.decode(req.cookies.token, {complete: true});
     const email = decodedData.payload.email || decodedData.payload.Email;
     // const { email } = req.query;
-    // if (!admins.includes(email))
-    //     return res.json({'status': 'failure', 'msg': 'User has no admin privileges'});
-    Team.find({/*"submission.reviewer": email*/ submitted: true})
+    if (!admins.includes(email))
+        return res.json({'status': 'failure', 'msg': 'User has no admin privileges'});
+    console.log(email);
+    Team.find({"submission.reviewer_email": email, submitted: true})
         .then(teams => {
             let submissions = [];
             for(var i in teams){
