@@ -2,10 +2,14 @@ const next = require('next')
 const express = require('express')
 const axios = require('axios')
 const cookieParser = require('cookie-parser');
+const jwt = require('jsonwebtoken');
+const key = ""
 const port = parseInt(process.env.PORT, 10) || 3000
 const dev = process.env.NODE_ENV !== 'production'
 const app = next({ dev })
 const handle = app.getRequestHandler()
+
+const admins = ['']
 
 app.prepare().then(() => {
     const server = express()
@@ -43,9 +47,36 @@ app.prepare().then(() => {
     })
 
     server.get('/admin', (req, res) => {
-        if(req.cookies && req.cookies.token)
-            return app.render(req, res, '/admin', req.query)
-        return res.redirect('/profile')
+        if(req.cookies && req.cookies.token){
+            const decodedData = jwt.decode(req.cookies.token, {complete: true})
+            const admin = decodedData.payload.email || decodedData.payload.Email
+            console.log(admin);
+            if (admins.includes(admin))
+                return app.render(req, res, '/admin', req.query)
+        }
+        return res.redirect('/404')
+    })
+
+    server.get('/review', (req, res) => {
+        if(req.cookies && req.cookies.token){
+            const decodedData = jwt.decode(req.cookies.token, {complete: true})
+            const admin = decodedData.payload.email || decodedData.payload.Email
+            console.log(admin);
+            if (admins.includes(admin))
+                return app.render(req, res, '/review', req.query)
+        }
+        return res.redirect('/404')
+    })
+
+    server.get('/review/:name', (req, res) => {
+        if(req.cookies && req.cookies.token){
+            const decodedData = jwt.decode(req.cookies.token, {complete: true})
+            const admin = decodedData.payload.email || decodedData.payload.Email
+            console.log(admin);
+            if (admins.includes(admin))
+                return app.render(req, res, `/review/${req.params.name}`, req.query)
+        }
+        return res.redirect('/404')
     })
 
     server.all('*', (req, res) => {

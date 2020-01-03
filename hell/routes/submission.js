@@ -30,12 +30,14 @@ router.get('/', (req, res) => {
                     // console.log(team.submission);
                     if(team.submission.link.length==0 || team.submission.description.length==0)
                         return res.json({'status': 'failure', 'msg': 'No submission found!'})
-                    team.submitted = true;
-                    return res.json({'status': 'success', 'msg': 'Submission found!', 'submission': team.submission, 'role': role})
+                    // team.submitted = true;
+                    let { title, domain, company, category, description, link, number } = team.submission;
+                    let submission = {title, domain, company, category, description, link, number};
+                    return res.json({'status': 'success', 'msg': 'Submission found!', 'submission': submission, 'role': role})
                 })
-                .catch(err => {return res.json({'status': 'failure', 'msg': 'No submission found!'})})
+                .catch(err => {console.log(err); return res.json({'status': 'failure', 'msg': 'No submission found!'})})
         })
-        .catch(err => {return res.json({'status': 'failure', 'msg': 'No submission found!'})});
+        .catch(err => {console.log(err); return res.json({'status': 'failure', 'msg': 'No submission found!'})});
 })
 
 router.post('/', (req, res) => {
@@ -54,13 +56,14 @@ router.post('/', (req, res) => {
                         submission.link.length==0)
                         return res.json({'status': 'failure', 'msg': 'Submission failed!'});
                     for (var key in submission)
-                        team.submission[key] = submission[key];
+                        if(!['scores', 'reviewer_email', 'reviewed'].includes(key))
+                            team.submission[key] = submission[key];
                     team.submitted = true;
                     team.save()
                         .then(() => res.json({'status': 'success', 'msg': 'Submission Done!'}))
-                        .catch(err => {return res.json({'status': 'failure', 'msg': 'Submission failed!'})})
+                        .catch(err => {console.log(err); return res.json({'status': 'failure', 'msg': 'Submission failed!'})})
                 })
-                .catch(err => {return res.json({'status': 'failure', 'msg': 'Submission failed!'})})
+                .catch(err => {console.log(err); return res.json({'status': 'failure', 'msg': 'Submission failed!'})})
         })
 })
 
