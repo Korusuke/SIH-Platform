@@ -19,7 +19,7 @@ var upload = multer({ storage: storage }).single('file')
 
 
 router.get('/', (req, res) => {
-    ProblemStatement.find()
+    ProblemStatement.find({})
         .then(ProblemStatement => res.json(ProblemStatement))
         .catch(err => res.status(400).json('Error: ' + err));
 });
