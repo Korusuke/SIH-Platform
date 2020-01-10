@@ -30,7 +30,7 @@
 * Submission of Ideas by Teams for the first review.
 * Review of Submissions by the authorities.
 
-## Demo
+## Final Product
 
 https://sih.kjsce.com
 
@@ -60,17 +60,35 @@ https://sih.kjsce.com
 
 ### Note
 
- This project was done under `2 weeks with minimal pre-preparation`
+ This project was actually used by **[KJSCE](https://kjsce.somaiya.edu)** for accepting applications for SIH internal hack and for shortlisting teams and problem statements.
 
 -----------------------------------------------------------------------
 
 ### Contributors
 
-* [@hetzz](https://github.com/hetzz)
-* [@Rusherrg](https://github.com/RusherRG)
-* [@Syn3rman](https://github.com/Syn3rman)
-* [@Korusuke](https://github.com/Korusuke)
-* [@vedant-shroff](https://github.com/vedant-shroff)
-* [@akshay-99](https://github.com/akshay-99)
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+
+<table align="center">
+  <tr>
+    <td align="center"><a href="https://github.com/akshay-99"><img src="https://avatars0.githubusercontent.com/u/38867671?v=4" width="100px;" alt=""/><br /><sub><b>Akshay Padte</b></sub></a><br /></td>
+    <td align="center"><a href="https://github.com/RusherRG"><img src="https://avatars3.githubusercontent.com/u/35848285?v=4" width="100px;" alt=""/><br /><sub><b>Rushang Gajjal</b></sub></a><br /></td>
+    <td align="center"><a href="https://github.com/Korusuke"><img src="https://avatars1.githubusercontent.com/u/15181757?v=4" width="100px;" alt=""/><br /><sub><b>Karan Sheth</b></sub></a></td>
+  </tr>
+  <tr>
+  <td align="center"><a href="https://github.com/Syn3rman"><img src="https://avatars1.githubusercontent.com/u/31011197?v=4" width="100px;" alt=""/><br /><sub><b>Aditya Prajapati</b></sub></a></td>
+  <td align="center"><a href="https://github.com/hetzz"><img src="https://avatars2.githubusercontent.com/u/39834439?v=4" width="100px;" alt=""/><br /><sub><b>Hetal Kuvadia</b></sub></a><br /></td>
+  <td align="center"><a href="https://github.com/vedant-shroff"><img src="https://avatars3.githubusercontent.com/u/32770414?v=4" width="100px;" alt=""/><br /><sub><b>Vedant Shroff</b></sub></a></td>
+  
+  
+  </tr>
+</table>
+
+<!-- markdownlint-enable -->
+<!-- prettier-ignore-end -->
 
 -----------------------------------------------------------------------
+
+<p align="center">
+Made with ❤️ by <a href="https://github.com/Team-Probably">TeamProbably</a>
+</p>
