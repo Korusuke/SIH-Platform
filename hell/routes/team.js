@@ -18,6 +18,53 @@ client.on('error', (err) => {
 
 router.use('/invite', require('./invitation'));
 
+async function get_members(team) {
+  console.log(team.members);
+  User.find({email: {'$in': team.members}})
+    .then(users => {
+      return users;
+    })
+}
+
+router.get('/', (req, res) => {
+  var data = []
+  var filter = {};
+  if (req.body.teamId) {
+    filter = {
+      teamId: req.body.teamId,
+    }
+  }
+  else
+    filter = {}
+  Team.find(filter)
+    .then(teams => {
+      for(let i in teams){
+        let team_data = {
+          id: teams[i].teamId,
+          name: teams[i].teamName,
+          members: []
+        }
+        let members = []
+        User.find({email: {'$in': teams[i].members}})
+          .then(users => {
+              members = users;
+              for(var i in users)
+                team_data.members.push(users[i]);
+              return team_data
+            }
+          ).then((team_data) => {
+            data.push(team_data);
+            if (i==teams.length-1){
+              console.log(data);
+              return res.json(data);
+            }
+          }).catch(err => console.log(err));
+      }
+    })
+    .catch(err => console.log(err))
+  // return res.json(data);
+})
+
 router.post('/create', (req, res)=>{
   const { teamName } = req.body;
   Team.findOne({'teamName': teamName}, (err, result)=>{

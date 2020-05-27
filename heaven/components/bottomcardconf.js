@@ -117,7 +117,6 @@ class App extends Component {
 
           <Grid item xs={10}>
           <TextField
-          id="outlined-read-only-input"
           label="Team Name"
           defaultValue={this.props.team.teamName}
           InputProps={{
