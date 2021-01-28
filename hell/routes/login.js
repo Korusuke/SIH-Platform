@@ -1,4 +1,5 @@
 const express = require('express');
+const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken');
 const otpGenerator = require('otp-generator');
 const nodemailer = require('nodemailer');
@@ -8,6 +9,7 @@ const LoginData = require('../models/logindata.model');
 const { verifyToken } = require('./token');
 const redis = require('redis');
 const _ = require('lodash')
+
 const client = redis.createClient({
     host: process.env.REDIS_KA_THING,
     port: 6379
@@ -18,12 +20,10 @@ client.on('error', (err) => {
 
 
 // Redirect from reset link to password reset page if success. From there call update password
-// Kuch bhi
 
 router.post('/reset/:token', (req, res)=>{
     let token = req.params.token;
     let {password} = req.body;
-    console.log(token);
     client.get(token, (err, user)=>{
         if(err){
             console.log(err);
@@ -44,12 +44,14 @@ router.post('/reset/:token', (req, res)=>{
             });
             return;
         }
-        updatePass(user, password)
+        // Change to async sometime in the future
+        const hash = bcrypt.hashSync(password, 10);
+        updatePass(user, hash)
         .then(()=>{
             client.del(token);
             res.json({
                 status: 'success',
-                msg:'Reset successfull',
+                msg:'Reset successful',
             });
         })
         .catch(er=>{console.log(er);res.sendStatus(500);return;})
@@ -66,12 +68,11 @@ function updatePass(user, password){
             doc.save();
             resolve();
         });
-    });    
+    });
 }
 
 router.get('/reset/:token', (req, res)=>{
     let token = req.params.token;
-    console.log(token);
     client.get(token, (err, user)=>{
         if(err){
             console.log(err);
@@ -93,20 +94,6 @@ router.get('/reset/:token', (req, res)=>{
     });
 });
 
-
-// router.post('/update', (req, res)=>{
-//     const { user, password } = req.body;
-//     User.findOne({email: user}, (err, doc)=>{
-//         if(err){
-//             console.log(err);
-//             res.sendStatus(500);
-//             return;
-//         }
-//         doc.password = password;
-//         doc.save();
-//     });
-// });
-
 router.post('/test', verifyToken, (req, res)=>{
   console.log("test");
   res.json({
@@ -123,31 +110,47 @@ router.post('/login', (req, res) => {
         });
         return
     }
-    User.findOne({email, password})
+
+    User.findOne({email})
         .then(user => {
-            console.log(email, password);
             if(!user){
-                res.status(200).json({status: 'failure', msg: 'Access Denied '});
+                res.status(200).json({status: 'failure', msg: 'Access Denied'});
                 return;
             }
-            jwt.sign({email}, process.env.KEY, { expiresIn: "30d" }, (er, token) => {
-                if (er) {
-                    console.log(er);
-                    res.send(500);
+            bcrypt.compare(password, user.password, (err, res) => {
+                if(err){
+                    console.log(err);
+                    res.sendStatus(500);
                     return;
                 }
-                res.json({
-                    status: 'success',
-                    msg: 'Access Granted',
-                    token,
-                });
+                if(res===true){
+                    jwt.sign({email}, process.env.KEY, { expiresIn: "30d" }, (er, token) => {
+                        if (er) {
+                            console.log(er);
+                            res.send(500);
+                            return;
+                        }
+                        res.json({
+                            status: 'success',
+                            msg: 'Access Granted',
+                            token,
+                        });
+                      });
+                    }
+                else{
+                    res.json({
+                            status: 'failure',
+                            msg: 'Invalid credentials'
+                    })
+                }
               });
+
         })
         .catch(err => res.status(500))
 });
 
 router.post('/verify', (req, res) => {
-    const { email, password, otp } = req.body;
+    const { email, otp } = req.body;
 
     if(!email || email.slice(-11, )!=='somaiya.edu' || password.length < 8) {
         res.json({
@@ -156,6 +159,8 @@ router.post('/verify', (req, res) => {
         });
         return
     }
+
+    let password = bcrypt.hashSync(req.body.password, 10);
 
     LoginData.findOne({email, password, otp})
         .then(user => {
@@ -203,8 +208,6 @@ router.post('/verify', (req, res) => {
 router.post('/signup', (req, res) => {
     const { email, password } = req.body;
     const otp = otpGenerator.generate(6, { specialChars: false });
-    console.log(otp);
-    console.log(email, password, email.slice(-11));
 
     if(!email || email.slice(-11)!='somaiya.edu' || password.length < 8) {
         console.log("error");
@@ -214,11 +217,10 @@ router.post('/signup', (req, res) => {
         })
         return
     }
-    console.log(User);
+
     User.find({email})
         .then(user => {
-            console.log("creating user");
-            if(user.length>0){
+            if(user.length > 0){
                 res.json({
                     'status': 'failure',
                     'msg': "Email already exists"
@@ -226,8 +228,8 @@ router.post('/signup', (req, res) => {
                 return;
             }
             else {
-                console.log("creating user");
-                const newlogindata = new LoginData({email, password, otp});
+                let hash = bcrypt.hashSync(password, 10);
+                const newlogindata = new LoginData({email, hash, otp});
                 newlogindata.save()
                 .then(() => {
                     const emailId = process.env.EMAIL;
